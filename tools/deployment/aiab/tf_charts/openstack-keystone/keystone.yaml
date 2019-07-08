@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: keystone-aiab
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: keystone-type
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  values:
+    pod:
+      replicas:
+        ingress: 1
+        error_page: 1
+    conf:
+      keystone:
+        security_compliance:
+          lockout_failure_attempts: 999
+          lockout_duration: 1

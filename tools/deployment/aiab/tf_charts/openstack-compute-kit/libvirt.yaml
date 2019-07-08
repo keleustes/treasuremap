@@ -1,0 +1,35 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: libvirt-global
+      component: libvirt
+    actions:
+      - method: merge
+        path: .values
+      - method: delete
+        path: .values.ceph_client
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      backend:
+        - tungstenfabric
+    dependencies:
+      dynamic:
+        targeted:
+          tungstenfabric:
+            libvirt:
+              daemonset: []
+    conf:
+      ceph:
+        enabled: false
+      qemu:
+        cgroup_device_acl: ["/dev/null", "/dev/full", "/dev/zero", "/dev/random", "/dev/urandom", "/dev/ptmx", "/dev/kvm", "/dev/kqemu", "/dev/rtc", "/dev/hpet", "/dev/net/tun"]
+...
