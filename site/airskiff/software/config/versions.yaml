@@ -1,20 +1,4 @@
 ---
-schema: pegleg/SoftwareVersions/v1
-metadata:
-  schema: metadata/Document/v1
-  replacement: true
-  name: software-versions
-  labels:
-    name: software-versions-airskiff-ubuntu
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: software-versions-global
-    actions:
-      - method: merge
-        path: .
-  storagePolicy: cleartext
 data:
   images:
     ucp:
@@ -27,4 +11,20 @@ data:
         shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_xenial"
         airflow: "quay.io/airshipit/airflow:latest-ubuntu_xenial"
         airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_xenial"
+metadata:
+  labels:
+    name: software-versions-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: software-versions-global
+    actions:
+      - method: merge
+        path: .
+  name: software-versions
+  replacement: true
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: pegleg/SoftwareVersions/v1
 ...
