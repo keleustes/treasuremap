@@ -3,117 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-maas-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: ucp-maas-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.maas
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.maas
-  - dest:
-      path: .values.conf.maas.dns.dns_servers
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.upstream_servers_joined
-  - dest:
-      path: .values.conf.maas.ntp.ntp_servers
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .ntp.servers_joined
-  - dest:
-      path: .values.secrets.maas_region.value
-    src:
-      kind: DeckhandPassphrase
-      name: maas-region-key
-      path: .
-  - dest:
-      path: .values.endpoints.maas_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.postgresql
-  - dest:
-      path: .values.endpoints.maas_region
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.maas_region
-  - dest:
-      path: .values.endpoints.maas_ingress
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.maas_ingress
-  - dest:
-      path: .values.endpoints.physicalprovisioner
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.physicalprovisioner
-  - dest:
-      path: .values.endpoints.maas_db.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.postgres.admin
-  - dest:
-      path: .values.endpoints.maas_db.auth.user
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.maas.postgres
-  - dest:
-      path: .values.endpoints.maas_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.maas.postgres.database
-  - dest:
-      path: .values.endpoints.maas_region.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.maas.admin
-  - dest:
-      path: .values.endpoints.maas_region.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_maas_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.maas_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_postgres_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.maas_db.auth.user.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_maas_postgres_password
-      path: .
+    name: ucp-maas
+  name: ucp-maas
+  namespace: ucp
 spec:
   chart_name: maas
   dependencies:
   - maas-htk
   install:
     no_hooks: false
-  namespace: ucp
   release: maas
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.maas)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -130,6 +31,7 @@ spec:
           secret:
             namespace: ucp
         dns:
+          dns_servers: $(PeglegCommonAddresses.common-addresses.spec.dns.upstream_servers_joined)
           require_dnssec: 'no'
         images:
           default_image: xenial
@@ -138,9 +40,31 @@ spec:
         ntp:
           disable_ntpd_rack: true
           disable_ntpd_region: true
+          ntp_servers: $(PeglegCommonAddresses.common-addresses.spec.ntp.servers_joined)
           use_external_only: 'true'
         proxy:
           proxy_enabled: 'true'
+    endpoints:
+      maas_db:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.postgres.admin)
+            password: $(DeckhandPassphrase.ucp-postgres-admin-password.spec)
+          user:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.maas.postgres)
+            password: $(DeckhandPassphrase.ucp-maas-postgres-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.postgresql)
+        path: /$(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.maas.postgres.database)
+      maas_ingress: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.maas_ingress)
+      maas_region:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.maas.admin)
+            password: $(DeckhandPassphrase.ucp-maas-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.maas_region)
+      physicalprovisioner: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.physicalprovisioner)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.maas)
     jobs:
       import_boot_resources:
         timeout: 1800
@@ -155,6 +79,9 @@ spec:
       replicas:
         rack: 1
         region: 1
+    secrets:
+      maas_region:
+        value: $(DeckhandPassphrase.maas-region-key.spec)
   wait:
     labels:
       release_group: airship-maas
@@ -163,20 +90,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: maas-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.maas-htk
+  namespace: pegleg
 spec:
   chart_name: maas-htk
   dependencies: []
-  namespace: maas-htk
   release: maas-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.maas-htk)
+  target_state: uninitialized
   values: {}

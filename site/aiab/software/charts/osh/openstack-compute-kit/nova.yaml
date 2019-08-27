@@ -2,19 +2,10 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .values.conf
-    - method: delete
-      path: .values.ceph_client
-    layer: site
-    parentSelector:
-      name: nova-type
   name: nova
-  replacement: true
+  namespace: openstack
 spec:
+  target_state: uninitialized
   values:
     conf:
       ceph:

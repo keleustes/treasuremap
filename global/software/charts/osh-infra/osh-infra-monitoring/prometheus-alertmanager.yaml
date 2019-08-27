@@ -2,37 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: prometheus-alertmanager
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.prometheus_alertmanager
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.prometheus_alertmanager
-  - dest:
-      path: .values.endpoints.alerts
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.alerts
+  namespace: osh-infra
 spec:
   chart_name: prometheus-alertmanager
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: prometheus-alertmanager
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_alertmanager)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -44,6 +24,10 @@ spec:
           release_group: airship-prometheus-alertmanager
         type: job
   values:
+    endpoints:
+      alerts: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.alerts)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.prometheus_alertmanager)
     labels:
       alertmanager:
         node_selector_key: openstack-control-plane

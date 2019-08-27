@@ -2,15 +2,8 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: full-site-global
-  name: full-site-aiab
+  name: full-site
+  namespace: shipyard
 spec:
   chart_groups:
   - podsecuritypolicy
@@ -35,8 +28,9 @@ spec:
   - openstack-rabbitmq
   - openstack-memcached
   - openstack-keystone
-  - openstack-glance-aiab
+  - openstack-glance
   - openstack-compute-kit
-  - openstack-heat-aiab
+  - openstack-heat
   - openstack-horizon
   release_prefix: airship
+  target_state: uninitialized

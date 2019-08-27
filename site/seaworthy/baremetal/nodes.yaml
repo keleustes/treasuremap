@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cab23-r720-12
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 10.23.104.12
@@ -30,11 +27,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cab23-r720-13
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 10.23.104.13
@@ -58,11 +52,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cab23-r720-14
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 10.23.104.14
@@ -86,11 +77,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cab23-r720-17
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 10.23.104.17
@@ -114,11 +102,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cab23-r720-19
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 10.23.104.19

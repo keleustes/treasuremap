@@ -4,282 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: nova
-    name: nova-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: nova-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.nova
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.nova
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db_api
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db_cell0
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_messaging
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_cache
-  - dest:
-      path: .values.endpoints.image
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.image
-  - dest:
-      path: .values.endpoints.compute
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute
-  - dest:
-      path: .values.endpoints.compute_metadata
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute_metadata
-  - dest:
-      path: .values.endpoints.compute_novnc_proxy
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute_novnc_proxy
-  - dest:
-      path: .values.endpoints.compute_spice_proxy
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute_spice_proxy
-  - dest:
-      path: .values.endpoints.placement
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.placement
-  - dest:
-      path: .values.endpoints.network
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.network
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.nova
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.nova
-  - dest:
-      path: .values.endpoints.identity.auth.neutron
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.neutron.neutron
-  - dest:
-      path: .values.endpoints.identity.auth.placement
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.placement
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.oslo_messaging.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.nova
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_messaging.nova
-  - dest:
-      path: .values.endpoints.oslo_db.auth.nova.username
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_db.username
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_db.database
-  - dest:
-      path: .values.endpoints.oslo_db_api.auth.nova
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_db_api
-  - dest:
-      path: .values.endpoints.oslo_db_api.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_db_api.database
-  - dest:
-      path: .values.endpoints.oslo_db_cell0.auth.nova
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_db_cell0
-  - dest:
-      path: .values.endpoints.oslo_db_cell0.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.oslo_db_cell0.database
-  - dest:
-      path: .values.endpoints.oslo_messaging.path
-      pattern: VHOST_NAME
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute.name
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.nova.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.neutron.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_neutron_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.placement.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_placement_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.nova.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.nova.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db_api.auth.nova.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db_cell0.auth.nova.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db_api.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db_cell0.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_cache_secret_key
-      path: .
-  - dest:
-      path: .values.conf.nova.neutron.metadata_proxy_shared_secret
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_metadata_proxy_shared_secret
-      path: .
+    name: nova
+  name: nova
+  namespace: openstack
 spec:
   chart_name: nova
   dependencies:
   - nova-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: nova
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.nova)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -369,6 +105,75 @@ spec:
         libvirt:
           cpu_mode: host-passthrough
           virt_type: kvm
+        neutron:
+          metadata_proxy_shared_secret: $(DeckhandPassphrase.osh-nova-metadata-proxy-shared-secret.spec)
+    endpoints:
+      compute: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute)
+      compute_metadata: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute_metadata)
+      compute_novnc_proxy: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute_novnc_proxy)
+      compute_spice_proxy: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute_spice_proxy)
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          neutron:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.neutron.neutron)
+            password: $(DeckhandPassphrase.osh-neutron-password.spec)
+          nova:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.nova)
+            password: $(DeckhandPassphrase.osh-nova-password.spec)
+          placement:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.placement)
+            password: $(DeckhandPassphrase.osh-placement-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      image: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image)
+      network: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.network)
+      oslo_cache:
+        auth:
+          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          nova:
+            password: $(DeckhandPassphrase.osh-nova-oslo-db-password.spec)
+            username: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_db.username)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_db.database)
+      oslo_db_api:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          nova:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_db_api)
+            password: $(DeckhandPassphrase.osh-nova-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_db_api.database)
+      oslo_db_cell0:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          nova:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_db_cell0)
+            password: $(DeckhandPassphrase.osh-nova-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_db_cell0.database)
+      oslo_messaging:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.oslo_messaging.admin)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+          nova:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.oslo_messaging.nova)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_messaging)
+        path: /$(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute.name)
+      placement: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.placement)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.nova)
     labels:
       agent:
         compute:
@@ -421,20 +226,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: nova-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.nova-htk
+  namespace: pegleg
 spec:
   chart_name: nova-htk
   dependencies: []
-  namespace: nova-htk
   release: nova-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.nova-htk)
+  target_state: uninitialized
   values: {}

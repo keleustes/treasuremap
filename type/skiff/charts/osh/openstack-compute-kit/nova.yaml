@@ -3,24 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: nova-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .values.labels.agent
-    - method: delete
-      path: .values.ceph_client
-    - method: merge
-      path: .values.conf
-    - method: replace
-      path: .values.pod
-    layer: type
-    parentSelector:
-      component: nova
-      name: nova-global
+    name: nova
   name: nova
+  namespace: openstack
 spec:
+  target_state: uninitialized
   values:
     conf:
       ceph:

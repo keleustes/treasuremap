@@ -2,13 +2,7 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: ucp-promenade-global
   name: ucp-promenade
-spec: {}
+  namespace: ucp
+spec:
+  target_state: uninitialized

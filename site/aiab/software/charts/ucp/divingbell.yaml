@@ -3,17 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-divingbell-site
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: ucp-divingbell-global
+    name: ucp-divingbell
   name: ucp-divingbell
+  namespace: ucp
 spec:
+  target_state: uninitialized
   values:
     manifests:
       daemonset_apparmor: false

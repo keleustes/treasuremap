@@ -3,14 +3,8 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: tenant-ceph-osd-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: tenant-ceph-osd-global
+    name: tenant-ceph-osd
   name: tenant-ceph-osd
-spec: {}
+  namespace: tenant-ceph
+spec:
+  target_state: uninitialized

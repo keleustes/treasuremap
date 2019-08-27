@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: memcached
-    name: openstack-memcached-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openstack-memcached-chart-group
   name: openstack-memcached
+  namespace: shipyard
 spec:
   chart_group:
   - openstack-memcached
   description: Deploy Memcached
+  target_state: uninitialized

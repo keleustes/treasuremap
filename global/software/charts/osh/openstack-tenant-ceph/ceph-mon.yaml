@@ -4,57 +4,19 @@ kind: ArmadaChart
 metadata:
   labels:
     name: tenant-ceph-mon
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: tenant-ceph-mon
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.tenant-ceph-mon
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ceph.tenant-ceph-mon
-  - dest:
-      path: .values.network.public
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.public_cidr
-  - dest:
-      path: .values.network.cluster
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.cluster_cidr
-  - dest:
-      path: .values.endpoints.ceph_mon
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.tenant_ceph_mon
-  - dest:
-      path: .values.conf.ceph.global.fsid
-    src:
-      kind: DeckhandPassphrase
-      name: tenant_ceph_fsid
-      path: .
+  namespace: tenant-ceph
 spec:
   chart_name: tenant-ceph-mon
   dependencies:
   - tenant-ceph-htk
   install:
     no_hooks: false
-  namespace: tenant-ceph
   protected:
     continue_processing: true
   release: tenant-ceph-mon
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tenant-ceph-mon)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -66,6 +28,9 @@ spec:
     bootstrap:
       enabled: true
     conf:
+      ceph:
+        global:
+          fsid: $(DeckhandPassphrase.tenant-ceph-fsid.spec)
       storage:
         mon:
           directory: /var/lib/openstack-helm/tenant-ceph/mon
@@ -76,10 +41,11 @@ spec:
     endpoints:
       ceph_mgr:
         namespace: tenant-ceph
-      ceph_mon:
-        namespace: tenant-ceph
+      ceph_mon: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.tenant_ceph_mon)
       fluentd:
         namespace: osh-infra
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ceph.tenant-ceph-mon)
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
@@ -90,6 +56,9 @@ spec:
     monitoring:
       ceph_mgr:
         port: 9284
+    network:
+      cluster: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.cluster_cidr)
+      public: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.public_cidr)
     storageclass:
       rbd:
         parameters:

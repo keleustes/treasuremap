@@ -3,38 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    hosttype: fluentbit-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: fluentbit-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.fluentbit
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.fluentbit
-  - dest:
-      path: .values.endpoints.fluentbit
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
+    hosttype: fluentbit
+  name: fluentbit
+  namespace: osh-infra
 spec:
   chart_name: fluentbit
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: fluentbit
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.fluentbit)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -206,6 +186,10 @@ spec:
             Time_Format "%Y-%m-%dT%H:%M:%S.%L"
             Time_Keep On
             Types "pid:integer"
+    endpoints:
+      fluentbit: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.fluentbit)
     labels:
       fluentbit:
         node_selector_key: fluentbit

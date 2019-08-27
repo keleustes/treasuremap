@@ -3,39 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: haproxy-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: haproxy
   name: haproxy
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.haproxy
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.haproxy
-  - dest:
-      path: .values.conf.anchor.kubernetes_url
-      pattern: KUBERNETES_IP
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.api_service_ip
+  namespace: kube-system
 spec:
   chart_name: haproxy
   dependencies:
   - haproxy-htk
-  namespace: kube-system
   protected:
     continue_processing: true
   release: haproxy
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.haproxy)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -46,7 +25,7 @@ spec:
   values:
     conf:
       anchor:
-        kubernetes_url: https://KUBERNETES_IP:443
+        kubernetes_url: https://$(PeglegCommonAddresses.common-addresses.spec.kubernetes.api_service_ip):443
         services:
           default:
             kubernetes:
@@ -74,6 +53,8 @@ spec:
                 - option tcpka
                 - bind *:2378
               server_opts: check port 2379
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.haproxy)
   wait:
     labels:
       release_group: airship-haproxy
@@ -82,20 +63,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: haproxy-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.haproxy-htk
+  namespace: pegleg
 spec:
   chart_name: haproxy-htk
   dependencies: []
-  namespace: haproxy-htk
   release: haproxy-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.haproxy-htk)
+  target_state: uninitialized
   values: {}

@@ -2,24 +2,15 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeEncryptionPolicy
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: encryption-policy
-  substitutions:
-  - dest:
-      path: .etcd[0].providers[0].secretbox.keys[0].secret
-    src:
-      kind: DeckhandPassphrase
-      name: apiserver-encryption-key-key1
-      path: .
+  namespace: drydock
 spec:
   etcd:
   - providers:
     - secretbox:
         keys:
         - name: key1
-          secret: null
+          secret: $(DeckhandPassphrase.apiserver-encryption-key-key1.spec)
     - identity: {}
     resources:
     - secrets

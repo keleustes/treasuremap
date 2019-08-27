@@ -3,24 +3,15 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-armada-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .source
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: ucp-armada-global
+    name: ucp-armada
   name: ucp-armada
-  replacement: true
+  namespace: ucp
 spec:
   source:
     location: /airship-components/armada
     subpath: charts/armada
     type: local
+  target_state: uninitialized
   values:
     pod:
       replicas:

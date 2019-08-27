@@ -4,10 +4,8 @@ kind: PromenadeDocker
 metadata:
   labels:
     promenade: enabled
-  layeringDefinition:
-    abstract: false
-    layer: global
-  name: docker-global
+  name: docker
+  namespace: drydock
 spec:
   config:
     live-restore: true

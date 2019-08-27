@@ -2,65 +2,13 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
-  name: ucp_endpoints
-  substitutions:
-  - dest:
-    - path: .ucp.identity.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .ucp.identity.host_fqdn_override.admin.host
-      pattern: DOMAIN
-    - path: .ucp.shipyard.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .ucp.physicalprovisioner.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .ucp.maas_region.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .ceph.object_store.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .ceph.ceph_object_store.host_fqdn_override.public.host
-      pattern: DOMAIN
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.ingress_domain
-  - dest:
-    - path: .ucp.identity.host_fqdn_override.public.tls.crt
-    - path: .ucp.shipyard.host_fqdn_override.public.tls.crt
-    - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.crt
-    - path: .ceph.object_store.host_fqdn_override.public.tls.crt
-    - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
-    src:
-      kind: DeckhandCertificate
-      name: ingress-crt
-      path: .
-  - dest:
-    - path: .ucp.identity.host_fqdn_override.public.tls.ca
-    - path: .ucp.shipyard.host_fqdn_override.public.tls.ca
-    - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.ca
-    - path: .ceph.object_store.host_fqdn_override.public.tls.ca
-    - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: ingress-ca
-      path: .
-  - dest:
-    - path: .ucp.identity.host_fqdn_override.public.tls.key
-    - path: .ucp.shipyard.host_fqdn_override.public.tls.key
-    - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
-    - path: .ceph.object_store.host_fqdn_override.public.tls.key
-    - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
-    src:
-      kind: DeckhandCertificateKey
-      name: ingress-key
-      path: .
+  name: ucp-endpoints
+  namespace: pegleg
 spec:
   ceph:
     ceph_mgr:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mgr
       namespace: ceph
@@ -71,7 +19,7 @@ spec:
         default: http
     ceph_mon:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mon
         discovery: ceph-mon-discovery
@@ -81,9 +29,13 @@ spec:
           default: 6789
     ceph_object_store:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: object-store-sw.DOMAIN
+          host: object-store-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -100,9 +52,13 @@ spec:
         public: https
     object_store:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: object-store-sw.DOMAIN
+          host: object-store-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -119,7 +75,7 @@ spec:
         public: https
     tenant_ceph_mgr:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mgr
       namespace: tenant-ceph
@@ -132,7 +88,7 @@ spec:
         default: http
     tenant_ceph_mon:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mon
         discovery: ceph-mon-discovery
@@ -143,10 +99,10 @@ spec:
   ucp:
     airflow_oslo_messaging:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: rabbitmq
-      namespace: null
+      namespace: ""
       path: /airflow
       port:
         amqp:
@@ -156,7 +112,7 @@ spec:
       scheme: amqp
     armada:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: armada-api
         public: armada
@@ -170,7 +126,7 @@ spec:
         default: http
     deckhand:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: deckhand-int
         public: deckhand-api
@@ -185,10 +141,14 @@ spec:
     identity:
       host_fqdn_override:
         admin:
-          host: iam-sw.DOMAIN
-        default: null
+          host: iam-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+        default: ""
         public:
-          host: iam-sw.DOMAIN
+          host: iam-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: keystone
         internal: keystone-api
@@ -205,13 +165,13 @@ spec:
         internal: http
     key_manager:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: barbican-api
         public: barbican
       name: barbican
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9311
@@ -220,7 +180,7 @@ spec:
         default: http
     kubernetesprovisioner:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: promenade-api
       name: promenade
@@ -253,9 +213,9 @@ spec:
           podport: 18089
     maas_region:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: maas-sw.DOMAIN
+          host: maas-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
       hosts:
         default: maas-region
         public: maas
@@ -274,7 +234,7 @@ spec:
         default: http
     oslo_cache:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: memcached
       port:
@@ -282,7 +242,7 @@ spec:
           default: 11211
     oslo_db:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mariadb
         discovery: mariadb-discovery
@@ -295,10 +255,10 @@ spec:
       scheme: mysql+pymysql
     oslo_messaging:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: rabbitmq
-      namespace: null
+      namespace: ""
       path: /keystone
       port:
         amqp:
@@ -308,9 +268,13 @@ spec:
         name: airship-ucp-rabbitmq-rabbitmq
     physicalprovisioner:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: drydock-sw.DOMAIN
+          host: drydock-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: drydock-api
       name: drydock
@@ -326,7 +290,7 @@ spec:
         public: https
     postgresql:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: postgresql
       name: postgresql
@@ -337,10 +301,10 @@ spec:
       scheme: postgresql+psycopg2
     postgresql_airflow_celery:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: postgresql
-      name: postgresql_airflow_celery_db
+      name: postgresql-airflow-celery-db
       path: /DB_NAME
       port:
         postgresql:
@@ -348,12 +312,12 @@ spec:
       scheme: db+postgresql
     prometheus_openstack_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-metrics
       namespace: ucp
       path:
-        default: null
+        default: ""
       port:
         exporter:
           default: 9103
@@ -361,9 +325,13 @@ spec:
         default: http
     shipyard:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: shipyard-sw.DOMAIN
+          host: shipyard-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: shipyard-int
         public: shipyard-api
@@ -381,110 +349,19 @@ spec:
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
-  name: osh_endpoints
-  substitutions:
-  - dest:
-    - path: .osh.object_store.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.ceph_object_store.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.image.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.cloudformation.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.orchestration.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.compute.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.placement.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.network.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.identity.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.identity.host_fqdn_override.admin.host
-      pattern: DOMAIN
-    - path: .osh.dashboard.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.volume.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.volumev2.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh.volumev3.host_fqdn_override.public.host
-      pattern: DOMAIN
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.ingress_domain
-  - dest:
-    - path: .osh.object_store.host_fqdn_override.public.tls.crt
-    - path: .osh.ceph_object_store.host_fqdn_override.public.tls.crt
-    - path: .osh.identity.host_fqdn_override.public.tls.crt
-    - path: .osh.orchestration.host_fqdn_override.public.tls.crt
-    - path: .osh.cloudformation.host_fqdn_override.public.tls.crt
-    - path: .osh.dashboard.host_fqdn_override.public.tls.crt
-    - path: .osh.image.host_fqdn_override.public.tls.crt
-    - path: .osh.volume.host_fqdn_override.public.tls.crt
-    - path: .osh.volumev2.host_fqdn_override.public.tls.crt
-    - path: .osh.volumev3.host_fqdn_override.public.tls.crt
-    - path: .osh.compute.host_fqdn_override.public.tls.crt
-    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.crt
-    - path: .osh.placement.host_fqdn_override.public.tls.crt
-    - path: .osh.network.host_fqdn_override.public.tls.crt
-    src:
-      kind: DeckhandCertificate
-      name: ingress-crt
-      path: .
-  - dest:
-    - path: .osh.object_store.host_fqdn_override.public.tls.ca
-    - path: .osh.ceph_object_store.host_fqdn_override.public.tls.ca
-    - path: .osh.identity.host_fqdn_override.public.tls.ca
-    - path: .osh.orchestration.host_fqdn_override.public.tls.ca
-    - path: .osh.cloudformation.host_fqdn_override.public.tls.ca
-    - path: .osh.dashboard.host_fqdn_override.public.tls.ca
-    - path: .osh.image.host_fqdn_override.public.tls.ca
-    - path: .osh.volume.host_fqdn_override.public.tls.ca
-    - path: .osh.volumev2.host_fqdn_override.public.tls.ca
-    - path: .osh.volumev3.host_fqdn_override.public.tls.ca
-    - path: .osh.compute.host_fqdn_override.public.tls.ca
-    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.ca
-    - path: .osh.placement.host_fqdn_override.public.tls.ca
-    - path: .osh.network.host_fqdn_override.public.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: ingress-ca
-      path: .
-  - dest:
-    - path: .osh.object_store.host_fqdn_override.public.tls.key
-    - path: .osh.ceph_object_store.host_fqdn_override.public.tls.key
-    - path: .osh.identity.host_fqdn_override.public.tls.key
-    - path: .osh.orchestration.host_fqdn_override.public.tls.key
-    - path: .osh.cloudformation.host_fqdn_override.public.tls.key
-    - path: .osh.dashboard.host_fqdn_override.public.tls.key
-    - path: .osh.image.host_fqdn_override.public.tls.key
-    - path: .osh.volume.host_fqdn_override.public.tls.key
-    - path: .osh.volumev2.host_fqdn_override.public.tls.key
-    - path: .osh.volumev3.host_fqdn_override.public.tls.key
-    - path: .osh.compute.host_fqdn_override.public.tls.key
-    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
-    - path: .osh.placement.host_fqdn_override.public.tls.key
-    - path: .osh.network.host_fqdn_override.public.tls.key
-    src:
-      kind: DeckhandCertificateKey
-      name: ingress-key
-      path: .
+  name: osh-endpoints
+  namespace: pegleg
 spec:
   osh:
     ceph_object_store:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: object-store-sw.DOMAIN
+          host: object-store-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -501,15 +378,19 @@ spec:
         public: https
     cloudformation:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: cloudformation-sw.DOMAIN
+          host: cloudformation-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: heat-cfn
         public: cloudformation
       name: heat-cfn
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 8000
@@ -519,13 +400,13 @@ spec:
         public: https
     cloudwatch:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: heat-cloudwatch
         public: cloudwatch
       name: heat-cloudwatch
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 8003
@@ -535,9 +416,13 @@ spec:
       type: null
     compute:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: compute-sw.DOMAIN
+          host: compute-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: nova-api
         public: nova
@@ -555,7 +440,7 @@ spec:
         public: https
     compute_metadata:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nova-metadata
         public: metadata
@@ -570,9 +455,13 @@ spec:
         default: http
     compute_novnc_proxy:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: nova-novncproxy-sw.DOMAIN
+          host: nova-novncproxy-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: nova-novncproxy
         public: novncproxy
@@ -588,7 +477,7 @@ spec:
         public: https
     compute_spice_proxy:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nova-spiceproxy
       name: nova
@@ -601,15 +490,19 @@ spec:
         default: http
     dashboard:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: dashboard-sw.DOMAIN
+          host: dashboard-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: horizon-int
         public: horizon
       name: horizon
       path:
-        default: null
+        default: ""
       port:
         web:
           default: 80
@@ -620,10 +513,14 @@ spec:
     identity:
       host_fqdn_override:
         admin:
-          host: identity-sw.DOMAIN
-        default: null
+          host: identity-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+        default: ""
         public:
-          host: identity-sw.DOMAIN
+          host: identity-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: keystone
         internal: keystone-api
@@ -640,15 +537,19 @@ spec:
         internal: http
     image:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: image-sw.DOMAIN
+          host: image-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: glance-api
         public: glance
       name: glance
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9292
@@ -658,13 +559,13 @@ spec:
         public: https
     image_registry:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: glance-registry
         public: glance-reg
       name: glance-registry
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9191
@@ -673,15 +574,19 @@ spec:
         default: http
     network:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: network-sw.DOMAIN
+          host: network-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: neutron-server
         public: neutron
       name: neutron
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9696
@@ -691,9 +596,13 @@ spec:
         public: https
     object_store:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: object-store-sw.DOMAIN
+          host: object-store-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -710,7 +619,7 @@ spec:
         public: https
     openstack_rabbitmq_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-rabbitmq-exporter
       namespace: openstack
@@ -723,9 +632,13 @@ spec:
         default: http
     orchestration:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: orchestration-sw.DOMAIN
+          host: orchestration-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: heat-api
         public: heat
@@ -741,7 +654,7 @@ spec:
         public: https
     oslo_cache:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: memcached
       namespace: openstack
@@ -750,7 +663,7 @@ spec:
           default: 11211
     oslo_db:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mariadb
         discovery: mariadb-discovery
@@ -763,7 +676,7 @@ spec:
       scheme: mysql+pymysql
     oslo_messaging:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-rabbitmq
       namespace: openstack
@@ -778,9 +691,13 @@ spec:
         name: airship-openstack-rabbitmq-rabbitmq
     placement:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: placement-sw.DOMAIN
+          host: placement-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: placement-api
         public: placement
@@ -796,7 +713,7 @@ spec:
         public: https
     prometheus_mysql_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mysql-exporter
       namespace: openstack
@@ -809,9 +726,13 @@ spec:
         default: http
     volume:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: volume-sw.DOMAIN
+          host: volume-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: cinder-api
         public: cinder
@@ -827,9 +748,13 @@ spec:
         public: https
     volumev2:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: volume-sw.DOMAIN
+          host: volume-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: cinder-api
         public: cinder
@@ -845,9 +770,13 @@ spec:
         public: https
     volumev3:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: volume-sw.DOMAIN
+          host: volume-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: cinder-api
         public: cinder
@@ -865,65 +794,13 @@ spec:
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
-  name: osh_infra_endpoints
-  substitutions:
-  - dest:
-    - path: .osh_infra.kibana.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh_infra.grafana.host_fqdn_override.public.host
-      pattern: DOMAIN
-    - path: .osh_infra.nagios.host_fqdn_override.public.host
-      pattern: DOMAIN
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.ingress_domain
-  - dest:
-    - path: .osh_infra.kibana.host_fqdn_override.public.tls.crt
-    - path: .osh_infra.grafana.host_fqdn_override.public.tls.crt
-    - path: .osh_infra.nagios.host_fqdn_override.public.tls.crt
-    src:
-      kind: DeckhandCertificate
-      name: ingress-crt
-      path: .
-  - dest:
-    - path: .osh_infra.kibana.host_fqdn_override.public.tls.ca
-    - path: .osh_infra.grafana.host_fqdn_override.public.tls.ca
-    - path: .osh_infra.nagios.host_fqdn_override.public.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: ingress-ca
-      path: .
-  - dest:
-    - path: .osh_infra.kibana.host_fqdn_override.public.tls.key
-    - path: .osh_infra.grafana.host_fqdn_override.public.tls.key
-    - path: .osh_infra.nagios.host_fqdn_override.public.tls.key
-    src:
-      kind: DeckhandCertificateKey
-      name: ingress-key
-      path: .
-  - dest:
-      path: .osh_infra.ldap.host_fqdn_override.public.host
-      pattern: DOMAIN
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .ldap.base_url
-  - dest:
-      path: .osh_infra.ldap.path.default
-      pattern: AUTH_PATH
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .ldap.auth_path
+  name: osh-infra-endpoints
+  namespace: pegleg
 spec:
   osh_infra:
     alerts:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: alerts-engine
         discovery: alertmanager-discovery
@@ -931,7 +808,7 @@ spec:
       name: alertmanager
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9093
@@ -942,14 +819,14 @@ spec:
         default: http
     ceph_object_store:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-rgw
         public: radosgw
       name: radosgw
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 8088
@@ -958,7 +835,7 @@ spec:
         default: http
     elasticsearch:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         data: elasticsearch-data
         default: elasticsearch-logging
@@ -967,18 +844,18 @@ spec:
       name: elasticsearch
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       scheme:
         default: http
     fluentd:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: fluentd-logging
       name: fluentd
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         metrics:
           default: 24220
@@ -988,16 +865,20 @@ spec:
         default: http
     grafana:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: grafana-sw.DOMAIN
+          host: grafana-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: grafana-dashboard
         public: grafana
       name: grafana
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         grafana:
           default: 3000
@@ -1007,16 +888,20 @@ spec:
         public: https
     kibana:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: kibana-sw.DOMAIN
+          host: kibana-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: kibana-dash
         public: kibana
       name: kibana
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         kibana:
           default: 5601
@@ -1036,12 +921,12 @@ spec:
         default: http
     kube_state_metrics:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: kube-state-metrics
       namespace: kube-system
       path:
-        default: null
+        default: ""
       port:
         http:
           default: 8080
@@ -1049,13 +934,13 @@ spec:
         default: http
     ldap:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: DOMAIN
+          host: $(PeglegCommonAddresses.common-addresses.spec.ldap.base_url)
       hosts:
         default: ldap
       path:
-        default: /AUTH_PATH
+        default: /$(PeglegCommonAddresses.common-addresses.spec.ldap.auth_path)
       port:
         ldap:
           default: 389
@@ -1063,14 +948,14 @@ spec:
         default: ldap
     monitoring:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: prom-metrics
         public: prometheus
       name: prometheus
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9090
@@ -1080,16 +965,20 @@ spec:
         default: http
     nagios:
       host_fqdn_override:
-        default: null
+        default: ""
         public:
-          host: nagios-sw.DOMAIN
+          host: nagios-sw.$(PeglegCommonAddresses.common-addresses.spec.dns.ingress_domain)
+          tls:
+            ca: $(DeckhandCertificateAuthority.ingress-ca.spec)
+            crt: $(DeckhandCertificate.ingress-crt.spec)
+            key: $(DeckhandCertificateKey.ingress-key.spec)
       hosts:
         default: nagios-metrics
         public: nagios
       name: nagios
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         http:
           default: 80
@@ -1099,12 +988,12 @@ spec:
         public: https
     node_metrics:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: node-exporter
       namespace: kube-system
       path:
-        default: null
+        default: ""
       port:
         metrics:
           default: 9100
@@ -1114,7 +1003,7 @@ spec:
         default: http
     oslo_db:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mariadb
       namespace: osh-infra
@@ -1125,12 +1014,12 @@ spec:
       scheme: mysql+pymysql
     process_exporter_metrics:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: process-exporter
       namespace: kube-system
       path:
-        default: null
+        default: ""
       port:
         metrics:
           default: 9256
@@ -1138,10 +1027,10 @@ spec:
         default: http
     prometheus_elasticsearch_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: elasticsearch-exporter
-      namespace: null
+      namespace: ""
       path:
         default: /metrics
       port:
@@ -1151,7 +1040,7 @@ spec:
         default: http
     prometheus_fluentd_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: fluentd-exporter
       namespace: osh-infra
@@ -1164,7 +1053,7 @@ spec:
         default: http
     prometheus_mysql_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mysql-exporter
       namespace: osh-infra
@@ -1177,12 +1066,12 @@ spec:
         default: http
     prometheus_openstack_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-metrics
       namespace: openstack
       path:
-        default: null
+        default: ""
       port:
         exporter:
           default: 9103

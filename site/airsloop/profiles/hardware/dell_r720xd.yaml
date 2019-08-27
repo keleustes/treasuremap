@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHardwareProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
-  name: dell_r720xd
-  schema: metadata/Document/v1
+  name: dell-r720xd
+  namespace: drydock
 spec:
   bios_version: 2.2.3
   boot_mode: bios

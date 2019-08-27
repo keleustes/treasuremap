@@ -2,86 +2,26 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeKubernetesNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: type
   name: kubernetes-network
-  substitutions:
-  - dest:
-      path: .dns.cluster_domain
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.cluster_domain
-  - dest:
-      path: .dns.service_ip
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.service_ip
-  - dest:
-      path: .dns.upstream_servers
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .dns.upstream_servers
-  - dest:
-      path: .kubernetes.service_ip
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.api_service_ip
-  - dest:
-      path: .kubernetes.pod_cidr
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.pod_cidr
-  - dest:
-      path: .kubernetes.service_cidr
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.service_cidr
-  - dest:
-      path: .kubernetes.apiserver_port
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.apiserver_port
-  - dest:
-      path: .kubernetes.haproxy_port
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.haproxy_port
-  - dest:
-      path: .etcd.container_port
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .etcd.container_port
-  - dest:
-      path: .etcd.haproxy_port
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .etcd.haproxy_port
-  - dest:
-      path: .proxy.url
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .proxy.http
-  - dest:
-      path: .proxy.additional_no_proxy
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .proxy.no_proxy
+  namespace: drydock
 spec:
   dns:
     bootstrap_validation_checks:
     - calico-etcd.kube-system.svc.cluster.local
     - kubernetes-etcd.kube-system.svc.cluster.local
     - kubernetes.default.svc.cluster.local
+    cluster_domain: $(PeglegCommonAddresses.common-addresses.spec.dns.cluster_domain)
+    service_ip: $(PeglegCommonAddresses.common-addresses.spec.dns.service_ip)
+    upstream_servers: $(PeglegCommonAddresses.common-addresses.spec.dns.upstream_servers)
+  etcd:
+    container_port: $(PeglegCommonAddresses.common-addresses.spec.etcd.container_port)
+    haproxy_port: $(PeglegCommonAddresses.common-addresses.spec.etcd.haproxy_port)
+  kubernetes:
+    apiserver_port: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.apiserver_port)
+    haproxy_port: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.haproxy_port)
+    pod_cidr: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
+    service_cidr: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
+    service_ip: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.api_service_ip)
+  proxy:
+    additional_no_proxy: $(PeglegCommonAddresses.common-addresses.spec.proxy.no_proxy)
+    url: $(PeglegCommonAddresses.common-addresses.spec.proxy.http)

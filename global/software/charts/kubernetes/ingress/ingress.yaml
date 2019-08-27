@@ -4,32 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     ingress: kube-system
-    name: ingress-kube-system-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: global-ingress-kube-system
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.ingress
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.ingress
+    name: ingress-kube-system
+  name: ingress-kube-system
+  namespace: kube-system
 spec:
   chart_name: ingress-kube-system
   dependencies:
   - ingress-kube-system-htk
   install:
     no_hooks: false
-  namespace: kube-system
   release: ingress-kube-system
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.ingress)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -41,6 +27,8 @@ spec:
     deployment:
       mode: cluster
       type: Deployment
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.ingress)
     labels:
       error_server:
         node_selector_key: kube-ingress
@@ -65,20 +53,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: ingress-kube-system-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.ingress-htk
+  namespace: pegleg
 spec:
   chart_name: ingress-kube-system-htk
   dependencies: []
-  namespace: ingress-kube-system-htk
   release: ingress-kube-system-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.ingress-htk)
+  target_state: uninitialized
   values: {}

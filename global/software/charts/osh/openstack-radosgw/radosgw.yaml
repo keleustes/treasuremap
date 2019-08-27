@@ -2,85 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: tenant-ceph-rgw
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.tenant-ceph-rgw
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ceph.tenant-ceph-rgw
-  - dest:
-      path: .values.network.public
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.public_cidr
-  - dest:
-      path: .values.network.cluster
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.cluster_cidr
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.object_store
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.object_store
-  - dest:
-      path: .values.endpoints.ceph_mon
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.tenant_ceph_mon
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.swift
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.swift.keystone
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.swift.password
-    src:
-      kind: DeckhandPassphrase
-      name: ceph_swift_keystone_password
-      path: .
+  namespace: openstack
 spec:
   chart_name: tenant-ceph-rgw
   dependencies:
   - tenant-ceph-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: tenant-ceph-rgw
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tenant-ceph-rgw)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -105,12 +37,19 @@ spec:
       rbd_provisioner: false
       rgw_keystone_user_and_endpoints: true
     endpoints:
-      ceph_mon:
-        namespace: tenant-ceph
+      ceph_mon: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.tenant_ceph_mon)
       identity:
-        namespace: openstack
-      object_store:
-        namespace: openstack
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          swift:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.swift.keystone)
+            password: $(DeckhandPassphrase.ceph-swift-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      object_store: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.object_store)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ceph.tenant-ceph-rgw)
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
@@ -118,6 +57,9 @@ spec:
       rgw:
         node_selector_key: tenant-ceph-rgw
         node_selector_value: enabled
+    network:
+      cluster: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.cluster_cidr)
+      public: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.public_cidr)
     pod:
       replicas:
         rgw: 2

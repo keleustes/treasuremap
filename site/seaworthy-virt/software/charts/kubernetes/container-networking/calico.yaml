@@ -2,80 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .
-    layer: site
-    parentSelector:
-      name: kubernetes-calico-global
   name: kubernetes-calico
-  replacement: true
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.calico.calico
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.calico.calico
-  - dest:
-      path: .values.endpoints.etcd.host_fqdn_override.default
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .calico.etcd.service_ip
-  - dest:
-      path: .values.networking.podSubnet
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.pod_cidr
-  - dest:
-      path: .values.conf.controllers.K8S_API
-      pattern: SUB_KUBERNETES_IP
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.api_service_ip
-  - dest:
-      path: .values.conf.node.IP_AUTODETECTION_METHOD
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .calico.ip_autodetection_method
-  - dest:
-      path: .values.endpoints.etcd.auth.client.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: calico-etcd
-      path: .
-  - dest:
-      path: .values.endpoints.etcd.auth.client.tls.crt
-    src:
-      kind: DeckhandCertificate
-      name: calico-node
-      path: .
-  - dest:
-      path: .values.endpoints.etcd.auth.client.tls.key
-    src:
-      kind: DeckhandCertificateKey
-      name: calico-node
-      path: .
+  namespace: kube-system
 spec:
   chart_name: calico
   dependencies:
   - calico-htk
-  namespace: kube-system
   protected:
     continue_processing: true
   release: kubernetes-calico
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.calico.calico)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -107,26 +44,38 @@ spec:
           snat: true
           type: portmap
       controllers:
-        K8S_API: https://SUB_KUBERNETES_IP:443
+        K8S_API: https://$(PeglegCommonAddresses.common-addresses.spec.kubernetes.api_service_ip):443
       node:
         CALICO_STARTUP_LOGLEVEL: INFO
         CLUSTER_TYPE: k8s,bgp
         ETCD_CA_CERT_FILE: /etc/calico/pki/ca
         ETCD_CERT_FILE: /etc/calico/pki/crt
         ETCD_KEY_FILE: /etc/calico/pki/key
+        IP_AUTODETECTION_METHOD: $(PeglegCommonAddresses.common-addresses.spec.calico.ip_autodetection_method)
         WAIT_FOR_STORAGE: 'true'
     endpoints:
       etcd:
+        auth:
+          client:
+            tls:
+              ca: $(DeckhandCertificateAuthority.calico-etcd.spec)
+              crt: $(DeckhandCertificate.calico-node.spec)
+              key: $(DeckhandCertificateKey.calico-node.spec)
+        host_fqdn_override:
+          default: $(PeglegCommonAddresses.common-addresses.spec.calico.etcd.service_ip)
         hosts:
           default: calico-etcd
         scheme:
           default: https
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.calico.calico)
     manifests:
       daemonset_calico_etcd: false
       job_image_repo_sync: false
       pod_calicoctl: false
       service_calico_etcd: false
     networking:
+      podSubnet: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
       settings:
         ippool:
           disabled: 'false'

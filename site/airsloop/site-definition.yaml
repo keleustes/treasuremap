@@ -2,9 +2,7 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSiteDefinition
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: airsloop
+  namespace: pegleg
 spec:
   site_type: sloop

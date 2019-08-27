@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: glance
-    name: openstack-glance-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openstack-glance-chart-group
   name: openstack-glance
+  namespace: shipyard
 spec:
   chart_group:
   - glance
   description: Deploy Glance
+  target_state: uninitialized

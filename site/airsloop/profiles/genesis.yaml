@@ -2,15 +2,8 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeGenesis
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: genesis-global
-  name: genesis-site
+  name: genesis
+  namespace: drydock
 spec:
   labels:
     dynamic:

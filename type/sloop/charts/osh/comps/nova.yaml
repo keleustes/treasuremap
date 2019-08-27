@@ -3,17 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: nova-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: nova-global
+    name: nova
   name: nova
+  namespace: openstack
 spec:
+  target_state: uninitialized
   values:
     pod:
       replicas:

@@ -3,11 +3,9 @@ apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSoftwareVersions
 metadata:
   labels:
-    name: software-versions-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: software-versions
   name: software-versions
+  namespace: pegleg
 spec:
   charts:
     kubernetes:

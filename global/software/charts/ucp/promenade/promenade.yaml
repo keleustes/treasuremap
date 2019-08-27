@@ -3,80 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-promenade-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: ucp-promenade-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.promenade
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.promenade
-  - dest:
-      path: .values.images.tags.monitoring_image
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.promenade.monitoring_image
-  - dest:
-      path: .values.pod.mount_path
-    src:
-      kind: PromenadeHostSystem
-      name: host-system
-      path: .files[0].path
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.identity
-  - dest:
-      path: .values.endpoints.kubernetesprovisioner
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.kubernetesprovisioner
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.user
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.promenade.keystone
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.user.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_promenade_keystone_password
-      path: .
+    name: ucp-promenade
+  name: ucp-promenade
+  namespace: ucp
 spec:
   chart_name: promenade
   dependencies:
   - promenade-htk
   install:
     no_hooks: false
-  namespace: ucp
   release: ucp-promenade
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.promenade)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -94,11 +32,27 @@ spec:
           identity_uri: http://keystone-api.ucp.svc.cluster.local/
           paste.filter_factory: keystonemiddleware.auth_token:filter_factory
           service_token_roles_required: true
+    endpoints:
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.keystone.admin)
+            password: $(DeckhandPassphrase.ucp-keystone-admin-password.spec)
+          user:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.promenade.keystone)
+            password: $(DeckhandPassphrase.ucp-promenade-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.identity)
+      kubernetesprovisioner: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.kubernetesprovisioner)
+    images:
+      tags:
+        monitoring_image: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.promenade.monitoring_image)
+        parent-inline: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.promenade)
     pod:
       env:
         promenade_api:
         - name: UWSGI_TIMEOUT
           value: '900'
+      mount_path: $(PromenadeHostSystem.host-system.spec.files[0].path)
       replicas:
         api: 2
   wait:
@@ -109,20 +63,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: promenade-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.promenade-htk
+  namespace: pegleg
 spec:
   chart_name: promenade-htk
   dependencies: []
-  namespace: promenade-htk
   release: promenade-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.promenade-htk)
+  target_state: uninitialized
   values: {}

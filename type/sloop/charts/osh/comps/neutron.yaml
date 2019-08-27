@@ -3,17 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: neutron-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: neutron-global
-  name: neutron-fixme
+    name: neutron
+  name: neutron
+  namespace: openstack
 spec:
+  target_state: uninitialized
   values:
     pod:
       replicas:

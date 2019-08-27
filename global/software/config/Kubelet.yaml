@@ -2,24 +2,8 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeKubelet
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: kubelet
-  substitutions:
-  - dest:
-      path: .images.pause
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.pause
-  - dest:
-      path: .arguments[9]
-      pattern: SECCOMP_PROFILE_ROOT
-    src:
-      kind: PeglegSeccompProfile
-      name: seccomp-default
-      path: .seccompDirPath
+  namespace: drydock
 spec:
   arguments:
   - --cni-bin-dir=/opt/cni/bin
@@ -32,3 +16,5 @@ spec:
   - --kube-api-qps=20
   - --seccomp-profile-root=SECCOMP_PROFILE_ROOT
   - --feature-gates=PodShareProcessNamespace=true
+  images:
+    pause: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.pause)

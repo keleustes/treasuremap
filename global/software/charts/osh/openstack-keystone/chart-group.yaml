@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: keystone
-    name: openstack-keystone-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openstack-keystone-chart-group
   name: openstack-keystone
+  namespace: shipyard
 spec:
   chart_group:
   - keystone
   description: Deploy Keystone
+  target_state: uninitialized

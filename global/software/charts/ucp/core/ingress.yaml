@@ -3,32 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-ingress-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: ucp-ingress
   name: ucp-ingress
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.ingress
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.ingress
+  namespace: ucp
 spec:
   chart_name: ingress
   dependencies:
   - ucp-ingress-htk
   install:
     no_hooks: false
-  namespace: ucp
   release: ingress
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ingress)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -40,6 +26,8 @@ spec:
     conf:
       ingress:
         proxy-body-size: 20m
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.ingress)
     labels:
       error_server:
         node_selector_key: ucp-control-plane
@@ -64,20 +52,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: ucp-ingress-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.ingress-htk
+  namespace: pegleg
 spec:
   chart_name: ucp-ingress-htk
   dependencies: []
-  namespace: ucp-ingress-htk
   release: ucp-ingress-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ingress-htk)
+  target_state: uninitialized
   values: {}

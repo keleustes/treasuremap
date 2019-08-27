@@ -3,68 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-armada-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: ucp-armada
   name: ucp-armada
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.armada
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.armada
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.identity
-  - dest:
-      path: .values.endpoints.armada
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.armada
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.user
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.armada.keystone
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.user.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_armada_keystone_password
-      path: .
+  namespace: ucp
 spec:
   chart_name: armada
   dependencies:
   - armada-htk
   install:
     no_hooks: false
-  namespace: ucp
   release: ucp-armada
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.armada)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -78,6 +28,19 @@ spec:
         DEFAULT:
           debug: true
           tiller_namespace: kube-system
+    endpoints:
+      armada: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.armada)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.keystone.admin)
+            password: $(DeckhandPassphrase.ucp-keystone-admin-password.spec)
+          user:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.armada.keystone)
+            password: $(DeckhandPassphrase.ucp-armada-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.identity)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.armada)
     manifests:
       deployment_tiller: false
       service_tiller_deploy: false
@@ -96,20 +59,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: armada-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.armada-htk
+  namespace: pegleg
 spec:
   chart_name: armada-htk
   dependencies: []
-  namespace: armada-htk
   release: armada-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.armada-htk)
+  target_state: uninitialized
   values: {}

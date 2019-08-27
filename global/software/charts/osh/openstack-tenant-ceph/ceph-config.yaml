@@ -2,49 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: tenant-ceph-config
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.tenant-ceph-provisioners
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ceph.tenant-ceph-provisioners
-  - dest:
-      path: .values.network.public
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.public_cidr
-  - dest:
-      path: .values.network.cluster
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.cluster_cidr
-  - dest:
-      path: .values.endpoints.ceph_mon
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.tenant_ceph_mon
+  namespace: openstack
 spec:
   chart_name: tenant-ceph-config
   dependencies:
   - tenant-ceph-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: tenant-ceph-config
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tenant-ceph-provisioners)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -61,6 +29,10 @@ spec:
       client_secrets: true
       rbd_provisioner: false
       rgw_keystone_user_and_endpoints: false
+    endpoints:
+      ceph_mon: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.tenant_ceph_mon)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ceph.tenant-ceph-provisioners)
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
@@ -73,6 +45,9 @@ spec:
         node_selector_value: enabled
     manifests:
       helm_tests: false
+    network:
+      cluster: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.cluster_cidr)
+      public: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.public_cidr)
     storageclass:
       cephfs:
         provision_storage_class: false

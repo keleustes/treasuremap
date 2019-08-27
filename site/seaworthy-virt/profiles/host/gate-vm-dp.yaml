@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
-  name: gate-vm-dp
-  schema: metadata/Document/v1
+  name: dp
+  namespace: drydock
 spec:
   hardware_profile: GenericVM
   interfaces:

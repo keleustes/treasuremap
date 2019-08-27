@@ -4,198 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: neutron
-    name: neutron-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: neutron
   name: neutron
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.neutron
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.neutron
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.compute
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute
-  - dest:
-      path: .values.endpoints.image_registry
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.compute_metadata
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_messaging
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_cache
-  - dest:
-      path: .values.endpoints.network
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.network
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.neutron
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.neutron.neutron
-  - dest:
-      path: .values.endpoints.identity.auth.nova
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.nova.nova
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.oslo_messaging.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.neutron
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.neutron.oslo_messaging.neutron
-  - dest:
-      path: .values.endpoints.oslo_db.auth.neutron
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.neutron.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.neutron.oslo_db.database
-  - dest:
-      path: .values.endpoints.oslo_messaging.path
-      pattern: VHOST_NAME
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.network.name
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.neutron.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_neutron_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.nova.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.neutron.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.neutron.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_neutron_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_cache_secret_key
-      path: .
-  - dest:
-      path: .values.conf.metadata_agent.DEFAULT.metadata_proxy_shared_secret
-    src:
-      kind: DeckhandPassphrase
-      name: osh_nova_metadata_proxy_shared_secret
-      path: .
-  - dest:
-      path: .values.network.interface.tunnel
-      pattern: TUNNEL_DEVICE
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .neutron.tunnel_device
-  - dest:
-      path: .values.conf.auto_bridge_add.br-ex
-      pattern: EXTERNAL_INTERFACE
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .neutron.external_iface
+  namespace: openstack
 spec:
   chart_name: neutron
   dependencies:
   - neutron-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: neutron
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.neutron)
+  target_state: uninitialized
   test:
     timeout: 500
   upgrade:
@@ -210,7 +30,7 @@ spec:
   values:
     conf:
       auto_bridge_add:
-        br-ex: EXTERNAL_INTERFACE
+        br-ex: $(PeglegCommonAddresses.common-addresses.spec.neutron.external_iface)
       logging:
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
@@ -278,6 +98,9 @@ spec:
           keys:
           - root
           - neutron
+      metadata_agent:
+        DEFAULT:
+          metadata_proxy_shared_secret: $(DeckhandPassphrase.osh-nova-metadata-proxy-shared-secret.spec)
       neutron:
         DEFAULT:
           dhcp_agents_per_network: 2
@@ -295,6 +118,48 @@ spec:
             type_drivers: vlan,flat,vxlan
           ml2_type_vlan:
             network_vlan_ranges: external
+    endpoints:
+      compute: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute)
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          neutron:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.neutron.neutron)
+            password: $(DeckhandPassphrase.osh-neutron-password.spec)
+          nova:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.nova.nova)
+            password: $(DeckhandPassphrase.osh-nova-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      image_registry: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.compute_metadata)
+      network: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.network)
+      oslo_cache:
+        auth:
+          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          neutron:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.neutron.oslo_db)
+            password: $(DeckhandPassphrase.osh-neutron-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.neutron.oslo_db.database)
+      oslo_messaging:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.oslo_messaging.admin)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+          neutron:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.neutron.oslo_messaging.neutron)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_messaging)
+        path: /$(PeglegEndpointCatalogue.osh-endpoints.spec.osh.network.name)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.neutron)
     labels:
       agent:
         dhcp:
@@ -323,7 +188,7 @@ spec:
         node_selector_value: enabled
     network:
       interface:
-        tunnel: TUNNEL_DEVICE
+        tunnel: $(PeglegCommonAddresses.common-addresses.spec.neutron.tunnel_device)
     pod:
       replicas:
         server: 2
@@ -334,20 +199,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: neutron-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.neutron-htk
+  namespace: pegleg
 spec:
   chart_name: neutron-htk
   dependencies: []
-  namespace: neutron-htk
   release: neutron-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.neutron-htk)
+  target_state: uninitialized
   values: {}

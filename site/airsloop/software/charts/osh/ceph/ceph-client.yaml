@@ -2,17 +2,10 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: tenant-ceph-client-type
   name: tenant-ceph-client
-  replacement: true
+  namespace: tenant-ceph
 spec:
+  target_state: uninitialized
   values:
     conf:
       pool:

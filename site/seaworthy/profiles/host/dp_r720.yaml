@@ -2,19 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .interfaces
-    - method: replace
-      path: .storage
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      hosttype: dp-global
-  name: dp_r720
+  name: dp-r720
+  namespace: drydock
 spec:
   hardware_profile: dell_r720
   interfaces:

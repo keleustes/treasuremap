@@ -2,18 +2,11 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeGenesis
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: genesis-global
-  name: genesis-site
+  name: genesis
+  namespace: drydock
 spec:
   armada:
-    target_manifest: cluster-bootstrap-aiab
+    target_manifest: cluster-bootstrap
   labels:
     dynamic:
     - beta.kubernetes.io/fluentd-ds-ready=true

@@ -3,18 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: osh-infra-mariadb-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: osh-infra-mariadb-global
+    name: osh-infra-mariadb
   name: osh-infra-mariadb
-  replacement: true
+  namespace: osh-infra
 spec:
+  target_state: uninitialized
   values:
     pod:
       replicas:

@@ -2,26 +2,12 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockRegion
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: seaworthy-virt
-  schema: metadata/Document/v1
-  substitutions:
-  - dest:
-      path: .authorized_keys[0]
-    src:
-      kind: DeckhandPublicKey
-      name: airship_ubuntu_ssh_public_key
-      path: .
-  - dest:
-      path: .repositories.main_archive
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .packages.repositories.main_archive
+  namespace: drydock
 spec:
-  authorized_keys: []
+  authorized_keys:
+  - $(DeckhandPublicKey.airship-ssh-public-key.spec)
   repositories:
+    main_archive: $(PeglegSoftwareVersions.software-versions.spec.packages.repositories.main_archive)
     remove_unlisted: true
   tag_definitions: []

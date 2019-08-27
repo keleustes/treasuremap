@@ -2,69 +2,12 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeHostSystem
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: host-system
-  substitutions:
-  - dest:
-      path: .files[0].docker_image
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.hyperkube
-  - dest:
-      path: .images.coredns
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.coredns.coredns
-  - dest:
-      path: .images.haproxy
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.haproxy.haproxy
-  - dest:
-      path: .images.helm.helm
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.armada.helm
-  - dest:
-      path: .images.monitoring_image
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.promenade.monitoring_image
-  - dest:
-      path: .packages.common.required.docker
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .packages.named.docker
-  - dest:
-      path: .packages.common.required.socat
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .packages.named.socat
-  - dest:
-      path: .packages.common.additional
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .packages.unnamed
-  - dest:
-      path: .files[4].content
-      pattern: DH_SUB_PRIVATE_DOCKER_KEY
-    src:
-      kind: DeckhandPassphrase
-      name: private_docker_key
-      path: .
+  namespace: drydock
 spec:
   files:
-  - file_path: /hyperkube
+  - docker_image: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.hyperkube)
+    file_path: /hyperkube
     mode: 365
     path: /opt/kubernetes/bin/hyperkube
   - mode: 365
@@ -93,7 +36,7 @@ spec:
   - content: |-
       {
          "https://private.registry.com": {
-           "auth": "DH_SUB_PRIVATE_DOCKER_KEY"
+           "auth": "$(DeckhandPassphrase.private-docker-key.spec)"
          }
       }
     mode: 256
@@ -104,8 +47,15 @@ spec:
   - content: export KUBECONFIG=/etc/kubernetes/admin/kubeconfig.yaml
     mode: 484
     path: /etc/profile.d/kubeconfig.sh
+  images:
+    coredns: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.coredns.coredns)
+    haproxy: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.haproxy.haproxy)
+    helm:
+      helm: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.armada.helm)
+    monitoring_image: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.promenade.monitoring_image)
   packages:
     common:
+      additional: $(PeglegSoftwareVersions.software-versions.spec.packages.unnamed)
       keys:
       - |-
         -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -172,3 +122,6 @@ spec:
         -----END PGP PUBLIC KEY BLOCK-----
       repositories:
       - deb https://download.docker.com/linux/ubuntu/ xenial stable
+      required:
+        docker: $(PeglegSoftwareVersions.software-versions.spec.packages.named.docker)
+        socat: $(PeglegSoftwareVersions.software-versions.spec.packages.named.socat)

@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: n1
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 172.24.1.11
@@ -21,11 +18,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: n2
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 172.24.1.12
@@ -40,11 +34,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: n3
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   addressing:
   - address: 172.24.1.13

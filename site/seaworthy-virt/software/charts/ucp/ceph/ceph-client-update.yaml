@@ -2,13 +2,7 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: ucp-ceph-client-update-global
   name: ucp-ceph-client-update
-spec: {}
+  namespace: ceph
+spec:
+  target_state: uninitialized

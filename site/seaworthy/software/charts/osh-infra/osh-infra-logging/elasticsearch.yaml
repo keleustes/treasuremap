@@ -2,13 +2,7 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      hosttype: elasticsearch-global
   name: elasticsearch
-spec: {}
+  namespace: osh-infra
+spec:
+  target_state: uninitialized

@@ -4,11 +4,8 @@ kind: DrydockBootAction
 metadata:
   labels:
     application: drydock
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: promjoin
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   assets:
   - data_pipeline:

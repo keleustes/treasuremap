@@ -2,20 +2,15 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: ucp-maas-global
   name: ucp-maas
-  substitutions:
-  - dest:
-      path: .values.network.maas_ingress.addr
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .vip.maas_vip
-spec: {}
+  namespace: ucp
+spec:
+  target_state: uninitialized
+  values:
+    network:
+      maas_ingress:
+        addr: $(PeglegCommonAddresses.common-addresses.spec.vip.maas_vip)
+    pod:
+      replicas:
+        rack: 2
+        region: 2

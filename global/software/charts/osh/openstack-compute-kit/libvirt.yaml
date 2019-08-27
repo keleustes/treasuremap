@@ -4,32 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: libvirt
-    name: libvirt-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: libvirt
   name: libvirt
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.libvirt
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.libvirt
+  namespace: openstack
 spec:
   chart_name: libvirt
   dependencies:
   - libvirt-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: libvirt
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.libvirt)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -41,6 +27,8 @@ spec:
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.libvirt)
     labels:
       agent:
         libvirt:
@@ -50,20 +38,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: libvirt-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.libvirt-htk
+  namespace: pegleg
 spec:
   chart_name: libvirt-htk
   dependencies: []
-  namespace: libvirt-htk
   release: libvirt-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.libvirt-htk)
+  target_state: uninitialized
   values: {}

@@ -2,37 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: prometheus-process-exporter
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.prometheus_process_exporter
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.prometheus_process_exporter
-  - dest:
-      path: .values.endpoints.process_exporter_metrics
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.process_exporter_metrics
+  namespace: kube-system
 spec:
   chart_name: prometheus-process-exporter
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: kube-system
   release: prometheus-process-exporter
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_process_exporter)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -44,6 +24,10 @@ spec:
           release_group: airship-prometheus-process-exporter
         type: job
   values:
+    endpoints:
+      process_exporter_metrics: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.process_exporter_metrics)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.prometheus_process_exporter)
     labels:
       job:
         node_selector_key: openstack-control-plane

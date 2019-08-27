@@ -3,32 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: osh-infra-ingress-controller-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: osh-infra-ingress-controller
   name: osh-infra-ingress-controller
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.ingress
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.ingress
+  namespace: osh-infra
 spec:
   chart_name: osh-infra-ingress-controller
   dependencies:
   - osh-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: osh-infra-ingress-controller
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.ingress)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -37,6 +23,8 @@ spec:
           release_group: airship-osh-infra-ingress-controller
         type: job
   values:
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.ingress)
     labels:
       error_server:
         node_selector_key: openstack-control-plane

@@ -3,32 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-tiller-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: ucp-tiller
   name: ucp-tiller
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.tiller
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.tiller
+  namespace: kube-system
 spec:
   chart_name: tiller
   dependencies:
   - tiller-htk
   install:
     no_hooks: false
-  namespace: kube-system
   release: ucp-tiller
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tiller)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -36,7 +22,9 @@ spec:
       - labels:
           release_group: airship-ucp-tiller
         type: job
-  values: {}
+  values:
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.tiller)
   wait:
     labels:
       release_group: airship-ucp-tiller
@@ -47,20 +35,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: tiller-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.tiller-htk
+  namespace: pegleg
 spec:
   chart_name: tiller-htk
   dependencies: []
-  namespace: tiller-htk
   release: tiller-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tiller-htk)
+  target_state: uninitialized
   values: {}

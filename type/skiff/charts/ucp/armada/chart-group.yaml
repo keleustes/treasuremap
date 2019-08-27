@@ -3,17 +3,10 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
   labels:
-    name: ucp-armada-chart-group-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .chart_group
-    layer: type
-    parentSelector:
-      name: ucp-armada-chart-group-global
+    name: ucp-armada-chart-group
   name: ucp-armada
-  replacement: true
+  namespace: shipyard
 spec:
   chart_group:
   - ucp-armada
+  target_state: uninitialized

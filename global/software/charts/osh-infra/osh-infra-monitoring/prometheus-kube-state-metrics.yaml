@@ -2,49 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: prometheus-kube-state-metrics
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.prometheus_kube_state_metrics
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.prometheus_kube_state_metrics
-  - dest:
-      path: .values.endpoints.kube_state_metrics
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.kube_state_metrics
-  - dest:
-      path: .values.endpoints.kube_scheduler
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.kube_scheduler
-  - dest:
-      path: .values.endpoints.kube_controller_manager
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.kube_controller_manager
+  namespace: kube-system
 spec:
   chart_name: prometheus-kube-state-metrics
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: kube-system
   release: prometheus-kube-state-metrics
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_kube_state_metrics)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -56,6 +24,12 @@ spec:
           release_group: airship-prometheus-kube-state-metrics
         type: job
   values:
+    endpoints:
+      kube_controller_manager: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.kube_controller_manager)
+      kube_scheduler: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.kube_scheduler)
+      kube_state_metrics: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.kube_state_metrics)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.prometheus_kube_state_metrics)
     labels:
       job:
         node_selector_key: openstack-control-plane

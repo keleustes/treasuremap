@@ -3,135 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-barbican-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: ucp-barbican
   name: ucp-barbican
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.barbican
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.barbican
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.identity
-  - dest:
-      path: .values.endpoints.key_manager
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.key_manager
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.oslo_cache
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.oslo_messaging
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.barbican
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.barbican.keystone
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.keystone.admin
-  - dest:
-      path: .values.endpoints.oslo_db.auth.barbican
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.barbican.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.barbican.oslo_db.database
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.barbican.oslo_messaging
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.barbican.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_barbican_keystone_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.barbican.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_barbican_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_oslo_messaging_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.barbican.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_oslo_messaging_password
-      path: .
+  namespace: ucp
 spec:
   chart_name: ucp-barbican
   dependencies:
   - ucp-barbican-htk
   install:
     no_hooks: false
-  namespace: ucp
   release: ucp-barbican
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.barbican)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -210,6 +93,38 @@ spec:
           keys:
           - root
           - barbican
+    endpoints:
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.keystone.admin)
+            password: $(DeckhandPassphrase.ucp-keystone-admin-password.spec)
+          barbican:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.barbican.keystone)
+            password: $(DeckhandPassphrase.ucp-barbican-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.identity)
+      key_manager: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.key_manager)
+      oslo_cache: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.ucp-oslo-db-admin-password.spec)
+          barbican:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.barbican.oslo_db)
+            password: $(DeckhandPassphrase.ucp-barbican-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.oslo_db)
+        path: /$(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.barbican.oslo_db.database)
+      oslo_messaging:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.ucp-oslo-messaging-password.spec)
+          barbican:
+            password: $(DeckhandPassphrase.ucp-oslo-messaging-password.spec)
+          parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.barbican.oslo_messaging)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.oslo_messaging)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.barbican)
     labels:
       api:
         node_selector_key: ucp-control-plane
@@ -231,20 +146,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: ucp-barbican-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.barbican-htk
+  namespace: pegleg
 spec:
   chart_name: ucp-barbican-htk
   dependencies: []
-  namespace: ucp-barbican-htk
   release: ucp-barbican-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.barbican-htk)
+  target_state: uninitialized
   values: {}

@@ -3,26 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: podsecuritypolicy-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: podsecuritypolicy
   name: podsecuritypolicy
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.podsecuritypolicy
+  namespace: ucp
 spec:
   chart_name: podsecuritypolicy
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: true
-  namespace: ucp
   release: podsecuritypolicy
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.podsecuritypolicy)
+  target_state: uninitialized
   upgrade:
     no_hooks: true
   values:

@@ -2,17 +2,10 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .chart_group
-    layer: site
-    parentSelector:
-      component: heat
-      name: openstack-heat-chart-group-global
-  name: openstack-heat-aiab
+  name: openstack-heat
+  namespace: shipyard
 spec:
   chart_group:
-  - heat-aiab
+  - heat
   sequenced: true
+  target_state: uninitialized

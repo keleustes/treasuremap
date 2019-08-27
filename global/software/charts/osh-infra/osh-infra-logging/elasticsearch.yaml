@@ -3,110 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    hosttype: elasticsearch-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: elasticsearch-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.elasticsearch
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.elasticsearch
-  - dest:
-      path: .values.endpoints.elasticsearch
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.elasticsearch
-  - dest:
-      path: .values.endpoints.prometheus_elasticsearch_exporter
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.prometheus_elasticsearch_exporter
-  - dest:
-      path: .values.endpoints.ldap
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.ldap
-  - dest:
-      path: .values.endpoints.elasticsearch.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.elasticsearch.admin
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.ceph_object_store.admin
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.elasticsearch
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.ceph_object_store.elasticsearch
-  - dest:
-      path: .values.endpoints.elasticsearch.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_elasticsearch_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.admin.access_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_rgw_s3_admin_access_key
-      path: .
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.admin.secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_rgw_s3_admin_secret_key
-      path: .
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.elasticsearch.access_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_rgw_s3_elasticsearch_access_key
-      path: .
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.elasticsearch.secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_rgw_s3_elasticsearch_secret_key
-      path: .
-  - dest:
-      path: .values.endpoints.ldap.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.ldap.admin
-  - dest:
-      path: .values.endpoints.ldap.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_ldap_password
-      path: .
+    hosttype: elasticsearch
+  name: elasticsearch
+  namespace: osh-infra
 spec:
   chart_name: elasticsearch
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: elasticsearch
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.elasticsearch)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -251,6 +159,32 @@ spec:
               Require valid-user
           </Proxy>
         </VirtualHost>
+    endpoints:
+      ceph_object_store:
+        auth:
+          admin:
+            access_key: $(DeckhandPassphrase.osh-infra-rgw-s3-admin-access-key.spec)
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.ceph_object_store.admin)
+            secret_key: $(DeckhandPassphrase.osh-infra-rgw-s3-admin-secret-key.spec)
+          elasticsearch:
+            access_key: $(DeckhandPassphrase.osh-infra-rgw-s3-elasticsearch-access-key.spec)
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.ceph_object_store.elasticsearch)
+            secret_key: $(DeckhandPassphrase.osh-infra-rgw-s3-elasticsearch-secret-key.spec)
+      elasticsearch:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.elasticsearch.admin)
+            password: $(DeckhandPassphrase.osh-infra-elasticsearch-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.elasticsearch)
+      ldap:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.ldap.admin)
+            password: $(DeckhandPassphrase.osh-keystone-ldap-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.ldap)
+      prometheus_elasticsearch_exporter: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.prometheus_elasticsearch_exporter)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.elasticsearch)
     labels:
       elasticsearch:
         node_selector_key: openstack-control-plane

@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: tempest
-    name: openstack-tempest-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openstack-tempest-chart-group
   name: openstack-tempest
+  namespace: shipyard
 spec:
   chart_group:
   - tempest
   description: Deploy Tempest
+  target_state: uninitialized

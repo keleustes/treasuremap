@@ -3,11 +3,9 @@ apiVersion: shipyard.airshipit.org/v1alpha1
 kind: ShipyardDeploymentStrategy
 metadata:
   labels:
-    name: deployment-strategy-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: deployment-strategy
   name: deployment-strategy
+  namespace: shipyard
 spec:
   groups:
   - critical: true

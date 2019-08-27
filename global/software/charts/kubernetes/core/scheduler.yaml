@@ -3,50 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: kubernetes-scheduler-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: kubernetes-scheduler
   name: kubernetes-scheduler
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.scheduler
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.scheduler
-  - dest:
-      path: .values.secrets.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: kubernetes
-      path: .
-  - dest:
-      path: .values.secrets.tls.cert
-    src:
-      kind: DeckhandCertificate
-      name: scheduler
-      path: .
-  - dest:
-      path: .values.secrets.tls.key
-    src:
-      kind: DeckhandCertificateKey
-      name: scheduler
-      path: .
+  namespace: kube-system
 spec:
   chart_name: scheduler
   dependencies:
   - kubernetes-scheduler-htk
-  namespace: kube-system
   protected:
     continue_processing: true
   release: kubernetes-scheduler
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.scheduler)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -55,8 +23,15 @@ spec:
           release_group: airship-kubernetes-scheduler
         type: job
   values:
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.scheduler)
     network:
       kubernetes_netloc: 127.0.0.1:6553
+    secrets:
+      tls:
+        ca: $(DeckhandCertificateAuthority.kubernetes.spec)
+        cert: $(DeckhandCertificate.scheduler.spec)
+        key: $(DeckhandCertificateKey.scheduler.spec)
   wait:
     labels:
       release_group: airship-kubernetes-scheduler
@@ -65,20 +40,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: kubernetes-scheduler-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.scheduler-htk
+  namespace: pegleg
 spec:
   chart_name: kubernetes-scheduler-htk
   dependencies: []
-  namespace: kubernetes-scheduler-htk
   release: kubernetes-scheduler-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.scheduler-htk)
+  target_state: uninitialized
   values: {}

@@ -2,11 +2,10 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: osh-infra-ingress-controller
+  namespace: shipyard
 spec:
   chart_group:
   - osh-infra-ingress-controller
   description: OpenStack Namespace Ingress
+  target_state: uninitialized

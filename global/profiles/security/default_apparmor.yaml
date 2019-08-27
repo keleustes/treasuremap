@@ -2,11 +2,8 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegAppArmorProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: airship-default
-  schema: metadata/Document/v1
+  namespace: pegleg
 spec:
   content: |
     #include <tunables/global>

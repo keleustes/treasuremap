@@ -3,82 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: kubernetes-controller-manager-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: kubernetes-controller-manager
   name: kubernetes-controller-manager
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.controller-manager
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.controller-manager
-  - dest:
-      path: .values.network.pod_cidr
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.pod_cidr
-  - dest:
-      path: .values.network.service_cidr
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.service_cidr
-  - dest:
-      path: .values.command_prefix[1]
-      pattern: SUB_POD_CIDR
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.pod_cidr
-  - dest:
-      path: .values.command_prefix[2]
-      pattern: SUB_SERVICE_CIDR
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.service_cidr
-  - dest:
-      path: .values.secrets.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: kubernetes
-      path: .
-  - dest:
-      path: .values.secrets.tls.cert
-    src:
-      kind: DeckhandCertificate
-      name: controller-manager
-      path: .
-  - dest:
-      path: .values.secrets.tls.key
-    src:
-      kind: DeckhandCertificateKey
-      name: controller-manager
-      path: .
-  - dest:
-      path: .values.secrets.service_account.private_key
-    src:
-      kind: DeckhandPrivateKey
-      name: service-account
-      path: .
+  namespace: kube-system
 spec:
   chart_name: controller-manager
   dependencies:
   - kubernetes-controller-manager-htk
-  namespace: kube-system
   protected:
     continue_processing: true
   release: kubernetes-controller-manager
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.controller-manager)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -89,13 +25,24 @@ spec:
   values:
     command_prefix:
     - /controller-manager
-    - --cluster-cidr=SUB_POD_CIDR
-    - --service-cluster-ip-range=SUB_SERVICE_CIDR
+    - --cluster-cidr=$(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
+    - --service-cluster-ip-range=$(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
     - --node-monitor-period=5s
     - --node-monitor-grace-period=20s
     - --pod-eviction-timeout=60s
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.controller-manager)
     network:
       kubernetes_netloc: 127.0.0.1:6553
+      pod_cidr: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
+      service_cidr: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
+    secrets:
+      service_account:
+        private_key: $(DeckhandPrivateKey.service-account.spec)
+      tls:
+        ca: $(DeckhandCertificateAuthority.kubernetes.spec)
+        cert: $(DeckhandCertificate.controller-manager.spec)
+        key: $(DeckhandCertificateKey.controller-manager.spec)
   wait:
     labels:
       release_group: airship-kubernetes-controller-manager
@@ -104,20 +51,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: kubernetes-controller-manager-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.controller-manager-htk
+  namespace: pegleg
 spec:
   chart_name: kubernetes-controller-manager-htk
   dependencies: []
-  namespace: kubernetes-controller-manager-htk
   release: kubernetes-controller-manager-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.controller-manager-htk)
+  target_state: uninitialized
   values: {}

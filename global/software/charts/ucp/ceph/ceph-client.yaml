@@ -3,64 +3,20 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-ceph-client-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: ucp-ceph-client-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.ceph-client
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ceph.ceph-client
-  - dest:
-      path: .values.network.public
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.public_cidr
-  - dest:
-      path: .values.network.cluster
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.cluster_cidr
-  - dest:
-      path: .values.endpoints.ceph_mon
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.ceph_mon
-  - dest:
-      path: .values.endpoints.ceph_mgr
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.ceph_mgr
-  - dest:
-      path: .values.conf.ceph.global.fsid
-    src:
-      kind: DeckhandPassphrase
-      name: ceph_fsid
-      path: .
+    name: ucp-ceph-client
+  name: ucp-ceph-client
+  namespace: ceph
 spec:
   chart_name: ucp-ceph-client
   dependencies:
   - ceph-htk
   install:
     no_hooks: false
-  namespace: ceph
   protected:
     continue_processing: true
   release: ucp-ceph-client
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ceph-client)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -74,6 +30,7 @@ spec:
     conf:
       ceph:
         global:
+          fsid: $(DeckhandPassphrase.ceph-fsid.spec)
           osd_pool_default_size: 1
       pool:
         crush:
@@ -87,8 +44,10 @@ spec:
     deployment:
       ceph: true
     endpoints:
-      ceph_mon:
-        namespace: ceph
+      ceph_mgr: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.ceph_mgr)
+      ceph_mon: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.ceph_mon)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ceph.ceph-client)
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -99,6 +58,9 @@ spec:
       mgr:
         node_selector_key: ceph-mgr
         node_selector_value: enabled
+    network:
+      cluster: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.cluster_cidr)
+      public: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.public_cidr)
     pod:
       replicas:
         mds: 1

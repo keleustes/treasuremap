@@ -2,15 +2,13 @@
 apiVersion: shipyard.airshipit.org/v1alpha1
 kind: ShipyardDeploymentConfiguration
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: deployment-configuration
+  namespace: shipyard
 spec:
   armada:
     get_releases_timeout: 300
     get_status_timeout: 300
-    manifest: full-site-aiab
+    manifest: full-site
     post_apply_timeout: 7200
     validate_design_timeout: 600
   kubernetes_provisioner:

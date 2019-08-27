@@ -3,17 +3,9 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
   labels:
-    name: full-site-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: full-site-global
+    name: full-site
   name: full-site
-  replacement: true
+  namespace: shipyard
 spec:
   chart_groups:
   - podsecuritypolicy
@@ -57,3 +49,4 @@ spec:
   - osh-infra-prometheus-openstack-exporter
   - openstack-horizon
   release_prefix: airship
+  target_state: uninitialized

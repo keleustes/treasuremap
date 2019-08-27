@@ -3,17 +3,9 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
   labels:
-    name: full-site-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .chart_groups
-    layer: type
-    parentSelector:
-      name: full-site-global
+    name: full-site
   name: full-site
-  replacement: true
+  namespace: shipyard
 spec:
   chart_groups:
   - openstack-ingress-controller
@@ -24,3 +16,4 @@ spec:
   - openstack-glance
   - openstack-compute-kit
   - openstack-heat
+  target_state: uninitialized

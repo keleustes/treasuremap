@@ -2,44 +2,20 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBootAction
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: apparmor-profiles
-  schema: metadata/Document/v1
-  substitutions:
-  - dest:
-      path: .assets[0].path
-    src:
-      kind: PeglegAppArmorProfile
-      name: airship-default
-      path: .savePath
-  - dest:
-      path: .assets[0].data
-    src:
-      kind: PeglegAppArmorProfile
-      name: airship-default
-      path: .content
-  - dest:
-      path: .assets[1].path
-    src:
-      kind: PeglegAppArmorProfile
-      name: airship-apparmor-loader
-      path: .savePath
-  - dest:
-      path: .assets[1].data
-    src:
-      kind: PeglegAppArmorProfile
-      name: airship-apparmor-loader
-      path: .content
+  namespace: drydock
 spec:
   assets:
-  - data_pipeline:
+  - data: $(PeglegAppArmorProfile.airship-default.spec.content)
+    data_pipeline:
     - utf8_decode
+    path: $(PeglegAppArmorProfile.airship-default.spec.savePath)
     permissions: '600'
     type: file
-  - data_pipeline:
+  - data: $(PeglegAppArmorProfile.airship-apparmor-loader.spec.content)
+    data_pipeline:
     - utf8_decode
+    path: $(PeglegAppArmorProfile.airship-apparmor-loader.spec.savePath)
     permissions: '600'
     type: file
   signaling: false

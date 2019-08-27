@@ -2,10 +2,8 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegCommonAddresses
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: common-addresses
+  namespace: pegleg
 spec:
   bootstrap:
     ip: 172.24.1.10

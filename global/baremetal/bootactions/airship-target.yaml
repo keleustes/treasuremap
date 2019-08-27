@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBootAction
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: airship-target
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   assets:
   - data: |

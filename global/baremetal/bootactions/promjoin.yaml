@@ -5,11 +5,8 @@ metadata:
   labels:
     application: drydock
     name: promjoin-systemd-unit
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: promjoin-systemd-unit
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   assets:
   - data: |

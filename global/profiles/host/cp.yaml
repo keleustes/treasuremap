@@ -3,18 +3,9 @@ apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
   labels:
-    hosttype: cp-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: cp-global
-  substitutions:
-  - dest:
-      path: .oob.credential
-    src:
-      kind: DeckhandPassphrase
-      name: ipmi_admin_password
-      path: .
+    hosttype: cp
+  name: cp
+  namespace: drydock
 spec:
   metadata:
     owner_data:
@@ -79,6 +70,7 @@ spec:
       ucp-shipyard: enabled
   oob:
     account: root
+    credential: $(DeckhandPassphrase.ipmi-admin-password.spec)
     network: oob
     type: ipmi
   platform:

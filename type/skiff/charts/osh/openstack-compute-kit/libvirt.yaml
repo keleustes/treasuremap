@@ -3,19 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: libvirt-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .values
-    layer: type
-    parentSelector:
-      component: libvirt
-      name: libvirt-global
+    name: libvirt
   name: libvirt
-  replacement: true
+  namespace: openstack
 spec:
+  target_state: uninitialized
   values:
     conf:
       ceph:

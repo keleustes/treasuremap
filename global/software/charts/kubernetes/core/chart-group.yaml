@@ -2,13 +2,12 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: kubernetes-core
+  namespace: shipyard
 spec:
   chart_group:
   - kubernetes-apiserver
   - kubernetes-controller-manager
   - kubernetes-scheduler
   description: Kubernetes components
+  target_state: uninitialized

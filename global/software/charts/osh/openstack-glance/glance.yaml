@@ -4,196 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: glance
-    name: glance-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: glance
   name: glance
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.glance
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.glance
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.image
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.image
-  - dest:
-      path: .values.endpoints.image_registry
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.image_registry
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_messaging
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_cache
-  - dest:
-      path: .values.endpoints.ceph_object_store
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.ceph_object_store
-  - dest:
-      path: .values.endpoints.object_store
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.object_store
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.glance
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.glance.glance
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.oslo_messaging.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.glance
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.glance.oslo_messaging.glance
-  - dest:
-      path: .values.endpoints.oslo_db.auth.glance
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.glance.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.glance.oslo_db.database
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.glance
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.glance.ceph_object_store
-  - dest:
-      path: .values.endpoints.oslo_messaging.path
-      pattern: VHOST_NAME
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.image.name
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.glance.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_glance_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.glance.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.glance.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_glance_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_cache_secret_key
-      path: .
-  - dest:
-      path: .values.endpoints.object_store.auth.glance.tmpurlkey
-    src:
-      kind: DeckhandPassphrase
-      name: ceph_swift_keystone_password
-      path: .
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.glance.tmpurlkey
-    src:
-      kind: DeckhandPassphrase
-      name: ceph_swift_keystone_password
-      path: .
-  - dest:
-      path: .values.endpoints.ceph_object_store.auth.glance.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_glance_password
-      path: .
+  namespace: openstack
 spec:
   chart_name: glance
   dependencies:
   - glance-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: glance
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.glance)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -275,6 +97,56 @@ spec:
           keys:
           - root
           - glance
+    endpoints:
+      ceph_object_store:
+        auth:
+          glance:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.glance.ceph_object_store)
+            password: $(DeckhandPassphrase.osh-glance-password.spec)
+            tmpurlkey: $(DeckhandPassphrase.ceph-swift-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.ceph_object_store)
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          glance:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.glance.glance)
+            password: $(DeckhandPassphrase.osh-glance-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      image: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image)
+      image_registry: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image_registry)
+      object_store:
+        auth:
+          glance:
+            tmpurlkey: $(DeckhandPassphrase.ceph-swift-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.object_store)
+      oslo_cache:
+        auth:
+          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          glance:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.glance.oslo_db)
+            password: $(DeckhandPassphrase.osh-glance-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.glance.oslo_db.database)
+      oslo_messaging:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.oslo_messaging.admin)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+          glance:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.glance.oslo_messaging.glance)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_messaging)
+        path: /$(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image.name)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.glance)
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -297,20 +169,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: glance-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.glance-htk
+  namespace: pegleg
 spec:
   chart_name: glance-htk
   dependencies: []
-  namespace: glance-htk
   release: glance-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.glance-htk)
+  target_state: uninitialized
   values: {}

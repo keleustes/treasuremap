@@ -4,16 +4,8 @@ kind: PeglegSoftwareVersions
 metadata:
   labels:
     name: software-versions-airskiff-ubuntu
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: software-versions-global
   name: software-versions
-  replacement: true
+  namespace: pegleg
 spec:
   images:
     ucp:

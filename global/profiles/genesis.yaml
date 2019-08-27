@@ -3,93 +3,23 @@ apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeGenesis
 metadata:
   labels:
-    name: genesis-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: genesis-global
-  substitutions:
-  - dest:
-      path: .images.armada
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.armada.api
-  - dest:
-      path: .images.helm.tiller
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.armada.tiller
-  - dest:
-      path: .images.kubernetes.apiserver
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.apiserver.apiserver
-  - dest:
-      path: .images.kubernetes.controller-manager
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.controller-manager.controller_manager
-  - dest:
-      path: .images.kubernetes.etcd
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.etcd.etcd
-  - dest:
-      path: .images.kubernetes.scheduler
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.scheduler.scheduler
-  - dest:
-      path: .hostname
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .genesis.hostname
-  - dest:
-      path: .ip
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .genesis.ip
-  - dest:
-      path: .apiserver.arguments[2]
-      pattern: SERVICE_CIDR
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.service_cidr
-  - dest:
-      path: .apiserver.arguments[3]
-      pattern: SERVICE_NODE_PORT_RANGE
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.service_node_port_range
-  - dest:
-      path: .apiserver.encryption
-    src:
-      kind: PromenadeEncryptionPolicy
-      name: encryption-policy
-      path: .etcd
+    name: genesis
+  name: genesis
+  namespace: drydock
 spec:
   apiserver:
     arguments:
     - --authorization-mode=Node,RBAC
     - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit
-    - --service-cluster-ip-range=SERVICE_CIDR
-    - --service-node-port-range=SERVICE_NODE_PORT_RANGE
+    - --service-cluster-ip-range=$(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
+    - --service-node-port-range=$(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_node_port_range)
     - --endpoint-reconciler-type=lease
     - --feature-gates=PodShareProcessNamespace=true
     - --v=3
     - --admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml
     - --experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
     - --requestheader-allowed-names='aggregator'
+    encryption: $(PromenadeEncryptionPolicy.encryption-policy.spec.etcd)
   armada:
     target_manifest: cluster-bootstrap
   files:
@@ -115,6 +45,17 @@ spec:
           burst: 10000
     mode: 292
     path: /etc/genesis/apiserver/eventconfig.yaml
+  hostname: $(PeglegCommonAddresses.common-addresses.spec.genesis.hostname)
+  images:
+    armada: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.armada.api)
+    helm:
+      tiller: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.armada.tiller)
+    kubernetes:
+      apiserver: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.apiserver.apiserver)
+      controller-manager: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.controller-manager.controller_manager)
+      etcd: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.etcd.etcd)
+      scheduler: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.scheduler.scheduler)
+  ip: $(PeglegCommonAddresses.common-addresses.spec.genesis.ip)
   labels:
     dynamic:
     - beta.kubernetes.io/fluentd-ds-ready=true

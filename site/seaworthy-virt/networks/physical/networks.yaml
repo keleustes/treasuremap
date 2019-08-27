@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetworkLink
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: gp
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   allowed_networks:
   - gp
@@ -21,11 +18,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: gp
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 172.24.1.0/24
   dns:

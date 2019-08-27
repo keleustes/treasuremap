@@ -3,24 +3,15 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-deckhand-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .source
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: ucp-deckhand-global
+    name: ucp-deckhand
   name: ucp-deckhand
-  replacement: true
+  namespace: ucp
 spec:
   source:
     location: /airship-components/deckhand
     subpath: charts/deckhand
     type: local
+  target_state: uninitialized
   values:
     pod:
       replicas:

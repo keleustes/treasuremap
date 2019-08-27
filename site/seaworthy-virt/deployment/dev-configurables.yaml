@@ -2,9 +2,7 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegDevConfigurables
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: dev-configurables
+  namespace: pegleg
 spec:
   hostcidr: 172.24.1.0/24

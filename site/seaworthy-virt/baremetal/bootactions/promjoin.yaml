@@ -4,17 +4,8 @@ kind: DrydockBootAction
 metadata:
   labels:
     application: drydock
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .assets
-    layer: site
-    parentSelector:
-      name: promjoin-systemd-unit
   name: promjoin-systemd-unit
-  replacement: true
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   assets:
   - data_pipeline:

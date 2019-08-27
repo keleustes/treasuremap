@@ -3,24 +3,15 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-shipyard-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .source
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: ucp-shipyard-global
+    name: ucp-shipyard
   name: ucp-shipyard
-  replacement: true
+  namespace: ucp
 spec:
   source:
     location: /airship-components/shipyard
     subpath: charts/shipyard
     type: local
+  target_state: uninitialized
   values:
     conf:
       shipyard:

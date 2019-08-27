@@ -4,12 +4,9 @@ kind: DrydockBootAction
 metadata:
   labels:
     application: drydock
-    name: nested-virt-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: nested-virt
   name: nested-virt
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   assets:
   - data: |

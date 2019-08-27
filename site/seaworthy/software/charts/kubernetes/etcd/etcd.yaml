@@ -2,134 +2,41 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: kubernetes-etcd-global
   name: kubernetes-etcd
-  substitutions:
-  - dest:
-      path: .values.nodes[0].name
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .genesis.hostname
-  - dest:
-      path: .values.nodes[1].name
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .masters[0].hostname
-  - dest:
-      path: .values.nodes[2].name
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .masters[1].hostname
-  - dest:
-      path: .values.nodes[3].name
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .masters[2].hostname
-  - dest:
-      path: .values.nodes[0].tls.client.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-genesis
-      path: .
-  - dest:
-      path: .values.nodes[0].tls.client.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-genesis
-      path: .
-  - dest:
-      path: .values.nodes[0].tls.peer.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-genesis-peer
-      path: .
-  - dest:
-      path: .values.nodes[0].tls.peer.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-genesis-peer
-      path: .
-  - dest:
-      path: .values.nodes[1].tls.client.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-cab23-r720-12
-      path: .
-  - dest:
-      path: .values.nodes[1].tls.client.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-cab23-r720-12
-      path: .
-  - dest:
-      path: .values.nodes[1].tls.peer.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-cab23-r720-12-peer
-      path: .
-  - dest:
-      path: .values.nodes[1].tls.peer.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-cab23-r720-12-peer
-      path: .
-  - dest:
-      path: .values.nodes[2].tls.client.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-cab23-r720-13
-      path: .
-  - dest:
-      path: .values.nodes[2].tls.client.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-cab23-r720-13
-      path: .
-  - dest:
-      path: .values.nodes[2].tls.peer.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-cab23-r720-13-peer
-      path: .
-  - dest:
-      path: .values.nodes[2].tls.peer.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-cab23-r720-13-peer
-      path: $
-  - dest:
-      path: .values.nodes[3].tls.client.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-cab23-r720-14
-      path: .
-  - dest:
-      path: .values.nodes[3].tls.client.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-cab23-r720-14
-      path: .
-  - dest:
-      path: .values.nodes[3].tls.peer.cert
-    src:
-      kind: DeckhandCertificate
-      name: kubernetes-etcd-cab23-r720-14-peer
-      path: .
-  - dest:
-      path: .values.nodes[3].tls.peer.key
-    src:
-      kind: DeckhandCertificateKey
-      name: kubernetes-etcd-cab23-r720-14-peer
-      path: $
-spec: {}
+  namespace: kube-system
+spec:
+  target_state: uninitialized
+  values:
+    nodes:
+    - name: $(PeglegCommonAddresses.common-addresses.spec.genesis.hostname)
+      tls:
+        client:
+          cert: $(DeckhandCertificate.kubernetes-etcd-genesis.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-genesis.spec)
+        peer:
+          cert: $(DeckhandCertificate.kubernetes-etcd-genesis-peer.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-genesis-peer.spec)
+    - name: $(PeglegCommonAddresses.common-addresses.spec.masters[0].hostname)
+      tls:
+        client:
+          cert: $(DeckhandCertificate.kubernetes-etcd-cab23-r720-12.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-cab23-r720-12.spec)
+        peer:
+          cert: $(DeckhandCertificate.kubernetes-etcd-cab23-r720-12-peer.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-cab23-r720-12-peer.spec)
+    - name: $(PeglegCommonAddresses.common-addresses.spec.masters[1].hostname)
+      tls:
+        client:
+          cert: $(DeckhandCertificate.kubernetes-etcd-cab23-r720-13.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-cab23-r720-13.spec)
+        peer:
+          cert: $(DeckhandCertificate.kubernetes-etcd-cab23-r720-13-peer.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-cab23-r720-13-peer.spec)
+    - name: $(PeglegCommonAddresses.common-addresses.spec.masters[2].hostname)
+      tls:
+        client:
+          cert: $(DeckhandCertificate.kubernetes-etcd-cab23-r720-14.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-cab23-r720-14.spec)
+        peer:
+          cert: $(DeckhandCertificate.kubernetes-etcd-cab23-r720-14-peer.spec)
+          key: $(DeckhandCertificateKey.kubernetes-etcd-cab23-r720-14-peer.spec)

@@ -2,11 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetworkLink
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: oob
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   allowed_networks:
   - oob
@@ -23,11 +20,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: oob
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 10.23.104.0/24
   ranges:
@@ -42,11 +36,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetworkLink
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: pxe
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   allowed_networks:
   - pxe
@@ -61,11 +52,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: pxe
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 10.23.20.0/24
   dns:
@@ -89,11 +77,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetworkLink
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: data
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   allowed_networks:
   - oam
@@ -115,11 +100,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: oam
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 10.23.21.0/24
   dns:
@@ -142,11 +124,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: storage
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 10.23.23.0/24
   mtu: 9100
@@ -162,11 +141,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: overlay
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 10.23.24.0/24
   mtu: 9100
@@ -182,11 +158,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: calico
-  schema: metadata/Document/v1
+  namespace: drydock
 spec:
   cidr: 10.23.22.0/24
   mtu: 9100

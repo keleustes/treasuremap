@@ -2,26 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      ingress: kube-system
   name: ingress-kube-system
-  substitutions:
-  - dest:
-      path: .values.network.vip.addr
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .vip.ingress_vip
+  namespace: kube-system
 spec:
+  target_state: uninitialized
   values:
     network:
       ingress:
         disable-ipv6: 'true'
       vip:
+        addr: $(PeglegCommonAddresses.common-addresses.spec.vip.ingress_vip)
         manage: true

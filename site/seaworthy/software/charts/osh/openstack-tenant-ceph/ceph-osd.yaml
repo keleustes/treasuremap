@@ -2,18 +2,10 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .values.conf.storage.osd
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: tenant-ceph-osd-global
   name: tenant-ceph-osd
+  namespace: tenant-ceph
 spec:
+  target_state: uninitialized
   values:
     conf:
       overrides:

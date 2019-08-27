@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: mariadb
-    name: openstack-mariadb-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openstack-mariadb-chart-group
   name: openstack-mariadb
+  namespace: shipyard
 spec:
   chart_group:
   - openstack-mariadb
   description: Deploy MariaDB
+  target_state: uninitialized

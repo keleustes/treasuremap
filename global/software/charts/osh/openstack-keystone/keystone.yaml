@@ -4,129 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: keystone
-    name: keystone-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: keystone
   name: keystone
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.keystone
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.keystone
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_messaging
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_cache
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.oslo_messaging.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.keystone
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.oslo_messaging.keystone
-  - dest:
-      path: .values.endpoints.oslo_db.auth.keystone
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.oslo_db.database
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.keystone.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.keystone.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_cache_secret_key
-      path: .
+  namespace: openstack
 spec:
   chart_name: keystone
   dependencies:
   - keystone-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: keystone
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.keystone)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -236,6 +125,38 @@ spec:
           - keystone-db-init
           - keystone-credential-setup
           - keystone-fernet-setup
+    endpoints:
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      oslo_cache:
+        auth:
+          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          keystone:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.oslo_db)
+            password: $(DeckhandPassphrase.osh-keystone-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.oslo_db.database)
+      oslo_messaging:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.oslo_messaging.admin)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+          keystone:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.oslo_messaging.keystone)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_messaging)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.keystone)
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -257,20 +178,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: keystone-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.keystone-htk
+  namespace: pegleg
 spec:
   chart_name: keystone-htk
   dependencies: []
-  namespace: keystone-htk
   release: keystone-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.keystone-htk)
+  target_state: uninitialized
   values: {}

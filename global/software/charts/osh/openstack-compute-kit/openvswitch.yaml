@@ -3,32 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: openvswitch-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openvswitch
   name: openvswitch
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.openvswitch
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.openvswitch
+  namespace: openstack
 spec:
   chart_name: openvswitch
   dependencies:
   - openvswitch-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: openvswitch
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.openvswitch)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -37,6 +23,8 @@ spec:
           release_group: airship-openvswitch
         type: job
   values:
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.openvswitch)
     labels:
       ovs:
         node_selector_key: openvswitch
@@ -49,20 +37,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: openvswitch-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.openvswitch-htk
+  namespace: pegleg
 spec:
   chart_name: openvswitch-htk
   dependencies: []
-  namespace: openvswitch-htk
   release: openvswitch-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.openvswitch-htk)
+  target_state: uninitialized
   values: {}

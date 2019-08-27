@@ -3,74 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: prometheus-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: prometheus
   name: prometheus
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.prometheus
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.prometheus
-  - dest:
-      path: .values.endpoints.monitoring
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.monitoring
-  - dest:
-      path: .values.endpoints.alerts
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.alerts
-  - dest:
-      path: .values.endpoints.ldap
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.ldap
-  - dest:
-      path: .values.endpoints.monitoring.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.prometheus.admin
-  - dest:
-      path: .values.endpoints.monitoring.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_prometheus_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.ldap.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.ldap.admin
-  - dest:
-      path: .values.endpoints.ldap.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_ldap_password
-      path: .
+  namespace: osh-infra
 spec:
   chart_name: prometheus
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: prometheus
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -1735,6 +1679,22 @@ spec:
             - replacement: calico-etcd
               target_label: endpoint
             scrape_interval: 20s
+    endpoints:
+      alerts: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.alerts)
+      ldap:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.ldap.admin)
+            password: $(DeckhandPassphrase.osh-keystone-ldap-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.ldap)
+      monitoring:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.prometheus.admin)
+            password: $(DeckhandPassphrase.osh-infra-prometheus-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.monitoring)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.prometheus)
     labels:
       job:
         node_selector_key: openstack-control-plane

@@ -3,70 +3,15 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-maas-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .values.manifests
-    - method: merge
-      path: .values.network
-    - method: merge
-      path: .values.conf
-    - method: replace
-      path: .values.dependencies.static
-    - method: replace
-      path: .values.endpoints.maas_ingress.hosts
-    layer: type
-    parentSelector:
-      name: ucp-maas-global
+    name: ucp-maas
   name: ucp-maas
-  substitutions:
-  - dest:
-      path: .values.conf.drydock.bootaction_url
-      pattern: (DRYDOCK_IP)
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .bootstrap.ip
-  - dest:
-      path: .values.conf.drydock.bootaction_url
-      pattern: (DRYDOCK_PORT)
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .node_ports.drydock_api
-  - dest:
-      path: .values.conf.maas.url.maas_url
-      pattern: (MAAS_IP)
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .bootstrap.ip
-  - dest:
-      path: .values.conf.maas.url.maas_url
-      pattern: (MAAS_PORT)
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .node_ports.maas_api
-  - dest:
-      path: .values.endpoints.maas_region.port.region_api.nodeport
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .node_ports.maas_api
-  - dest:
-      path: .values.endpoints.maas_region.port.region_proxy.default
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .node_ports.maas_proxy
+  namespace: ucp
 spec:
+  target_state: uninitialized
   values:
     conf:
       drydock:
-        bootaction_url: http://DRYDOCK_IP:DRYDOCK_PORT/api/v1.0
+        bootaction_url: http://$(PeglegCommonAddresses.common-addresses.spec.bootstrap.ip):$(PeglegCommonAddresses.common-addresses.spec.node_ports.drydock_api)/api/v1.0
       maas:
         credentials:
           secret:
@@ -76,7 +21,7 @@ spec:
           default_kernel: ga-16.04
           default_os: ubuntu
         url:
-          maas_url: http://MAAS_IP:MAAS_PORT/MAAS
+          maas_url: http://$(PeglegCommonAddresses.common-addresses.spec.bootstrap.ip):$(PeglegCommonAddresses.common-addresses.spec.node_ports.maas_api)/MAAS
     dependencies:
       static:
         bootstrap_admin_user:
@@ -128,6 +73,12 @@ spec:
         hosts:
           default: maas-ingress
           error_pages: maas-ingress-error
+      maas_region:
+        port:
+          region_api:
+            nodeport: $(PeglegCommonAddresses.common-addresses.spec.node_ports.maas_api)
+          region_proxy:
+            default: $(PeglegCommonAddresses.common-addresses.spec.node_ports.maas_proxy)
     manifests:
       maas_ingress: false
     network:

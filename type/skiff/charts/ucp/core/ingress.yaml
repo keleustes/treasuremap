@@ -3,18 +3,11 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-ingress-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: ucp-ingress-global
+    name: ucp-ingress
   name: ucp-ingress
-  replacement: true
+  namespace: ucp
 spec:
+  target_state: uninitialized
   values:
     pod:
       replicas:

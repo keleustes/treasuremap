@@ -3,44 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-divingbell-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: ucp-divingbell-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.divingbell
-  - dest:
-      path: .values.images
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ucp.divingbell
-  - dest:
-      path: .values.conf.exec.X005-rbd-roomba-scanner.data
-    src:
-      kind: PeglegScript
-      name: rbd-roomba-scanner
-      path: .
-  - dest:
-      path: .values.conf.exec.X005-hanging-cgroup-release.data
-    src:
-      kind: PeglegScript
-      name: hanging-cgroup-release
-      path: .
+    name: ucp-divingbell
+  name: ucp-divingbell
+  namespace: ucp
 spec:
   chart_name: ucp-divingbell
   dependencies:
   - ucp-divingbell-htk
   install:
     no_hooks: false
-  namespace: ucp
   release: ucp-divingbell
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.divingbell)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -52,10 +26,12 @@ spec:
     conf:
       exec:
         X005-hanging-cgroup-release:
+          data: $(PeglegScript.hanging-cgroup-release.spec)
           rerun_interval: 3600
           rerun_policy: always
           timeout: 600
         X005-rbd-roomba-scanner:
+          data: $(PeglegScript.rbd-roomba-scanner.spec)
           rerun_interval: 300
           rerun_policy: always
           timeout: 300
@@ -76,6 +52,7 @@ spec:
         net.ipv4.tcp_retries2: '5'
         net.netfilter.nf_conntrack_acct: '1'
         net.nf_conntrack_max: '1048576'
+    images: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.divingbell)
   wait:
     labels:
       release_group: airship-ucp-divingbell
@@ -84,20 +61,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: ucp-divingbell-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.divingbell-htk
+  namespace: pegleg
 spec:
   chart_name: ucp-divingbell-htk
   dependencies: []
-  namespace: ucp-divingbell-htk
   release: ucp-divingbell-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.divingbell-htk)
+  target_state: uninitialized
   values: {}

@@ -2,10 +2,8 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegScript
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: rbd-roomba-scanner
+  namespace: pegleg
 spec: |-
   #!/bin/bash
   set -ex

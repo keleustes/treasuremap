@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: horizon
-    name: openstack-horizon-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: openstack-horizon-chart-group
   name: openstack-horizon
+  namespace: shipyard
 spec:
   chart_group:
   - horizon
   description: Deploy Horizon
+  target_state: uninitialized

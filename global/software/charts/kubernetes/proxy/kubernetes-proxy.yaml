@@ -3,43 +3,16 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: kubernetes-proxy-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: kubernetes-proxy
   name: kubernetes-proxy
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.proxy
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.kubernetes.proxy
-  - dest:
-      path: .values.command_prefix[1]
-      pattern: POD_CIDR
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .kubernetes.pod_cidr
-  - dest:
-      path: .values.secrets.tls.ca
-    src:
-      kind: DeckhandCertificateAuthority
-      name: kubernetes
-      path: .
+  namespace: kube-system
 spec:
   chart_name: proxy
   dependencies:
   - kubernetes-proxy-htk
-  namespace: kube-system
   release: kubernetes-proxy
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.proxy)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -50,14 +23,19 @@ spec:
   values:
     command_prefix:
     - /proxy
-    - --cluster-cidr=POD_CIDR
+    - --cluster-cidr=$(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
     - --proxy-mode=iptables
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.proxy)
     kube_service:
       host: 127.0.0.1
       port: 6553
     livenessProbe:
       whitelist:
       - tiller-deploy
+    secrets:
+      tls:
+        ca: $(DeckhandCertificateAuthority.kubernetes.spec)
   wait:
     labels:
       release_group: airship-kubernetes-proxy
@@ -66,19 +44,11 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: kubernetes-proxy-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.kubernetes.proxy-htk
+  namespace: pegleg
 spec:
   chart_name: kubernetes-proxy-htk
   dependencies: []
-  namespace: kubernetes-proxy-htk
   release: kubernetes-proxy-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.kubernetes.proxy-htk)
+  target_state: uninitialized

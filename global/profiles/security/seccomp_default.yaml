@@ -2,11 +2,8 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSeccompProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: seccomp-default
-  schema: metadata/Document/v1
+  namespace: pegleg
 spec:
   content: |-
     {

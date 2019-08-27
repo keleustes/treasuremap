@@ -4,62 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: tempest
-    name: tempest-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: tempest
   name: tempest
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.tempest
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.tempest
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.tempest
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.tempest.tempest
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.tempest.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_tempest_password
-      path: .
+  namespace: openstack
 spec:
   chart_name: tempest
   dependencies:
   - tempest-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: tempest
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.tempest)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -73,6 +29,18 @@ spec:
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
+    endpoints:
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          tempest:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.tempest.tempest)
+            password: $(DeckhandPassphrase.osh-tempest-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.tempest)
     labels:
       job:
         node_selector_key: openstack-control-plane
@@ -85,20 +53,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: tempest-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.tempest-htk
+  namespace: pegleg
 spec:
   chart_name: tempest-htk
   dependencies: []
-  namespace: tempest-htk
   release: tempest-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.tempest-htk)
+  target_state: uninitialized
   values: {}

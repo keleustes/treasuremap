@@ -2,55 +2,15 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegCommonAddresses
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: common-addresses
-  substitutions:
-  - dest:
-      path: .calico.ip_autodetection_method
-      pattern: REPLACEME
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .interface
-  - dest:
-      path: .genesis.hostname
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .genesis.ip
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
-  - dest:
-      path: .bootstrap.ip
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
-  - dest:
-      path: .storage.ceph.public_cidr
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostcidr
-  - dest:
-      path: .storage.ceph.cluster_cidr
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostcidr
+  namespace: pegleg
 spec:
   bootstrap:
-    ip: REPLACEME
+    ip: $(PeglegDevConfigurables.dev-configurables.spec.hostip)
   calico:
     etcd:
       service_ip: 10.96.232.136
-    ip_autodetection_method: interface=REPLACEME
+    ip_autodetection_method: interface=$(PeglegDevConfigurables.dev-configurables.spec.interface)
   dns:
     cluster_domain: cluster.local
     service_ip: 10.96.0.10
@@ -62,8 +22,8 @@ spec:
     container_port: 2379
     haproxy_port: 2378
   genesis:
-    hostname: REPLACEME
-    ip: REPLACEME
+    hostname: $(PeglegDevConfigurables.dev-configurables.spec.hostname)
+    ip: $(PeglegDevConfigurables.dev-configurables.spec.hostip)
   kubernetes:
     api_service_ip: 10.96.0.1
     apiserver_port: 6443
@@ -96,5 +56,5 @@ spec:
     no_proxy: []
   storage:
     ceph:
-      cluster_cidr: REPLACEME
-      public_cidr: REPLACEME
+      cluster_cidr: $(PeglegDevConfigurables.dev-configurables.spec.hostcidr)
+      public_cidr: $(PeglegDevConfigurables.dev-configurables.spec.hostcidr)

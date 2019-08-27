@@ -3,16 +3,14 @@ apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
   labels:
-    name: ucp_endpoints-type
-  layeringDefinition:
-    abstract: false
-    layer: type
-  name: ucp_endpoints
+    name: ucp-endpoints
+  name: ucp-endpoints
+  namespace: pegleg
 spec:
   ceph:
     ceph_mgr:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mgr
       namespace: ceph
@@ -23,7 +21,7 @@ spec:
         default: http
     ceph_mon:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mon
         discovery: ceph-mon-discovery
@@ -33,7 +31,7 @@ spec:
           default: 6789
     ceph_object_store:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -50,7 +48,7 @@ spec:
         public: http
     object_store:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -67,7 +65,7 @@ spec:
         public: http
     tenant_ceph_mgr:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mgr
       namespace: tenant-ceph
@@ -80,7 +78,7 @@ spec:
         default: http
     tenant_ceph_mon:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-mon
         discovery: ceph-mon-discovery
@@ -91,10 +89,10 @@ spec:
   ucp:
     airflow_oslo_messaging:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: rabbitmq
-      namespace: null
+      namespace: ""
       path: /airflow
       port:
         amqp:
@@ -104,7 +102,7 @@ spec:
       scheme: amqp
     armada:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: armada-api
         public: armada
@@ -118,7 +116,7 @@ spec:
         default: http
     deckhand:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: deckhand-int
         public: deckhand-api
@@ -132,7 +130,7 @@ spec:
         default: http
     identity:
       host_fqdn_override:
-        default: null
+        default: ""
       name: keystone
       namespace: ucp
       path:
@@ -146,13 +144,13 @@ spec:
         internal: http
     key_manager:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: barbican-api
         public: barbican
       name: barbican
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9311
@@ -161,7 +159,7 @@ spec:
         default: http
     kubernetesprovisioner:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: promenade-api
       name: promenade
@@ -194,7 +192,7 @@ spec:
           podport: 18089
     maas_region:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: maas-region
         public: maas-region
@@ -213,7 +211,7 @@ spec:
         default: http
     oslo_cache:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: memcached
       port:
@@ -221,7 +219,7 @@ spec:
           default: 11211
     oslo_db:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mariadb
         discovery: mariadb-discovery
@@ -234,10 +232,10 @@ spec:
       scheme: mysql+pymysql
     oslo_messaging:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: rabbitmq
-      namespace: null
+      namespace: ""
       path: /keystone
       port:
         amqp:
@@ -247,7 +245,7 @@ spec:
         name: airship-ucp-rabbitmq-rabbitmq
     physicalprovisioner:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: drydock-api
         public: drydock-api
@@ -264,7 +262,7 @@ spec:
         public: http
     postgresql:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: postgresql
       name: postgresql
@@ -275,10 +273,10 @@ spec:
       scheme: postgresql+psycopg2
     postgresql_airflow_celery:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: postgresql
-      name: postgresql_airflow_celery_db
+      name: postgresql-airflow-celery-db
       path: /DB_NAME
       port:
         postgresql:
@@ -286,12 +284,12 @@ spec:
       scheme: db+postgresql
     prometheus_openstack_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-metrics
       namespace: ucp
       path:
-        default: null
+        default: ""
       port:
         exporter:
           default: 9103
@@ -299,7 +297,7 @@ spec:
         default: http
     shipyard:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: shipyard-int
         public: shipyard-api
@@ -317,15 +315,13 @@ spec:
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: type
-  name: osh_endpoints
+  name: osh-endpoints
+  namespace: pegleg
 spec:
   osh:
     ceph_object_store:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -342,13 +338,13 @@ spec:
         public: http
     cloudformation:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: heat-cfn
         public: cloudformation
       name: heat-cfn
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 8000
@@ -358,13 +354,13 @@ spec:
         public: http
     cloudwatch:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: heat-cloudwatch
         public: cloudwatch
       name: heat-cloudwatch
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 8003
@@ -374,7 +370,7 @@ spec:
       type: null
     compute:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nova-api
         public: nova
@@ -392,7 +388,7 @@ spec:
         public: http
     compute_metadata:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nova-metadata
         public: metadata
@@ -407,7 +403,7 @@ spec:
         default: http
     compute_novnc_proxy:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nova-novncproxy
         public: novncproxy
@@ -423,7 +419,7 @@ spec:
         public: http
     compute_spice_proxy:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nova-spiceproxy
       name: nova
@@ -436,13 +432,13 @@ spec:
         default: http
     dashboard:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: horizon-int
         public: horizon
       name: horizon
       path:
-        default: null
+        default: ""
       port:
         web:
           default: 80
@@ -452,7 +448,7 @@ spec:
         public: http
     identity:
       host_fqdn_override:
-        default: null
+        default: ""
       name: keystone
       namespace: openstack
       path:
@@ -466,13 +462,13 @@ spec:
         internal: http
     image:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: glance-api
         public: glance
       name: glance
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9292
@@ -482,13 +478,13 @@ spec:
         public: http
     image_registry:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: glance-registry
         public: glance-reg
       name: glance-registry
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9191
@@ -497,13 +493,13 @@ spec:
         default: http
     network:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: neutron-server
         public: neutron
       name: neutron
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9696
@@ -513,7 +509,7 @@ spec:
         public: http
     object_store:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -530,7 +526,7 @@ spec:
         public: http
     openstack_rabbitmq_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-rabbitmq-exporter
       namespace: openstack
@@ -543,7 +539,7 @@ spec:
         default: http
     orchestration:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: heat-api
         public: heat
@@ -559,7 +555,7 @@ spec:
         public: http
     oslo_cache:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: memcached
       namespace: openstack
@@ -568,7 +564,7 @@ spec:
           default: 11211
     oslo_db:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mariadb
         discovery: mariadb-discovery
@@ -581,7 +577,7 @@ spec:
       scheme: mysql+pymysql
     oslo_messaging:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-rabbitmq
       namespace: openstack
@@ -596,7 +592,7 @@ spec:
         name: airship-openstack-rabbitmq-rabbitmq
     placement:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: placement-api
         public: placement
@@ -612,7 +608,7 @@ spec:
         public: http
     prometheus_mysql_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mysql-exporter
       namespace: openstack
@@ -625,7 +621,7 @@ spec:
         default: http
     volume:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: cinder-api
         public: cinder
@@ -641,7 +637,7 @@ spec:
         public: http
     volumev2:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: cinder-api
         public: cinder
@@ -657,7 +653,7 @@ spec:
         public: http
     volumev3:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: cinder-api
         public: cinder
@@ -675,23 +671,13 @@ spec:
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: type
-  name: osh_infra_endpoints
-  substitutions:
-  - dest:
-      path: .osh_infra.ldap.path.default
-      pattern: AUTH_PATH
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .ldap.auth_path
+  name: osh-infra-endpoints
+  namespace: pegleg
 spec:
   osh_infra:
     alerts:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: alerts-engine
         discovery: alertmanager-discovery
@@ -699,7 +685,7 @@ spec:
       name: alertmanager
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9093
@@ -710,14 +696,14 @@ spec:
         default: http
     ceph_object_store:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ceph-rgw
         public: radosgw
       name: radosgw
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 8088
@@ -726,7 +712,7 @@ spec:
         default: http
     elasticsearch:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         data: elasticsearch-data
         default: elasticsearch-logging
@@ -735,18 +721,18 @@ spec:
       name: elasticsearch
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       scheme:
         default: http
     fluentd:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: fluentd-logging
       name: fluentd
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         metrics:
           default: 24220
@@ -756,14 +742,14 @@ spec:
         default: http
     grafana:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: grafana-dashboard
         public: grafana
       name: grafana
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         grafana:
           default: 3000
@@ -773,14 +759,14 @@ spec:
         public: http
     kibana:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: kibana-dash
         public: kibana
       name: kibana
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         kibana:
           default: 5601
@@ -800,12 +786,12 @@ spec:
         default: http
     kube_state_metrics:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: kube-state-metrics
       namespace: kube-system
       path:
-        default: null
+        default: ""
       port:
         http:
           default: 8080
@@ -813,11 +799,11 @@ spec:
         default: http
     ldap:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: ldap
       path:
-        default: /AUTH_PATH
+        default: /$(PeglegCommonAddresses.common-addresses.spec.ldap.auth_path)
       port:
         ldap:
           default: 389
@@ -825,14 +811,14 @@ spec:
         default: ldap
     monitoring:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: prom-metrics
         public: prometheus
       name: prometheus
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         api:
           default: 9090
@@ -842,14 +828,14 @@ spec:
         default: http
     nagios:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: nagios-metrics
         public: nagios
       name: nagios
       namespace: osh-infra
       path:
-        default: null
+        default: ""
       port:
         http:
           default: 80
@@ -859,12 +845,12 @@ spec:
         public: http
     node_metrics:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: node-exporter
       namespace: kube-system
       path:
-        default: null
+        default: ""
       port:
         metrics:
           default: 9100
@@ -874,7 +860,7 @@ spec:
         default: http
     oslo_db:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mariadb
       namespace: osh-infra
@@ -885,12 +871,12 @@ spec:
       scheme: mysql+pymysql
     process_exporter_metrics:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: process-exporter
       namespace: kube-system
       path:
-        default: null
+        default: ""
       port:
         metrics:
           default: 9256
@@ -898,10 +884,10 @@ spec:
         default: http
     prometheus_elasticsearch_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: elasticsearch-exporter
-      namespace: null
+      namespace: ""
       path:
         default: /metrics
       port:
@@ -911,7 +897,7 @@ spec:
         default: http
     prometheus_fluentd_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: fluentd-exporter
       namespace: osh-infra
@@ -924,7 +910,7 @@ spec:
         default: http
     prometheus_mysql_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: mysql-exporter
       namespace: osh-infra
@@ -937,12 +923,12 @@ spec:
         default: http
     prometheus_openstack_exporter:
       host_fqdn_override:
-        default: null
+        default: ""
       hosts:
         default: openstack-metrics
       namespace: openstack
       path:
-        default: null
+        default: ""
       port:
         exporter:
           default: 9103

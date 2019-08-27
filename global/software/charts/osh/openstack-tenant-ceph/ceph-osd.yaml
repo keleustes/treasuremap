@@ -3,58 +3,20 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: tenant-ceph-osd-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: tenant-ceph-osd-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.tenant-ceph-osd
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ceph.tenant-ceph-osd
-  - dest:
-      path: .values.network.public
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.public_cidr
-  - dest:
-      path: .values.network.cluster
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.cluster_cidr
-  - dest:
-      path: .values.endpoints.ceph_mon
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.tenant_ceph_mon
-  - dest:
-      path: .values.conf.ceph.global.fsid
-    src:
-      kind: DeckhandPassphrase
-      name: tenant_ceph_fsid
-      path: .
+    name: tenant-ceph-osd
+  name: tenant-ceph-osd
+  namespace: tenant-ceph
 spec:
   chart_name: tenant-ceph-osd
   dependencies:
   - tenant-ceph-htk
   install:
     no_hooks: false
-  namespace: tenant-ceph
   protected:
     continue_processing: true
   release: tenant-ceph-osd
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tenant-ceph-osd)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
   values:
@@ -62,6 +24,8 @@ spec:
       enabled: true
     conf:
       ceph:
+        global:
+          fsid: $(DeckhandPassphrase.tenant-ceph-fsid.spec)
         osd:
           osd_op_num_threads_per_hdd: 2
           osd_op_num_threads_per_ssd: 4
@@ -81,10 +45,11 @@ spec:
     endpoints:
       ceph_mgr:
         namespace: tenant-ceph
-      ceph_mon:
-        namespace: tenant-ceph
+      ceph_mon: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.tenant_ceph_mon)
       fluentd:
         namespace: osh-infra
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ceph.tenant-ceph-osd)
     labels:
       osd:
         node_selector_key: tenant-ceph-osd
@@ -92,6 +57,9 @@ spec:
     monitoring:
       ceph_mgr:
         port: 9284
+    network:
+      cluster: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.cluster_cidr)
+      public: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.public_cidr)
   wait:
     labels:
       release_group: airship-tenant-ceph-osd

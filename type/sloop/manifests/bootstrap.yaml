@@ -3,17 +3,9 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
   labels:
-    name: cluster-bootstrap-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: cluster-bootstrap-global
+    name: cluster-bootstrap
   name: cluster-bootstrap
-  replacement: true
+  namespace: shipyard
 spec:
   chart_groups:
   - podsecuritypolicy
@@ -35,3 +27,4 @@ spec:
   - ucp-promenade
   - ucp-shipyard
   release_prefix: airship
+  target_state: uninitialized

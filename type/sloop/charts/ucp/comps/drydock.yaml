@@ -3,40 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-drydock-type
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: type
-    parentSelector:
-      name: ucp-drydock-global
+    name: ucp-drydock
   name: ucp-drydock
-  replacement: true
-  substitutions:
-  - dest:
-      path: .values.conf.drydock.maasdriver.maas_api_url
-      pattern: MAAS_IP
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .genesis.ip
-  - dest:
-      path: .values.conf.drydock.maasdriver.maas_api_url
-      pattern: MAAS_PORT
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .node_ports.maas_api
+  namespace: ucp
 spec:
+  target_state: uninitialized
   values:
     conf:
       drydock:
         database:
           pool_size: 200
         maasdriver:
-          maas_api_url: http://MAAS_IP:MAAS_PORT/MAAS
+          maas_api_url: http://$(PeglegCommonAddresses.common-addresses.spec.genesis.ip):$(PeglegCommonAddresses.common-addresses.spec.node_ports.maas_api)/MAAS
     network:
       api:
         nodeport:

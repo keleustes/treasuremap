@@ -2,78 +2,8 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadePKICatalog
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cluster-certificates
-  substitutions:
-  - dest:
-      path: .certificate_authorities.kubernetes.certificates[1].hosts[0]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .certificate_authorities.kubernetes.certificates[1].hosts[1]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
-  - dest:
-      path: .certificate_authorities.kubernetes.certificates[1].common_name
-      pattern: HOSTNAME
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .certificate_authorities.kubernetes-etcd.certificates[2].hosts[0]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .certificate_authorities.kubernetes-etcd.certificates[2].hosts[1]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
-  - dest:
-      path: .certificate_authorities.kubernetes-etcd-peer.certificates[0].hosts[0]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .certificate_authorities.kubernetes-etcd-peer.certificates[0].hosts[1]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
-  - dest:
-      path: .certificate_authorities.calico-etcd.certificates[1].hosts[0]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .certificate_authorities.calico-etcd.certificates[1].hosts[1]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
-  - dest:
-      path: .certificate_authorities.calico-etcd-peer.certificates[0].hosts[0]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostname
-  - dest:
-      path: .certificate_authorities.calico-etcd-peer.certificates[0].hosts[1]
-    src:
-      kind: PeglegDevConfigurables
-      name: dev-configurables
-      path: .hostip
+  namespace: drydock
 spec:
   certificate_authorities:
     calico-etcd:
@@ -84,8 +14,8 @@ spec:
       - common_name: calico-etcd
         document_name: calico-etcd
         hosts:
-        - REPLACEME_HOST_NAME
-        - REPLACEME_HOST_IP
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostname)
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostip)
         - 127.0.0.1
         - localhost
         - 10.96.232.136
@@ -97,8 +27,8 @@ spec:
       - common_name: calico-etcd-peer
         document_name: calico-etcd-peer
         hosts:
-        - REPLACEME_HOST_NAME
-        - REPLACEME_HOST_IP
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostname)
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostip)
         - 127.0.0.1
         - localhost
         - 10.96.232.136
@@ -116,13 +46,13 @@ spec:
         - 10.96.0.1
         kubernetes_service_names:
         - kubernetes.default.svc.cluster.local
-      - common_name: system:node:HOSTNAME
+      - common_name: system:node:$(PeglegDevConfigurables.dev-configurables.spec.hostname)
         document_name: kubelet-genesis
         groups:
         - system:nodes
         hosts:
-        - REPLACEME_HOST_NAME
-        - REPLACEME_HOST_IP
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostname)
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostip)
       - common_name: system:kube-scheduler
         description: Service certificate for Kubernetes scheduler
         document_name: scheduler
@@ -149,8 +79,8 @@ spec:
       - common_name: kubernetes-etcd-genesis
         document_name: kubernetes-etcd-genesis
         hosts:
-        - REPLACEME_HOST_NAME
-        - REPLACEME_HOST_IP
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostname)
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostip)
         - 127.0.0.1
         - localhost
         - kubernetes-etcd.kube-system.svc.cluster.local
@@ -161,8 +91,8 @@ spec:
       - common_name: kubernetes-etcd-genesis-peer
         document_name: kubernetes-etcd-genesis-peer
         hosts:
-        - REPLACEME_HOST_NAME
-        - REPLACEME_HOST_IP
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostname)
+        - $(PeglegDevConfigurables.dev-configurables.spec.hostip)
         - 127.0.0.1
         - localhost
         - kubernetes-etcd.kube-system.svc.cluster.local

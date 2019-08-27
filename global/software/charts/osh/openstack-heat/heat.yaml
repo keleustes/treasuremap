@@ -4,190 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: heat
-    name: heat-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: heat
   name: heat
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.heat
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.heat
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.orchestration
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.orchestration
-  - dest:
-      path: .values.endpoints.cloudformation
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.cloudformation
-  - dest:
-      path: .values.endpoints.cloudwatch
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.cloudwatch
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_messaging
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_cache
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.heat
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.heat.heat
-  - dest:
-      path: .values.endpoints.identity.auth.heat_trustee
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.heat.heat_trustee
-  - dest:
-      path: .values.endpoints.identity.auth.heat_stack_user
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.heat.heat_stack_user
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.oslo_messaging.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.heat
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.heat.oslo_messaging.heat
-  - dest:
-      path: .values.endpoints.oslo_db.auth.heat
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.heat.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.heat.oslo_db.database
-  - dest:
-      path: .values.endpoints.oslo_messaging.path
-      pattern: VHOST_NAME
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.orchestration.name
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.heat.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_heat_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.heat_trustee.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_heat_trustee_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.heat_stack_user.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_heat_stack_user_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.heat.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.heat.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_heat_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_cache_secret_key
-      path: .
+  namespace: openstack
 spec:
   chart_name: heat
   dependencies:
   - heat-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: heat
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.heat)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -266,6 +94,51 @@ spec:
           keys:
           - root
           - heat
+    endpoints:
+      cloudformation: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.cloudformation)
+      cloudwatch: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.cloudwatch)
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          heat:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.heat.heat)
+            password: $(DeckhandPassphrase.osh-heat-password.spec)
+          heat_stack_user:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.heat.heat_stack_user)
+            password: $(DeckhandPassphrase.osh-heat-stack-user-password.spec)
+          heat_trustee:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.heat.heat_trustee)
+            password: $(DeckhandPassphrase.osh-heat-trustee-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      orchestration: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.orchestration)
+      oslo_cache:
+        auth:
+          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          heat:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.heat.oslo_db)
+            password: $(DeckhandPassphrase.osh-heat-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.heat.oslo_db.database)
+      oslo_messaging:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.oslo_messaging.admin)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+          heat:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.heat.oslo_messaging.heat)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_messaging)
+        path: /$(PeglegEndpointCatalogue.osh-endpoints.spec.osh.orchestration.name)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.heat)
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -296,20 +169,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: heat-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.heat-htk
+  namespace: pegleg
 spec:
   chart_name: heat-htk
   dependencies: []
-  namespace: heat-htk
   release: heat-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.heat-htk)
+  target_state: uninitialized
   values: {}

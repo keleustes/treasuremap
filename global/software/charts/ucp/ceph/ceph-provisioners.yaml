@@ -4,57 +4,19 @@ kind: ArmadaChart
 metadata:
   labels:
     name: ucp-ceph-provisioners
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: ucp-ceph-provisioners
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.ucp.ceph-provisioners
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.ceph.ceph-provisioners
-  - dest:
-      path: .values.network.public
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.public_cidr
-  - dest:
-      path: .values.network.cluster
-    src:
-      kind: PeglegCommonAddresses
-      name: common-addresses
-      path: .storage.ceph.cluster_cidr
-  - dest:
-      path: .values.endpoints.ceph_mon
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ceph.ceph_mon
-  - dest:
-      path: .values.conf.ceph.global.fsid
-    src:
-      kind: DeckhandPassphrase
-      name: ceph_fsid
-      path: .
+  namespace: ceph
 spec:
   chart_name: ucp-ceph-provisioners
   dependencies:
   - ceph-htk
   install:
     no_hooks: false
-  namespace: ceph
   protected:
     continue_processing: true
   release: ucp-ceph-provisioners
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ceph-provisioners)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -68,6 +30,7 @@ spec:
     conf:
       ceph:
         global:
+          fsid: $(DeckhandPassphrase.ceph-fsid.spec)
           osd_mkfs_type: xfs
     deployment:
       ceph: true
@@ -75,8 +38,9 @@ spec:
       client_secrets: false
       rbd_provisioner: true
     endpoints:
-      ceph_mon:
-        namespace: ceph
+      ceph_mon: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ceph.ceph_mon)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.ceph.ceph-provisioners)
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -84,6 +48,9 @@ spec:
       provisioner:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
+    network:
+      cluster: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.cluster_cidr)
+      public: $(PeglegCommonAddresses.common-addresses.spec.storage.ceph.public_cidr)
     pod:
       replicas:
         cephfs_provisioner: 2

@@ -2,19 +2,8 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .interfaces
-    - method: replace
-      path: .storage
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      hosttype: cp-global
-  name: cp_r720-primary
+  name: cp-r720-primary
+  namespace: drydock
 spec:
   hardware_profile: dell_r720
   interfaces:
@@ -79,21 +68,8 @@ spec:
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .interfaces
-    - method: replace
-      path: .storage
-    - method: replace
-      path: .metadata.owner_data
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      hosttype: cp-global
-  name: cp_r740-secondary
+  name: cp-r740-secondary
+  namespace: drydock
 spec:
   hardware_profile: dell_r720
   interfaces:

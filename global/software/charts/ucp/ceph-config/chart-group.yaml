@@ -4,12 +4,11 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     component: ceph
-    name: ucp-ceph-config-chart-group-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: ucp-ceph-config-chart-group
   name: ucp-ceph-config
+  namespace: shipyard
 spec:
   chart_group:
   - ucp-ceph-config
   description: Ceph config for Airship namespace(s)
+  target_state: uninitialized

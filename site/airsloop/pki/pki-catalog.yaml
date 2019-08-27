@@ -2,10 +2,8 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadePKICatalog
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: cluster-certificates
+  namespace: drydock
 spec:
   certificate_authorities:
     calico-etcd:

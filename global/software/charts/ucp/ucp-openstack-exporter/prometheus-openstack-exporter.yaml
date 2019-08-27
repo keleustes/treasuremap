@@ -3,68 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-prometheus-openstack-exporter-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: ucp-prometheus-openstack-exporter
   name: ucp-prometheus-openstack-exporter
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.prometheus_openstack_exporter
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.prometheus_openstack_exporter
-  - dest:
-      path: .values.endpoints.prometheus_openstack_exporter
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.prometheus_openstack_exporter
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: ucp_endpoints
-      path: .ucp.identity
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.user
-    src:
-      kind: PeglegAccountCatalogue
-      name: ucp_service_accounts
-      path: .ucp.prometheus_openstack_exporter.user
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.user.password
-    src:
-      kind: DeckhandPassphrase
-      name: ucp_openstack_exporter_keystone_password
-      path: .
+  namespace: ucp
 spec:
   chart_name: ucp-prometheus-openstack-exporter
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: ucp
   release: ucp-prometheus-openstack-exporter
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_openstack_exporter)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     pre:
@@ -73,6 +23,19 @@ spec:
           release_group: airship-ucp-prometheus-openstack-exporter
         type: job
   values:
+    endpoints:
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.keystone.admin)
+            password: $(DeckhandPassphrase.ucp-keystone-admin-password.spec)
+          user:
+            parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.prometheus_openstack_exporter.user)
+            password: $(DeckhandPassphrase.ucp-openstack-exporter-keystone-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.identity)
+      prometheus_openstack_exporter: $(PeglegEndpointCatalogue.ucp-endpoints.spec.ucp.prometheus_openstack_exporter)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.prometheus_openstack_exporter)
     labels:
       job:
         node_selector_key: openstack-control-plane

@@ -2,24 +2,10 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: ucp-drydock-global
   name: ucp-drydock
-  replacement: true
-  substitutions:
-  - dest:
-      path: .values.conf.ssh.private_key
-    src:
-      kind: DeckhandCertificateKey
-      name: airship_drydock_kvm_ssh_key
-      path: .
+  namespace: ucp
 spec:
+  target_state: uninitialized
   values:
     conf:
       drydock:
@@ -27,6 +13,8 @@ spec:
           oob_driver:
           - drydock_provisioner.drivers.oob.pyghmi_driver.driver.PyghmiDriver
           - drydock_provisioner.drivers.oob.libvirt_driver.driver.LibvirtDriver
+      ssh:
+        private_key: $(DeckhandCertificateKey.airship-drydock-kvm-ssh-key.spec)
     manifests:
       secret_ssh_key: true
     pod:

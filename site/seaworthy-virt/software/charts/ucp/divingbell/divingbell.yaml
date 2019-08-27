@@ -3,43 +3,21 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    name: ucp-divingbell-site
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: ucp-divingbell-global
+    name: ucp-divingbell
   name: ucp-divingbell
-  substitutions:
-  - dest:
-      path: .values.conf.uamlite.users[0].user_sshkeys[0]
-    src:
-      kind: DeckhandPublicKey
-      name: airship_ubuntu_ssh_public_key
-      path: .
-  - dest:
-      path: .values.conf.uamlite.users[0].user_crypt_passwd
-    src:
-      kind: DeckhandPassphrase
-      name: ubuntu_crypt_password
-      path: .
-  - dest:
-      path: .values.conf.uamlite.users[1].user_sshkeys[0]
-    src:
-      kind: DeckhandPublicKey
-      name: airship_ubuntu_ssh_public_key
-      path: .
+  namespace: ucp
 spec:
+  target_state: uninitialized
   values:
     conf:
       uamlite:
         users:
-        - user_name: ubuntu
-          user_sshkeys: []
+        - user_crypt_passwd: $(DeckhandPassphrase.ubuntu-crypt-password.spec)
+          user_name: ubuntu
+          user_sshkeys:
+          - $(DeckhandPublicKey.airship-ssh-public-key.spec)
           user_sudo: true
         - user_name: airship
-          user_sshkeys: []
+          user_sshkeys:
+          - $(DeckhandPublicKey.airship-ssh-public-key.spec)
           user_sudo: true

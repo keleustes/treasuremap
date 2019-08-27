@@ -3,11 +3,9 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
   labels:
-    name: cluster-bootstrap-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: cluster-bootstrap
   name: cluster-bootstrap
+  namespace: shipyard
 spec:
   chart_groups:
   - podsecuritypolicy
@@ -29,3 +27,4 @@ spec:
   - ucp-promenade
   - ucp-shipyard
   release_prefix: airship
+  target_state: uninitialized

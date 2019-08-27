@@ -4,178 +4,18 @@ kind: ArmadaChart
 metadata:
   labels:
     component: cinder
-    name: cinder-global
-  layeringDefinition:
-    abstract: false
-    layer: global
+    name: cinder
   name: cinder
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.cinder
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh.cinder
-  - dest:
-      path: .values.endpoints.identity
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.identity
-  - dest:
-      path: .values.endpoints.image
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.image
-  - dest:
-      path: .values.endpoints.image_registry
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.image_registry
-  - dest:
-      path: .values.endpoints.volume
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.volume
-  - dest:
-      path: .values.endpoints.volumev2
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.volumev2
-  - dest:
-      path: .values.endpoints.volumev3
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.volumev3
-  - dest:
-      path: .values.endpoints.oslo_db
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_messaging
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_messaging
-  - dest:
-      path: .values.endpoints.oslo_cache
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.oslo_cache
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.identity.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.keystone.admin
-  - dest:
-      path: .values.endpoints.identity.auth.cinder
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.cinder.cinder
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.oslo_messaging.admin
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.cinder
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.cinder.oslo_messaging.cinder
-  - dest:
-      path: .values.endpoints.oslo_db.auth.cinder
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.cinder.oslo_db
-  - dest:
-      path: .values.endpoints.oslo_db.path
-      pattern: DB_NAME
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_service_accounts
-      path: .osh.cinder.oslo_db.database
-  - dest:
-      path: .values.endpoints.oslo_messaging.path
-      pattern: VHOST_NAME
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_endpoints
-      path: .osh.volume.name
-  - dest:
-      path: .values.endpoints.identity.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.identity.auth.cinder.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_cinder_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_messaging.auth.cinder.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_messaging_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.cinder.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_cinder_oslo_db_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_db.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_db_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-    src:
-      kind: DeckhandPassphrase
-      name: osh_oslo_cache_secret_key
-      path: .
+  namespace: openstack
 spec:
   chart_name: cinder
   dependencies:
   - cinder-htk
   install:
     no_hooks: false
-  namespace: openstack
   release: cinder
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.cinder)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -257,6 +97,47 @@ spec:
           keys:
           - root
           - cinder
+    endpoints:
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      identity:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.keystone.admin)
+            password: $(DeckhandPassphrase.osh-keystone-admin-password.spec)
+          cinder:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.cinder.cinder)
+            password: $(DeckhandPassphrase.osh-cinder-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
+      image: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image)
+      image_registry: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image_registry)
+      oslo_cache:
+        auth:
+          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
+      oslo_db:
+        auth:
+          admin:
+            password: $(DeckhandPassphrase.osh-oslo-db-admin-password.spec)
+          cinder:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.cinder.oslo_db)
+            password: $(DeckhandPassphrase.osh-cinder-oslo-db-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_db)
+        path: /$(PeglegAccountCatalogue.osh-service-accounts.spec.osh.cinder.oslo_db.database)
+      oslo_messaging:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.oslo_messaging.admin)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+          cinder:
+            parent-inline: $(PeglegAccountCatalogue.osh-service-accounts.spec.osh.cinder.oslo_messaging.cinder)
+            password: $(DeckhandPassphrase.osh-oslo-messaging-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_messaging)
+        path: /$(PeglegEndpointCatalogue.osh-endpoints.spec.osh.volume.name)
+      volume: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.volume)
+      volumev2: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.volumev2)
+      volumev3: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.volumev3)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.cinder)
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -290,20 +171,12 @@ spec:
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: cinder-htk
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh.cinder-htk
+  namespace: pegleg
 spec:
   chart_name: cinder-htk
   dependencies: []
-  namespace: cinder-htk
   release: cinder-htk
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.cinder-htk)
+  target_state: uninitialized
   values: {}

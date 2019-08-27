@@ -2,73 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: global
   name: kibana
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.kibana
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.kibana
-  - dest:
-      path: .values.endpoints.elasticsearch
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.elasticsearch
-  - dest:
-      path: .values.endpoints.kibana
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.kibana
-  - dest:
-      path: .values.endpoints.ldap
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.ldap
-  - dest:
-      path: .values.endpoints.elasticsearch.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.elasticsearch.admin
-  - dest:
-      path: .values.endpoints.elasticsearch.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_elasticsearch_admin_password
-      path: .
-  - dest:
-      path: .values.endpoints.ldap.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.ldap.admin
-  - dest:
-      path: .values.endpoints.ldap.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_keystone_ldap_password
-      path: .
+  namespace: osh-infra
 spec:
   chart_name: kibana
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: kibana
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.kibana)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -101,6 +45,22 @@ spec:
                 Require valid-user
             </Proxy>
           </VirtualHost>
+    endpoints:
+      elasticsearch:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.elasticsearch.admin)
+            password: $(DeckhandPassphrase.osh-infra-elasticsearch-admin-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.elasticsearch)
+      kibana: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.kibana)
+      ldap:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.ldap.admin)
+            password: $(DeckhandPassphrase.osh-keystone-ldap-password.spec)
+        parent-inline: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.ldap)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.kibana)
     labels:
       job:
         node_selector_key: openstack-control-plane

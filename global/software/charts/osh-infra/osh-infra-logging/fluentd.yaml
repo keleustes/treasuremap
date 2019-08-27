@@ -3,56 +3,18 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   labels:
-    hosttype: fluentd-global
-  layeringDefinition:
-    abstract: true
-    layer: global
-  name: fluentd-global
-  substitutions:
-  - dest:
-      path: .source
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .charts.osh_infra.fluentd
-  - dest:
-      path: .values.images.tags
-    src:
-      kind: PeglegSoftwareVersions
-      name: software-versions
-      path: .images.osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.fluentd
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.fluentd
-  - dest:
-      path: .values.endpoints.prometheus_fluentd_exporter
-    src:
-      kind: PeglegEndpointCatalogue
-      name: osh_infra_endpoints
-      path: .osh_infra.prometheus_fluentd_exporter
-  - dest:
-      path: .values.endpoints.elasticsearch.auth.admin
-    src:
-      kind: PeglegAccountCatalogue
-      name: osh_infra_service_accounts
-      path: .osh_infra.elasticsearch.admin
-  - dest:
-      path: .values.endpoints.elasticsearch.auth.admin.password
-    src:
-      kind: DeckhandPassphrase
-      name: osh_infra_elasticsearch_admin_password
-      path: .
+    hosttype: fluentd
+  name: fluentd
+  namespace: osh-infra
 spec:
   chart_name: fluentd
   dependencies:
   - osh-infra-helm-toolkit
   install:
     no_hooks: false
-  namespace: osh-infra
   release: fluentd
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.fluentd)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
     post:
@@ -312,6 +274,16 @@ spec:
             @type elasticsearch
             user "#{ENV['ELASTICSEARCH_USERNAME']}"
           </match>
+    endpoints:
+      elasticsearch:
+        auth:
+          admin:
+            parent-inline: $(PeglegAccountCatalogue.osh-infra-service-accounts.spec.osh_infra.elasticsearch.admin)
+            password: $(DeckhandPassphrase.osh-infra-elasticsearch-admin-password.spec)
+      fluentd: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.fluentd)
+      prometheus_fluentd_exporter: $(PeglegEndpointCatalogue.osh-infra-endpoints.spec.osh_infra.prometheus_fluentd_exporter)
+    images:
+      tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh_infra.fluentd)
     labels:
       fluentd:
         node_selector_key: fluentd
