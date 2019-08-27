@@ -98,8 +98,9 @@ spec:
     images:
       tags: {}
     labels:
-      node_selector_key: openstack-control-plane
-      node_selector_value: enabled
+      horizon:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
     pod:
       replicas:
         server: 1

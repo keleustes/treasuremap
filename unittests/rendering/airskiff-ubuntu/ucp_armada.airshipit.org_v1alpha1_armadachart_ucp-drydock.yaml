@@ -123,8 +123,9 @@ spec:
         drydock: quay.io/airshipit/drydock:2cf960f4fc334760c696c886c94c79bc115226fd
         drydock_db_sync: quay.io/airshipit/drydock:2cf960f4fc334760c696c886c94c79bc115226fd
     labels:
-      node_selector_key: ucp-control-plane
-      node_selector_value: enabled
+      drydock:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
     network:
       api:
         nodeport:

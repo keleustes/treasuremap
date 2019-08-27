@@ -25,8 +25,10 @@ spec:
         type: job
   values:
     deployment:
-      mode: cluster
-      type: Deployment
+      # mode: cluster
+      # type: Deployment
+      mode: true
+      type: true
     images:
       tags: $(PeglegSoftwareVersions.software-versions.spec.images.kubernetes.ingress)
     labels:

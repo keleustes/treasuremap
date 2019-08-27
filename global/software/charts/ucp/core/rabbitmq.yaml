@@ -26,7 +26,7 @@ spec:
     endpoints:
       oslo_messaging:
         auth:
-          erlang_cookie: $(DeckhandPassphrase.ucp-rabbitmq-erlang-cookie.spec)
+          # erlang_cookie: $(DeckhandPassphrase.ucp-rabbitmq-erlang-cookie.spec)
           user:
             parent-inline: $(PeglegAccountCatalogue.ucp-service-accounts.spec.ucp.oslo_messaging.admin)
             password: $(DeckhandPassphrase.ucp-oslo-messaging-password.spec)

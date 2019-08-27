@@ -9,5 +9,5 @@ spec:
   - $(DeckhandPublicKey.airsloop-ssh-public-key.spec)
   repositories:
     main_archive: $(PeglegSoftwareVersions.software-versions.spec.packages.repositories.main_archive)
-    remove_unlisted: true
+    # remove_unlisted: true
   tag_definitions: []

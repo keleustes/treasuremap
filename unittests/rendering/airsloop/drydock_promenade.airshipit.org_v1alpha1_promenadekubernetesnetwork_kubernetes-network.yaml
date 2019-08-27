@@ -26,5 +26,6 @@ spec:
     service_cidr: 10.96.0.0/16
     service_ip: 10.96.0.1
   proxy:
-    additional_no_proxy: null
+    additional_no_proxy:
+    - 127.0.0.1
     url: ""

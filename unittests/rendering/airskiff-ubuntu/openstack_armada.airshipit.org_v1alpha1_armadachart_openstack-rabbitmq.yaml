@@ -31,7 +31,6 @@ spec:
     endpoints:
       oslo_messaging:
         auth:
-          erlang_cookie: password123
           user:
             password: password123
             username: admin

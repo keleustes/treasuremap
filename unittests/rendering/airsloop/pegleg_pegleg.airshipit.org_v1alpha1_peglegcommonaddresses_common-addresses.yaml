@@ -56,7 +56,8 @@ spec:
   proxy:
     http: ""
     https: ""
-    no_proxy: []
+    no_proxy:
+    - 127.0.0.1
   storage:
     ceph:
       cluster_cidr: 10.22.73.0/24

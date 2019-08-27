@@ -380,10 +380,6 @@ spec:
     images:
       tags: {}
     labels:
-      agent:
-        compute:
-          node_selector_key: openstack-nova-compute
-          node_selector_value: enabled
       agent_compute:
         node_selector_key: openstack-compute-node
         node_selector_value: enabled
