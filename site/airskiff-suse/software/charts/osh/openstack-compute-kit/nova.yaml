@@ -1,29 +1,27 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
-  name: nova-suse
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
-      name: nova-type
       component: nova
-    actions:
-      - method: merge
-        path: .
-  storagePolicy: cleartext
-data:
+      name: nova-type
+  name: nova
+  namespace: openstack
+spec:
   values:
     conf:
-      software:
-        apache2:
-          binary: apache2ctl
-          start_parameters: -DFOREGROUND -k start
-          site_dir: /etc/apache2/vhosts.d
-          conf_dir: /etc/apache2/conf.d
-          a2enmod:
-            - version
+      nova:
+        DEFAULT:
+          mkisofs_cmd: mkisofs
+        libvirt:
+          cpu_mode: host-model
+          virt_type: qemu
       security: |
         <Directory "/var/www">
           Options Indexes FollowSymLinks
@@ -36,10 +34,11 @@ data:
             Allow from all
           </IfModule>
         </Directory>
-      nova:
-        libvirt:
-          virt_type: qemu
-          cpu_mode: host-model
-        DEFAULT:
-          mkisofs_cmd: mkisofs
-...
+      software:
+        apache2:
+          a2enmod:
+          - version
+          binary: apache2ctl
+          conf_dir: /etc/apache2/conf.d
+          site_dir: /etc/apache2/vhosts.d
+          start_parameters: -DFOREGROUND -k start

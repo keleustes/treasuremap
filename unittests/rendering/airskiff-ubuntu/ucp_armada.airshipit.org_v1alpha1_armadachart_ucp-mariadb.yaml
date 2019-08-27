@@ -18,6 +18,8 @@ spec:
     subpath: mariadb
     type: git
   target_state: uninitialized
+  test:
+    timeout: 600
   upgrade:
     no_hooks: false
     pre:

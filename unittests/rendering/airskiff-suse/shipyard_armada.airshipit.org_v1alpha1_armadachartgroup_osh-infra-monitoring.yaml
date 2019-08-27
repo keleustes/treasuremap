@@ -1,0 +1,15 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
+metadata:
+  name: osh-infra-monitoring
+  namespace: shipyard
+spec:
+  chart_group:
+  - prometheus
+  - prometheus-alertmanager
+  - prometheus-node-exporter
+  - prometheus-process-exporter
+  - prometheus-kube-state-metrics
+  - nagios
+  description: OSH Infra Monitoring
+  target_state: uninitialized

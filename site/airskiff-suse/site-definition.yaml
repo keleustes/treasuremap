@@ -1,12 +1,11 @@
 ---
-schema: pegleg/SiteDefinition/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegSiteDefinition
 metadata:
-  schema: metadata/Document/v1
   layeringDefinition:
     abstract: false
     layer: site
-  name: airskiff-suse
-  storagePolicy: cleartext
-data:
+  name: airskiff
+  namespace: pegleg
+spec:
   site_type: skiff
-...

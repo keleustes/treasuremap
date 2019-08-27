@@ -124,6 +124,26 @@ deploy-airskiff-ubuntu: install
 purge-airskiff-ubuntu: 
 	$(SETKUBECONFIG) kubectl delete -f actual/airskiff-ubuntu
 
+rendering-test-airskiff-suse:
+	rm -fr actual/airskiff-suse
+	mkdir -p actual/airskiff-suse
+	kustomize build site/airskiff-suse -o actual/airskiff-suse
+	# cp actual/airskiff-suse/* ./unittests/rendering/airskiff-suse
+	diff -r actual/airskiff-suse ./unittests/rendering/airskiff-suse
+
+deploy-airskiff-suse: install
+	rm -fr actual/airskiff-suse
+	mkdir -p actual/airskiff-suse
+	kustomize build site/airskiff-suse -o actual/airskiff-suse
+	rm actual/airskiff-suse/pegleg*
+	rm actual/airskiff-suse/shipyard*
+	rm actual/airskiff-suse/drydock*
+	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-suse
+
+purge-airskiff-suse: 
+	$(SETKUBECONFIG) kubectl delete -f actual/airskiff-suse
+
+
 rendering-test-aiab:
 	rm -fr actual/aiab
 	mkdir -p actual/aiab
@@ -181,7 +201,7 @@ deploy-seaworthy-virt: install
 purge-seaworthy-virt: 
 	$(SETKUBECONFIG) kubectl delete -f actual/seaworthy-virt
 
-rendering-tests: rendering-test-airsloop rendering-test-airskiff-ubuntu rendering-test-aiab rendering-test-seaworthy rendering-test-seaworthy-virt
+rendering-tests: rendering-test-airsloop rendering-test-airskiff-ubuntu rendering-test-aiab rendering-test-seaworthy rendering-test-seaworthy-virt rendering-test-airskiff-suse
 
 deploy-patch:
 	$(SETKUBECONFIG) kubectl patch act openstack-memcached -n openstack --type merge -p $'spec:\n  target_state: deployed'

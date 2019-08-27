@@ -1,0 +1,40 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: openvswitch
+  name: openvswitch
+  namespace: openstack
+spec:
+  chart_name: openvswitch
+  dependencies:
+  - openvswitch-htk
+  install:
+    no_hooks: false
+  release: openvswitch
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: openvswitch
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-openvswitch
+        type: job
+  values:
+    images:
+      tags:
+        openvswitch_db_server: docker.io/openstackhelm/openvswitch:latest-opensuse_15
+        openvswitch_vswitchd: docker.io/openstackhelm/openvswitch:latest-opensuse_15
+    labels:
+      ovs:
+        node_selector_key: openvswitch
+        node_selector_value: enabled
+  wait:
+    labels:
+      release_group: airship-openvswitch
+    timeout: 900

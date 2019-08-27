@@ -1,0 +1,22 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patchesStrategicMerge:
+- ./software/config/versions.yaml
+- ./software/charts/ucp/keystone/keystone.yaml
+- ./software/charts/ucp/keystone/chart-group.yaml
+- ./software/charts/osh/openstack-keystone/keystone.yaml
+- ./software/charts/osh/openstack-keystone/chart-group.yaml
+- ./software/charts/osh/openstack-compute-kit/neutron.yaml
+- ./software/charts/osh/openstack-compute-kit/chart-group.yaml
+- ./software/charts/osh/openstack-compute-kit/nova.yaml
+
+resources:
+- ../../type/skiff
+
+- ./deployment/deployment-configuration.yaml
+- ./site-definition.yaml
+- ./software/config/common-software-config.yaml
+
+vars:

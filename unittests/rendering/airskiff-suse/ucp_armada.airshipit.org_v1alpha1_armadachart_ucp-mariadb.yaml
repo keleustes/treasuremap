@@ -1,0 +1,72 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: ucp-mariadb
+  name: ucp-mariadb
+  namespace: ucp
+spec:
+  chart_name: ucp-mariadb
+  dependencies:
+  - mariadb-htk
+  install:
+    no_hooks: false
+  release: ucp-mariadb
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: mariadb
+    type: git
+  target_state: uninitialized
+  test:
+    timeout: 600
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-ucp-mariadb
+        type: job
+  values:
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: password123
+            username: root
+        host_fqdn_override:
+          default: ""
+        hosts:
+          default: mariadb
+          discovery: mariadb-discovery
+        path: /DB_NAME
+        port:
+          mysql:
+            default: 3306
+          wsrep:
+            default: 4567
+        scheme: mysql+pymysql
+    images:
+      tags:
+        prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:rocky-opensuse_15-20190819
+    labels:
+      error_server:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      ingress:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      prometheus_mysql_exporter:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      server:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        ingress: 1
+        server: 1
+  wait:
+    labels:
+      release_group: airship-ucp-mariadb
+    timeout: 1800

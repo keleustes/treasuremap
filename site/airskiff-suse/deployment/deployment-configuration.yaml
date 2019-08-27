@@ -1,13 +1,12 @@
 ---
-schema: shipyard/DeploymentConfiguration/v1
+apiVersion: shipyard.airshipit.org/v1alpha1
+kind: ShipyardDeploymentConfiguration
 metadata:
-  schema: metadata/Document/v1
-  name: deployment-configuration
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+  name: deployment-configuration
+  namespace: shipyard
+spec:
   armada:
     manifest: full-site
-...

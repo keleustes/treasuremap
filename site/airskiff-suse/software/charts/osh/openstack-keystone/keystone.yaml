@@ -1,37 +1,21 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
-  name: keystone-suse
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
-      name: keystone-global
       component: keystone
-    actions:
-      - method: merge
-        path: .
-  storagePolicy: cleartext
-data:
+      name: keystone-global
+  name: keystone
+  namespace: openstack
+spec:
   values:
-    pod:
-      security_context:
-        keystone:
-          pod:
-            runAsUser: 0
-          container:
-            keystone_api:
-              readOnlyRootFilesystem: false
     conf:
-      software:
-        apache2:
-          binary: apache2ctl
-          start_parameters: -DFOREGROUND -k start
-          site_dir: /etc/apache2/vhosts.d
-          conf_dir: /etc/apache2/conf.d
-          a2enmod:
-            - version
       security: |
         <Directory "/var/www">
           Options Indexes FollowSymLinks
@@ -44,4 +28,19 @@ data:
             Allow from all
           </IfModule>
         </Directory>
-...
+      software:
+        apache2:
+          a2enmod:
+          - version
+          binary: apache2ctl
+          conf_dir: /etc/apache2/conf.d
+          site_dir: /etc/apache2/vhosts.d
+          start_parameters: -DFOREGROUND -k start
+    pod:
+      security_context:
+        keystone:
+          container:
+            keystone_api:
+              readOnlyRootFilesystem: false
+          pod:
+            runAsUser: 0

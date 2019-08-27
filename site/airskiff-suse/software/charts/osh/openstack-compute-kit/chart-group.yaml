@@ -1,21 +1,21 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
-  name: openstack-compute-kit
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .chart_group
     layer: site
     parentSelector:
       name: openstack-compute-kit-chart-group-global
-    actions:
-      - method: replace
-        path: .chart_group
-  storagePolicy: cleartext
-data:
+  name: openstack-compute-kit
+  namespace: shipyard
+  replacement: true
+spec:
   chart_group:
-    - libvirt
-    - openvswitch
-    - neutron-suse
-    - nova-suse
+  - libvirt
+  - openvswitch
+  - neutron
+  - nova

@@ -1,21 +1,21 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
-  name: ucp-keystone
-  replacement: true
   labels:
-    name: ucp-keystone-chart-group-suse
+    name: ucp-keystone-chart-group
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .chart_group
     layer: site
     parentSelector:
       name: ucp-keystone-chart-group-global
-    actions:
-      - method: replace
-        path: .chart_group
-  storagePolicy: cleartext
-data:
+  name: ucp-keystone
+  namespace: shipyard
+  replacement: true
+spec:
   chart_group:
-    - ucp-keystone-memcached
-    - ucp-keystone-suse
+  - ucp-keystone-memcached
+  - ucp-keystone

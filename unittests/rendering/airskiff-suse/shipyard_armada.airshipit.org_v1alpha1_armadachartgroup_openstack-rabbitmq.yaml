@@ -1,0 +1,13 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
+metadata:
+  labels:
+    component: keystone
+    name: openstack-rabbitmq-chart-group
+  name: openstack-rabbitmq
+  namespace: shipyard
+spec:
+  chart_group:
+  - openstack-rabbitmq
+  description: Deploy Keystone
+  target_state: uninitialized
