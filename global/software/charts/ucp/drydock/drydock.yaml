@@ -2,149 +2,138 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-drydock
   labels:
     name: ucp-drydock-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-drydock
   substitutions:
-
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.drydock
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.drydock
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.postgresql
-      dest:
-        path: .values.endpoints.postgresql
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.physicalprovisioner
-      dest:
-        path: .values.endpoints.physicalprovisioner
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.maas_region
-      dest:
-        path: .values.endpoints.maas_region
-
-    # Drydock IPs
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .node_ports.drydock_api
-      dest:
-        path: .values.network.drydock.node_port.port
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .node_ports.drydock_api
-      dest:
-        path: .values.endpoints.physicalprovisioner.port.api.nodeport
-
-    # Credentials
-
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.postgres.admin
-      dest:
-        path: .values.endpoints.postgresql.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.drydock.postgres
-      dest:
-        path: .values.endpoints.postgresql.auth.user
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.drydock.postgres.database
-      dest:
-        path: .values.endpoints.postgresql.path
-        pattern: DB_NAME
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.drydock.keystone
-      dest:
-        path: .values.endpoints.identity.auth.drydock
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_postgres_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.identity.auth.drydock.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_drydock_keystone_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.user.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_drydock_postgres_password
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.drydock
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.drydock
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.identity
+  - dest:
+      path: .values.endpoints.postgresql
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.postgresql
+  - dest:
+      path: .values.endpoints.physicalprovisioner
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.physicalprovisioner
+  - dest:
+      path: .values.endpoints.maas_region
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.maas_region
+  - dest:
+      path: .values.network.drydock.node_port.port
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .node_ports.drydock_api
+  - dest:
+      path: .values.endpoints.physicalprovisioner.port.api.nodeport
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .node_ports.drydock_api
+  - dest:
+      path: .values.endpoints.postgresql.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.postgres.admin
+  - dest:
+      path: .values.endpoints.postgresql.auth.user
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.drydock.postgres
+  - dest:
+      path: .values.endpoints.postgresql.path
+      pattern: DB_NAME
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.drydock.postgres.database
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.admin
+  - dest:
+      path: .values.endpoints.identity.auth.drydock
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.drydock.keystone
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.postgresql.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_postgres_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.identity.auth.drydock.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_drydock_keystone_password
+      path: .
+  - dest:
+      path: .values.endpoints.postgresql.auth.user.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_drydock_postgres_password
+      path: .
 spec:
   chart_name: drydock
-  release: drydock
-  namespace: ucp
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-drydock
+  dependencies:
+  - drydock-htk
   install:
     no_hooks: false
+  namespace: ucp
+  release: drydock
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-drydock
+      - labels:
+          release_group: airship-drydock
+        type: job
   values:
+    conf:
+      drydock:
+        database:
+          pool_size: 200
+        plugins:
+          ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
     labels:
       node_selector_key: ucp-control-plane
       node_selector_value: enabled
@@ -152,34 +141,28 @@ spec:
       api:
         nodeport:
           enabled: false
-    conf:
-      drydock:
-        database:
-          pool_size: 200
-        plugins:
-          ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
-  dependencies:
-    - drydock-htk
-...
+  wait:
+    labels:
+      release_group: airship-drydock
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: drydock-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: drydock-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.drydock-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.drydock-htk
 spec:
   chart_name: drydock-htk
-  release: drydock-htk
-  namespace: drydock-htk
-  values: {}
   dependencies: []
-...
+  namespace: drydock-htk
+  release: drydock-htk
+  values: {}

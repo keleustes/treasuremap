@@ -2,109 +2,97 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: tenant-ceph-osd-global
+  labels:
+    name: tenant-ceph-osd-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: tenant-ceph-osd-global
+  name: tenant-ceph-osd-global
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.tenant-ceph-osd
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.tenant-ceph-osd
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.tenant_ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-    # Secrets
-    - dest:
-       path: .values.conf.ceph.global.fsid
-      src:
-        kind: DeckhandPassphrase
-        name: tenant_ceph_fsid
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.tenant-ceph-osd
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.tenant-ceph-osd
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.tenant_ceph_mon
+  - dest:
+      path: .values.conf.ceph.global.fsid
+    src:
+      kind: DeckhandPassphrase
+      name: tenant_ceph_fsid
+      path: .
 spec:
   chart_name: tenant-ceph-osd
-  release: tenant-ceph-osd
+  dependencies:
+  - tenant-ceph-htk
+  install:
+    no_hooks: false
   namespace: tenant-ceph
   protected:
     continue_processing: true
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-tenant-ceph-osd
-  install:
-    no_hooks: false
+  release: tenant-ceph-osd
   upgrade:
     no_hooks: false
   values:
-    labels:
-      osd:
-        node_selector_key: tenant-ceph-osd
-        node_selector_value: enabled
-    endpoints:
-      ceph_mon:
-        namespace: tenant-ceph
-      ceph_mgr:
-        namespace: tenant-ceph
-      fluentd:
-        namespace: osh-infra
-    monitoring:
-      ceph_mgr:
-        port: 9284
     bootstrap:
       enabled: true
     conf:
-      storage:
-        osd_log_directory: /var/log/tenant-ceph
-        mon:
-          directory: /var/lib/openstack-helm/tenant-ceph/mon
-        osd:
-          - data:
-              type: directory
-              location: /var/lib/openstack-helm/tenant-ceph/osd/osd-one
-            journal:
-              type: directory
-              location: /var/lib/openstack-helm/tenant-ceph/osd/journal-one
-      osd:
-        # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-        # cluster with only one OSD.  Depending on OSD targeting & site
-        # configuration this can be changed.
-        osd_crush_chooseleaf_type: 0
       ceph:
         osd:
           osd_op_num_threads_per_hdd: 2
           osd_op_num_threads_per_ssd: 4
-  dependencies:
-    - tenant-ceph-htk
-...
+      osd:
+        osd_crush_chooseleaf_type: 0
+      storage:
+        mon:
+          directory: /var/lib/openstack-helm/tenant-ceph/mon
+        osd:
+        - data:
+            location: /var/lib/openstack-helm/tenant-ceph/osd/osd-one
+            type: directory
+          journal:
+            location: /var/lib/openstack-helm/tenant-ceph/osd/journal-one
+            type: directory
+        osd_log_directory: /var/log/tenant-ceph
+    endpoints:
+      ceph_mgr:
+        namespace: tenant-ceph
+      ceph_mon:
+        namespace: tenant-ceph
+      fluentd:
+        namespace: osh-infra
+    labels:
+      osd:
+        node_selector_key: tenant-ceph-osd
+        node_selector_value: enabled
+    monitoring:
+      ceph_mgr:
+        port: 9284
+  wait:
+    labels:
+      release_group: airship-tenant-ceph-osd
+    timeout: 900

@@ -2,68 +2,65 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: osh-infra-ceph-config
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-ceph-config
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ceph-provisioners
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.ceph-provisioners
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ceph-provisioners
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.ceph-provisioners
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.ceph_mon
 spec:
   chart_name: osh-infra-ceph-config
-  release: osh-infra-ceph-config
-  namespace: osh-infra
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-osh-infra-ceph-config
+  dependencies:
+  - ceph-htk
   install:
     no_hooks: false
+  namespace: osh-infra
+  release: osh-infra-ceph-config
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-osh-infra-ceph-config
+      - labels:
+          release_group: airship-osh-infra-ceph-config
+        type: job
   values:
+    bootstrap:
+      enabled: false
+    deployment:
+      ceph: false
+      cephfs_provisioner: false
+      client_secrets: true
+      rbd_provisioner: false
+      rgw_keystone_user_and_endpoints: false
     labels:
       job:
         node_selector_key: openstack-control-plane
@@ -71,21 +68,14 @@ spec:
       provisioner:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    deployment:
-      ceph: false
-      client_secrets: true
-      rbd_provisioner: false
-      cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: false
-    bootstrap:
-      enabled: false
     storageclass:
+      cephfs:
+        provision_storage_class: false
       rbd:
         ceph_configmap_name: ceph-etc
         parameters:
           userSecretName: pvc-ceph-client-key
-      cephfs:
-        provision_storage_class: false
-  dependencies:
-    - ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-osh-infra-ceph-config
+    timeout: 900

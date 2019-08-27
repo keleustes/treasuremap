@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: kubernetes-dns
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-dns
 spec:
-  description: Cluster DNS
   chart_group:
-    - coredns
+  - coredns
+  description: Cluster DNS

@@ -2,22 +2,21 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  replacement: true
-  name: openstack-ingress-controller
   labels:
     name: openstack-ingress-controller-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: openstack-ingress-controller-global
-    actions:
-      - method: merge
-        path: .
+  name: openstack-ingress-controller
+  replacement: true
 spec:
   values:
     pod:
       replicas:
-        ingress: 1
         error_page: 1
-...
+        ingress: 1

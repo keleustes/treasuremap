@@ -2,16 +2,15 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-osd
   labels:
     name: ucp-ceph-osd-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: ucp-ceph-osd-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-ceph-osd
 spec: {}
-...

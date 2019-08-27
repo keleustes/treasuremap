@@ -1,4 +1,13 @@
 ---
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegSoftwareVersions
+metadata:
+  labels:
+    name: software-versions-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  name: software-versions
 spec:
   charts:
     kubernetes:
@@ -737,13 +746,3 @@ spec:
         url: http://us.archive.ubuntu.com/ubuntu
     unnamed:
     - ceph-common
-metadata:
-  labels:
-    name: software-versions-global
-  layeringDefinition:
-    abstract: false
-    layer: global
-  name: software-versions
-apiVersion: pegleg.airshipit.org/v1alpha1
-kind: PeglegSoftwareVersions
-...

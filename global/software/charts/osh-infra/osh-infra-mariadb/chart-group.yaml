@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: osh-infra-mariadb
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-mariadb
 spec:
-  description: OpenStack-Infra MariaDB
   chart_group:
-    - osh-infra-mariadb
+  - osh-infra-mariadb
+  description: OpenStack-Infra MariaDB

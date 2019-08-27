@@ -2,17 +2,16 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-core
   labels:
     name: ucp-core-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-core
 spec:
-  description: Common Airship Components
   chart_group:
-    - ucp-ingress
-    - ucp-mariadb
-    - ucp-postgresql
-    - ucp-rabbitmq
-...
+  - ucp-ingress
+  - ucp-mariadb
+  - ucp-postgresql
+  - ucp-rabbitmq
+  description: Common Airship Components

@@ -2,16 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-ceph-config
   labels:
-    name: ucp-ceph-config-chart-group-global
     component: ceph
+    name: ucp-ceph-config-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-ceph-config
 spec:
-  description: Ceph config for Airship namespace(s)
   chart_group:
-    # NOTE: This will probably expand into one config per Airship namespace
-    # that requires ceph access.
-    - ucp-ceph-config
+  - ucp-ceph-config
+  description: Ceph config for Airship namespace(s)

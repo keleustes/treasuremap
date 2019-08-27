@@ -2,22 +2,21 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: libvirt
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .values
+    - method: delete
+      path: .values.ceph_client
     layer: site
     parentSelector:
-      name: libvirt-global
       component: libvirt
-    actions:
-      - method: merge
-        path: .values
-      - method: delete
-        path: .values.ceph_client
+      name: libvirt-global
+  name: libvirt
+  replacement: true
 spec:
   values:
     conf:
       ceph:
         enabled: false
-...

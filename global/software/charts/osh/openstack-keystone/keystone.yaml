@@ -2,165 +2,141 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: keystone
   labels:
-    name: keystone-global
     component: keystone
+    name: keystone-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: keystone
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.keystone
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.keystone
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_db
-      dest:
-        path: .values.endpoints.oslo_db
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_messaging
-      dest:
-        path: .values.endpoints.oslo_messaging
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_cache
-      dest:
-        path: .values.endpoints.oslo_cache
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-
-    # Service Accounts
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.oslo_messaging.admin
-      dest:
-        path: .values.endpoints.oslo_messaging.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.keystone.oslo_messaging.keystone
-      dest:
-        path: .values.endpoints.oslo_messaging.auth.keystone
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.keystone.oslo_db
-      dest:
-        path: .values.endpoints.oslo_db.auth.keystone
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.keystone.oslo_db.database
-      dest:
-        path: .values.endpoints.oslo_db.path
-        pattern: DB_NAME
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_messaging.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_messaging_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_messaging.auth.keystone.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_messaging_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_db.auth.keystone.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_oslo_db_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_db.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_db_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-      src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_cache_secret_key
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.keystone
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.keystone
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.identity
+  - dest:
+      path: .values.endpoints.oslo_db
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_db
+  - dest:
+      path: .values.endpoints.oslo_messaging
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_messaging
+  - dest:
+      path: .values.endpoints.oslo_cache
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_cache
+  - dest:
+      path: .values.endpoints.fluentd
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.fluentd
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.keystone.admin
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.oslo_messaging.admin
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.keystone
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.keystone.oslo_messaging.keystone
+  - dest:
+      path: .values.endpoints.oslo_db.auth.keystone
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.keystone.oslo_db
+  - dest:
+      path: .values.endpoints.oslo_db.path
+      pattern: DB_NAME
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.keystone.oslo_db.database
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_messaging_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.keystone.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_messaging_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_db.auth.keystone.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_oslo_db_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_db.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_db_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_cache_secret_key
+      path: .
 spec:
   chart_name: keystone
-  release: keystone
-  namespace: openstack
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-keystone
+  dependencies:
+  - keystone-htk
   install:
     no_hooks: false
+  namespace: openstack
+  release: keystone
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-keystone
     post:
       create: []
+    pre:
+      delete:
+      - labels:
+          release_group: airship-keystone
+        type: job
   values:
-    dependencies:
-      static:
-        api:
-          jobs:
-            - keystone-db-sync
-            - keystone-credential-setup
-            - keystone-fernet-setup
-        db_sync:
-          jobs:
-            - keystone-db-init
-            - keystone-credential-setup
-            - keystone-fernet-setup
     bootstrap:
       script: |
         openstack role create --or-show _member_
@@ -180,77 +156,86 @@ spec:
               --project="${OS_PROJECT_NAME}" \
               "heat_stack_owner"
     conf:
-      logging:
-        loggers:
-          keys:
-            - root
-            - keystone
-        handlers:
-          keys:
-            - stdout
-            - stderr
-            - 'null'
-            - fluent
-        formatters:
-          keys:
-            - context
-            - default
-            - fluent
-        logger_root:
-          level: WARNING
-          handlers: stdout
-        logger_keystone:
-          level: INFO
-          handlers:
-            - stdout
-            - fluent
-          qualname: keystone
-        logger_eventletwsgi:
-          level: WARNING
-          handlers: stderr
-          qualname: eventlet.wsgi.server
-        logger_sqlalchemy:
-          level: WARNING
-          handlers: stderr
-          qualname: sqlalchemy
-        logger_boto:
-          level: WARNING
-          handlers: stderr
-          qualname: boto
-        handler_null:
-          class: logging.NullHandler
-          formatter: default
-          args: ()
-        handler_stdout:
-          class: StreamHandler
-          args: (sys.stdout,)
-          formatter: context
-        handler_stderr:
-          class: StreamHandler
-          args: (sys.stderr,)
-          formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.keystone', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
-        formatter_context:
-          class: oslo_log.formatters.ContextFormatter
-        formatter_default:
-          format: "%(message)s"
       keystone:
         DEFAULT:
           transport_url: localhost
         identity:
-          driver: sql
           default_domain_id: default
-          domain_specific_drivers_enabled: True
-          domain_configurations_from_database: True
           domain_config_dir: /etc/keystonedomains
-    pod:
-      replicas:
-        api: 2
+          domain_configurations_from_database: true
+          domain_specific_drivers_enabled: true
+          driver: sql
+      logging:
+        formatter_context:
+          class: oslo_log.formatters.ContextFormatter
+        formatter_default:
+          format: '%(message)s'
+        formatter_fluent:
+          class: oslo_log.formatters.FluentFormatter
+        formatters:
+          keys:
+          - context
+          - default
+          - fluent
+        handler_fluent:
+          args: ('openstack.keystone', 'fluentd-logging.osh-infra', 24224)
+          class: fluent.handler.FluentHandler
+          formatter: fluent
+        handler_null:
+          args: ()
+          class: logging.NullHandler
+          formatter: default
+        handler_stderr:
+          args: (sys.stderr,)
+          class: StreamHandler
+          formatter: context
+        handler_stdout:
+          args: (sys.stdout,)
+          class: StreamHandler
+          formatter: context
+        handlers:
+          keys:
+          - stdout
+          - stderr
+          - 'null'
+          - fluent
+        logger_boto:
+          handlers: stderr
+          level: WARNING
+          qualname: boto
+        logger_eventletwsgi:
+          handlers: stderr
+          level: WARNING
+          qualname: eventlet.wsgi.server
+        logger_keystone:
+          handlers:
+          - stdout
+          - fluent
+          level: INFO
+          qualname: keystone
+        logger_root:
+          handlers: stdout
+          level: WARNING
+        logger_sqlalchemy:
+          handlers: stderr
+          level: WARNING
+          qualname: sqlalchemy
+        loggers:
+          keys:
+          - root
+          - keystone
+    dependencies:
+      static:
+        api:
+          jobs:
+          - keystone-db-sync
+          - keystone-credential-setup
+          - keystone-fernet-setup
+        db_sync:
+          jobs:
+          - keystone-db-init
+          - keystone-credential-setup
+          - keystone-fernet-setup
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -261,28 +246,31 @@ spec:
     manifests:
       job_rabbit_init: false
       secret_rabbitmq: false
-  dependencies:
-    - keystone-htk
-...
+    pod:
+      replicas:
+        api: 2
+  wait:
+    labels:
+      release_group: airship-keystone
+    timeout: 900
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: keystone-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: keystone-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.keystone-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.keystone-htk
 spec:
   chart_name: keystone-htk
-  release: keystone-htk
-  namespace: keystone-htk
-  values: {}
   dependencies: []
-...
+  namespace: keystone-htk
+  release: keystone-htk
+  values: {}

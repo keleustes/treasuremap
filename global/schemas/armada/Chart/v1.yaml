@@ -1,11 +1,11 @@
 ---
-apiVersion: deckhand.airshipit.org/v1alpha1
-kind: DeckhandDataSchema
+schema: 'deckhand/DataSchema/v1'
 metadata:
-  name: armada/Chart
+  schema: metadata/Control/v1
+  name: armada/Chart/v1
   labels:
     application: armada
-spec:
+data:
   $schema: 'http://json-schema.org/schema#'
   type: 'object'
   additionalProperties: true

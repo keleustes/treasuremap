@@ -2,13 +2,13 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: kubernetes-container-networking
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-container-networking
 spec:
+  chart_group:
+  - kubernetes-calico-etcd
+  - kubernetes-calico
   description: Container networking via Calico
   sequenced: true
-  chart_group:
-    - kubernetes-calico-etcd
-    - kubernetes-calico

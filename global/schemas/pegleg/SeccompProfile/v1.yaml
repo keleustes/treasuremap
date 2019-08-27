@@ -1,11 +1,11 @@
 ---
-apiVersion: deckhand.airshipit.org/v1alpha1
-kind: DeckhandDataSchema
+schema: 'deckhand/DataSchema/v1'
 metadata:
-  name: pegleg/SeccompProfile
+  schema: metadata/Control/v1
+  name: pegleg/SeccompProfile/v1
   labels:
     application: pegleg
-spec:
+data:
   $schema: 'http://json-schema.org/schema#'
   type: 'object'
   additionalProperties: false

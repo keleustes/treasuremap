@@ -2,80 +2,74 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openstack-memcached
   labels:
-    name: openstack-memcached-global
     component: memcached
+    name: openstack-memcached-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-memcached
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.memcached
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.memcached
-      dest:
-        path: .values.images.tags
-
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_cache
-      dest:
-        path: .values.endpoints.oslo_cache
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.memcached
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.memcached
+  - dest:
+      path: .values.endpoints.oslo_cache
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_cache
 spec:
   chart_name: openstack-memcached
-  release: openstack-memcached
-  namespace: openstack
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-openstack-memcached
+  dependencies:
+  - memcached-htk
   install:
     no_hooks: false
+  namespace: openstack
+  release: openstack-memcached
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-openstack-memcached
+      - labels:
+          release_group: airship-openstack-memcached
+        type: job
   values:
     labels:
       server:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-  dependencies:
-    - memcached-htk
-...
+  wait:
+    labels:
+      release_group: airship-openstack-memcached
+    timeout: 900
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: memcached-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: memcached-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.memcached-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.memcached-htk
 spec:
   chart_name: memcached-htk
-  release: memcached-htk
-  namespace: memcached-htk
-  values: {}
   dependencies: []
-...
+  namespace: memcached-htk
+  release: memcached-htk
+  values: {}

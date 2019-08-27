@@ -2,22 +2,21 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  replacement: true
-  name: tenant-ceph-ingress
   labels:
     name: tenant-ceph-ingress-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: tenant-ceph-ingress-global
-    actions:
-      - method: merge
-        path: .
+  name: tenant-ceph-ingress
+  replacement: true
 spec:
   values:
     pod:
       replicas:
-        ingress: 1
         error_page: 1
-...
+        ingress: 1

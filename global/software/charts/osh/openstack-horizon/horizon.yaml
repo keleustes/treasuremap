@@ -2,115 +2,104 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: horizon
   labels:
-    name: horizon-global
     component: horizon
+    name: horizon-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: horizon
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.horizon
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.horizon
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.dashboard
-      dest:
-        path: .values.endpoints.dashboard
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_db
-      dest:
-        path: .values.endpoints.oslo_db
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_cache
-      dest:
-        path: .values.endpoints.oslo_cache
-
-    # Service Accounts
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.horizon.oslo_db
-      dest:
-        path: .values.endpoints.oslo_db.auth.horizon
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.horizon.oslo_db.database
-      dest:
-        path: .values.endpoints.oslo_db.path
-        pattern: DB_NAME
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_db.auth.keystone.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_horizon_oslo_db_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_db.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_db_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_cache.auth.memcache_secret_key
-      src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_cache_secret_key
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.horizon
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.horizon
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.identity
+  - dest:
+      path: .values.endpoints.dashboard
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.dashboard
+  - dest:
+      path: .values.endpoints.oslo_db
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_db
+  - dest:
+      path: .values.endpoints.oslo_cache
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_cache
+  - dest:
+      path: .values.endpoints.oslo_db.auth.horizon
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.horizon.oslo_db
+  - dest:
+      path: .values.endpoints.oslo_db.path
+      pattern: DB_NAME
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.horizon.oslo_db.database
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_db.auth.keystone.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_horizon_oslo_db_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_db.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_db_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_cache.auth.memcache_secret_key
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_cache_secret_key
+      path: .
 spec:
   chart_name: horizon
-  release: horizon
-  namespace: openstack
+  dependencies:
+  - horizon-htk
   install:
     no_hooks: false
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-horizon
+  namespace: openstack
+  release: horizon
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-horizon
     post:
       create: []
+    pre:
+      delete:
+      - labels:
+          release_group: airship-horizon
+        type: job
   values:
     labels:
       node_selector_key: openstack-control-plane
@@ -118,28 +107,28 @@ spec:
     pod:
       replicas:
         server: 2
-  dependencies:
-    - horizon-htk
-...
+  wait:
+    labels:
+      release_group: airship-horizon
+    timeout: 900
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: horizon-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: horizon-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.horizon-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.horizon-htk
 spec:
   chart_name: horizon-htk
-  release: horizon-htk
-  namespace: horizon-htk
-  values: {}
   dependencies: []
-...
+  namespace: horizon-htk
+  release: horizon-htk
+  values: {}

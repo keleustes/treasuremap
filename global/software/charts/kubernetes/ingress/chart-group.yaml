@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ingress-kube-system
   layeringDefinition:
     abstract: false
     layer: global
+  name: ingress-kube-system
 spec:
-  description: Ingress for the site
   chart_group:
-    - ingress-kube-system
+  - ingress-kube-system
+  description: Ingress for the site

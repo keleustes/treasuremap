@@ -1,8 +1,8 @@
 ---
-apiVersion: deckhand.airshipit.org/v1alpha1
-kind: DeckhandDataSchema
+schema: deckhand/DataSchema/v1
 metadata:
-  name: pegleg/Script
-spec:
+  schema: metadata/Control/v1
+  name: pegleg/Script/v1
+data:
   $schema: http://json-schema.org/schema#
   type: string

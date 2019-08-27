@@ -2,146 +2,140 @@
 apiVersion: promenade.airshipit.org/v1alpha1
 kind: PromenadeGenesis
 metadata:
-  name: genesis-global
+  labels:
+    name: genesis-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: genesis-global
+  name: genesis-global
   substitutions:
-    # Software versions for bootstrapping phase
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.armada.api
-      dest:
-        path: .images.armada
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.armada.tiller
-      dest:
-        path: .images.helm.tiller
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.apiserver.apiserver
-      dest:
-        path: .images.kubernetes.apiserver
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.controller-manager.controller_manager
-      dest:
-        path: .images.kubernetes.controller-manager
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.etcd.etcd
-      dest:
-        path: .images.kubernetes.etcd
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.scheduler.scheduler
-      dest:
-        path: .images.kubernetes.scheduler
-
-    # Site-specific configuration
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .genesis.hostname
-      dest:
-        path: .hostname
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .genesis.ip
-      dest:
-        path: .ip
-
-    # Command prefix
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.service_cidr
-      dest:
-        path: .apiserver.arguments[2]
-        pattern: SERVICE_CIDR
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.service_node_port_range
-      dest:
-        path: .apiserver.arguments[3]
-        pattern: SERVICE_NODE_PORT_RANGE
-
-    # Set etcd encryption policy
-    - src:
-        kind: PromenadeEncryptionPolicy
-        name: encryption-policy
-        path: .etcd
-      dest:
-        path: .apiserver.encryption
-
+  - dest:
+      path: .images.armada
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.armada.api
+  - dest:
+      path: .images.helm.tiller
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.armada.tiller
+  - dest:
+      path: .images.kubernetes.apiserver
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.apiserver.apiserver
+  - dest:
+      path: .images.kubernetes.controller-manager
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.controller-manager.controller_manager
+  - dest:
+      path: .images.kubernetes.etcd
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.etcd.etcd
+  - dest:
+      path: .images.kubernetes.scheduler
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.scheduler.scheduler
+  - dest:
+      path: .hostname
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .genesis.hostname
+  - dest:
+      path: .ip
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .genesis.ip
+  - dest:
+      path: .apiserver.arguments[2]
+      pattern: SERVICE_CIDR
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.service_cidr
+  - dest:
+      path: .apiserver.arguments[3]
+      pattern: SERVICE_NODE_PORT_RANGE
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.service_node_port_range
+  - dest:
+      path: .apiserver.encryption
+    src:
+      kind: PromenadeEncryptionPolicy
+      name: encryption-policy
+      path: .etcd
 spec:
   apiserver:
     arguments:
-      - --authorization-mode=Node,RBAC
-      - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit
-      - --service-cluster-ip-range=SERVICE_CIDR
-      - --service-node-port-range=SERVICE_NODE_PORT_RANGE
-      - --endpoint-reconciler-type=lease
-      - --feature-gates=PodShareProcessNamespace=true
-      - --v=3
-      - --admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml
-      - --experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
-      - --requestheader-allowed-names='aggregator'
+    - --authorization-mode=Node,RBAC
+    - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit
+    - --service-cluster-ip-range=SERVICE_CIDR
+    - --service-node-port-range=SERVICE_NODE_PORT_RANGE
+    - --endpoint-reconciler-type=lease
+    - --feature-gates=PodShareProcessNamespace=true
+    - --v=3
+    - --admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml
+    - --experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
+    - --requestheader-allowed-names='aggregator'
   armada:
     target_manifest: cluster-bootstrap
+  files:
+  - content: |-
+      # placeholder for triggering calico etcd bootstrapping
+      # this file will be deleted
+    mode: 420
+    path: /var/lib/anchor/calico-etcd-bootstrap
+  - content: |
+      kind: AdmissionConfiguration
+      apiVersion: apiserver.k8s.io/v1alpha1
+      plugins:
+        - name: EventRateLimit
+          path: eventconfig.yaml
+    mode: 292
+    path: /etc/genesis/apiserver/acconfig.yaml
+  - content: |
+      kind: Configuration
+      apiVersion: eventratelimit.admission.k8s.io/v1alpha1
+      limits:
+        - type: Server
+          qps: 1000
+          burst: 10000
+    mode: 292
+    path: /etc/genesis/apiserver/eventconfig.yaml
   labels:
     dynamic:
-      - beta.kubernetes.io/fluentd-ds-ready=true
-      - calico-etcd=enabled
-      - ceph-mds=enabled
-      - ceph-mon=enabled
-      - ceph-osd=enabled
-      - ceph-rgw=enabled
-      - ceph-mgr=enabled
-      - tenant-ceph-control-plane=enabled
-      - tenant-ceph-mon=enabled
-      - tenant-ceph-rgw=enabled
-      - tenant-ceph-mgr=enabled
-      - kube-dns=enabled
-      - kube-ingress=enabled
-      - kubernetes-apiserver=enabled
-      - kubernetes-controller-manager=enabled
-      - kubernetes-etcd=enabled
-      - kubernetes-scheduler=enabled
-      - promenade-genesis=enabled
-      - ucp-control-plane=enabled
-      - maas-rack=enabled
-      - maas-region=enabled
-      - node-exporter=enabled
-  files:
-    - path: /var/lib/anchor/calico-etcd-bootstrap
-      content: "# placeholder for triggering calico etcd bootstrapping\n# this file will be deleted"
-      mode: 0644
-    - path: /etc/genesis/apiserver/acconfig.yaml
-      mode: 0444
-      content: |
-        kind: AdmissionConfiguration
-        apiVersion: apiserver.k8s.io/v1alpha1
-        plugins:
-          - name: EventRateLimit
-            path: eventconfig.yaml
-    - path: /etc/genesis/apiserver/eventconfig.yaml
-      mode: 0444
-      content: |
-        kind: Configuration
-        apiVersion: eventratelimit.admission.k8s.io/v1alpha1
-        limits:
-          - type: Server
-            qps: 1000
-            burst: 10000
+    - beta.kubernetes.io/fluentd-ds-ready=true
+    - calico-etcd=enabled
+    - ceph-mds=enabled
+    - ceph-mon=enabled
+    - ceph-osd=enabled
+    - ceph-rgw=enabled
+    - ceph-mgr=enabled
+    - tenant-ceph-control-plane=enabled
+    - tenant-ceph-mon=enabled
+    - tenant-ceph-rgw=enabled
+    - tenant-ceph-mgr=enabled
+    - kube-dns=enabled
+    - kube-ingress=enabled
+    - kubernetes-apiserver=enabled
+    - kubernetes-controller-manager=enabled
+    - kubernetes-etcd=enabled
+    - kubernetes-scheduler=enabled
+    - promenade-genesis=enabled
+    - ucp-control-plane=enabled
+    - maas-rack=enabled
+    - maas-region=enabled
+    - node-exporter=enabled

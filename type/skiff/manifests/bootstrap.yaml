@@ -2,25 +2,24 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
-  replacement: true
-  name: cluster-bootstrap
   labels:
     name: cluster-bootstrap-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .chart_groups
     layer: type
     parentSelector:
       name: cluster-bootstrap-global
-    actions:
-      - method: replace
-        path: .chart_groups
+  name: cluster-bootstrap
+  replacement: true
 spec:
-  release_prefix: airship
   chart_groups:
-    - osh-infra-nfs-provisioner
-    - ucp-core
-    - ucp-keystone
-    - ucp-shipyard
-    - ucp-armada
-    - ucp-deckhand
-...
+  - osh-infra-nfs-provisioner
+  - ucp-core
+  - ucp-keystone
+  - ucp-shipyard
+  - ucp-armada
+  - ucp-deckhand
+  release_prefix: airship

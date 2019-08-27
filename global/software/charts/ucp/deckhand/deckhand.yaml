@@ -2,142 +2,128 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-deckhand
   labels:
     name: ucp-deckhand-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-deckhand
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.deckhand
-      dest:
-        path: .source
-
-    # Images
-
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.deckhand
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.postgresql
-      dest:
-        path: .values.endpoints.postgresql
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.deckhand
-      dest:
-        path: .values.endpoints.deckhand
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.key_manager
-      dest:
-        path: .values.endpoints.key_manager
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.oslo_cache
-      dest:
-        path: .values.endpoints.oslo_cache
-    # Credentials
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.postgres.admin
-      dest:
-        path: .values.endpoints.postgresql.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.deckhand.postgres
-      dest:
-        path: .values.endpoints.postgresql.auth.user
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.deckhand.postgres.database
-      dest:
-        path: .values.endpoints.postgresql.path
-        pattern: DB_NAME
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.deckhand.keystone
-      dest:
-        path: .values.endpoints.identity.auth.user
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_postgres_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.identity.auth.user.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_deckhand_keystone_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.user.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_deckhand_postgres_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.deckhand
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.deckhand
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.identity
+  - dest:
+      path: .values.endpoints.postgresql
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.postgresql
+  - dest:
+      path: .values.endpoints.deckhand
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.deckhand
+  - dest:
+      path: .values.endpoints.key_manager
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.key_manager
+  - dest:
+      path: .values.endpoints.oslo_cache
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.oslo_cache
+  - dest:
+      path: .values.endpoints.postgresql.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.postgres.admin
+  - dest:
+      path: .values.endpoints.postgresql.auth.user
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.deckhand.postgres
+  - dest:
+      path: .values.endpoints.postgresql.path
+      pattern: DB_NAME
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.deckhand.postgres.database
+  - dest:
+      path: .values.endpoints.identity.auth.user
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.deckhand.keystone
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.admin
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.postgresql.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_postgres_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.identity.auth.user.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_deckhand_keystone_password
+      path: .
+  - dest:
+      path: .values.endpoints.postgresql.auth.user.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_deckhand_postgres_password
+      path: .
 spec:
   chart_name: ucp-deckhand
-  release: ucp-deckhand
-  namespace: ucp
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-ucp-deckhand
+  dependencies:
+  - deckhand-htk
   install:
     no_hooks: false
+  namespace: ucp
+  release: ucp-deckhand
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-deckhand
     post:
       create: []
+    pre:
+      delete:
+      - labels:
+          release_group: airship-ucp-deckhand
+        type: job
   values:
-    pod:
-      replicas:
-        deckhand: 2
     conf:
       deckhand:
         DEFAULT:
@@ -146,28 +132,31 @@ spec:
           use_syslog: true
         keystone_authtoken:
           memcache_security_strategy: None
-  dependencies:
-    - deckhand-htk
-...
+    pod:
+      replicas:
+        deckhand: 2
+  wait:
+    labels:
+      release_group: airship-ucp-deckhand
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: deckhand-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: deckhand-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.deckhand-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.deckhand-htk
 spec:
   chart_name: deckhand-htk
-  release: deckhand-htk
-  namespace: deckhand-htk
-  values: {}
   dependencies: []
-...
+  namespace: deckhand-htk
+  release: deckhand-htk
+  values: {}

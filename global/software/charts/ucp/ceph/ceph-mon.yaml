@@ -2,77 +2,75 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-mon
+  labels:
+    name: ucp-ceph-mon
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: ucp-ceph-mon
+  name: ucp-ceph-mon
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ceph-mon
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.ceph-mon
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-    # Secrets
-    - dest:
-       path: .values.conf.ceph.global.fsid
-      src:
-        kind: DeckhandPassphrase
-        name: ceph_fsid
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ceph-mon
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.ceph-mon
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.ceph_mon
+  - dest:
+      path: .values.conf.ceph.global.fsid
+    src:
+      kind: DeckhandPassphrase
+      name: ceph_fsid
+      path: .
 spec:
   chart_name: ucp-ceph-mon
-  release: ucp-ceph-mon
+  dependencies:
+  - ceph-htk
+  install:
+    no_hooks: false
   namespace: ceph
   protected:
     continue_processing: true
-  wait:
-    timeout: 1800
-    labels:
-      release_group: airship-ucp-ceph-mon
-  install:
-    no_hooks: false
+  release: ucp-ceph-mon
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-ceph-mon
+      - labels:
+          release_group: airship-ucp-ceph-mon
+        type: job
   values:
+    bootstrap:
+      enabled: true
+    deployment:
+      ceph: true
+      storage_secrets: true
+    endpoints:
+      ceph_mon:
+        namespace: ceph
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -80,14 +78,7 @@ spec:
       mon:
         node_selector_key: ceph-mon
         node_selector_value: enabled
-    endpoints:
-      ceph_mon:
-        namespace: ceph
-    deployment:
-      ceph: true
-      storage_secrets: true
-    bootstrap:
-      enabled: true
-  dependencies:
-    - ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-ucp-ceph-mon
+    timeout: 1800

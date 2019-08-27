@@ -1,15 +1,10 @@
 ---
-# High-level pegleg site definition file
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSiteDefinition
 metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  # NEWSITE-CHANGEME: Replace with the site name
   name: airsloop
 spec:
-  # The type layer this site will delpoy with. Type layer is found in the
-  # type folder.
   site_type: sloop
-...

@@ -2,46 +2,45 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-divingbell
+  labels:
+    name: ucp-divingbell-site
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-divingbell-global
-    actions:
-      - method: merge
-        path: .
-  labels:
-    name: ucp-divingbell-site
+  name: ucp-divingbell
   substitutions:
-    - dest:
-        path: .values.conf.uamlite.users[0].user_sshkeys[0]
-      src:
-        kind: DeckhandPublicKey
-        name: airsloop_ssh_public_key
-        path: .
-    - dest:
-        path: .values.conf.uamlite.users[0].user_crypt_passwd
-      src:
-        kind: DeckhandPassphrase
-        name: airsloop_crypt_password
-        path: .
+  - dest:
+      path: .values.conf.uamlite.users[0].user_sshkeys[0]
+    src:
+      kind: DeckhandPublicKey
+      name: airsloop_ssh_public_key
+      path: .
+  - dest:
+      path: .values.conf.uamlite.users[0].user_crypt_passwd
+    src:
+      kind: DeckhandPassphrase
+      name: airsloop_crypt_password
+      path: .
 spec:
   values:
-    manifests:
-      daemonset_ethtool: false
-      daemonset_mounts: false
-      daemonset_uamlite: true
-      daemonset_sysctl: false
-      daemonset_limits: false
-      daemonset_apt: true
-      daemonset_perm: false
-      daemonset_exec: true
-      daemonset_apparmor: false
     conf:
       uamlite:
         users:
-          - user_name: ubuntu
-            user_sudo: true
-            user_sshkeys: []
-...
+        - user_name: ubuntu
+          user_sshkeys: []
+          user_sudo: true
+    manifests:
+      daemonset_apparmor: false
+      daemonset_apt: true
+      daemonset_ethtool: false
+      daemonset_exec: true
+      daemonset_limits: false
+      daemonset_mounts: false
+      daemonset_perm: false
+      daemonset_sysctl: false
+      daemonset_uamlite: true

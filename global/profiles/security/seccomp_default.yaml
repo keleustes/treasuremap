@@ -1,23 +1,14 @@
 ---
-# The data content of this file is referred from the Moby project as
-# mentioned in the link below:
-# https://github.com/moby/moby/blob/master/profiles/seccomp/default.json
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSeccompProfile
 metadata:
-  schema: 'metadata/Document/v1'
-  name: seccomp-default
   layeringDefinition:
     abstract: false
     layer: global
+  name: seccomp-default
+  schema: metadata/Document/v1
 spec:
-  # Path for seccomp profile root directory.
-  seccompDirPath: /var/lib/kubelet/seccomp
-  # Path to save seccomp profile as file.
-  # This should be same as seccompDirPath with file name.
-  savePath: /var/lib/kubelet/seccomp/seccomp_default
-  # Content of default seccomp profile file.
-  content: |
+  content: |-
     {
         "defaultAction": "SCMP_ACT_ERRNO",
         "archMap": [
@@ -785,3 +776,5 @@ spec:
             }
         ]
     }
+  savePath: /var/lib/kubelet/seccomp/seccomp_default
+  seccompDirPath: /var/lib/kubelet/seccomp

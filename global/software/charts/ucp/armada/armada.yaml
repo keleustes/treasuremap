@@ -2,95 +2,77 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-armada
   labels:
     name: ucp-armada-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-armada
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.armada
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.armada
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.armada
-      dest:
-        path: .values.endpoints.armada
-
-    # Credentials
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.armada.keystone
-      dest:
-        path: .values.endpoints.identity.auth.user
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.identity.auth.user.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_armada_keystone_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.armada
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.armada
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.identity
+  - dest:
+      path: .values.endpoints.armada
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.armada
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.admin
+  - dest:
+      path: .values.endpoints.identity.auth.user
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.armada.keystone
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.identity.auth.user.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_armada_keystone_password
+      path: .
 spec:
   chart_name: armada
-  release: ucp-armada
-  namespace: ucp
-  wait:
-    timeout: 100
-    labels:
-      release_group: airship-ucp-armada
+  dependencies:
+  - armada-htk
   install:
     no_hooks: false
+  namespace: ucp
+  release: ucp-armada
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-armada
+      - labels:
+          release_group: airship-ucp-armada
+        type: job
   values:
-    pod:
-      replicas:
-        api: 2
-      env:
-        armada_api:
-          - name: ARMADA_UWSGI_TIMEOUT
-            value: 14400
     conf:
       armada:
         DEFAULT:
@@ -99,28 +81,35 @@ spec:
     manifests:
       deployment_tiller: false
       service_tiller_deploy: false
-  dependencies:
-    - armada-htk
-...
+    pod:
+      env:
+        armada_api:
+        - name: ARMADA_UWSGI_TIMEOUT
+          value: 14400
+      replicas:
+        api: 2
+  wait:
+    labels:
+      release_group: airship-ucp-armada
+    timeout: 100
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: armada-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: armada-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.armada-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.armada-htk
 spec:
   chart_name: armada-htk
-  release: armada-htk
-  namespace: armada-htk
-  values: {}
   dependencies: []
-...
+  namespace: armada-htk
+  release: armada-htk
+  values: {}

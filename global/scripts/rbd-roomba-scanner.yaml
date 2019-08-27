@@ -2,10 +2,10 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegScript
 metadata:
-  name: rbd-roomba-scanner
   layeringDefinition:
     abstract: false
     layer: global
+  name: rbd-roomba-scanner
 spec: |-
   #!/bin/bash
   set -ex

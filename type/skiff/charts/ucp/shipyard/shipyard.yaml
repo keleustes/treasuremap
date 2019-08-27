@@ -2,41 +2,38 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-shipyard
-  replacement: true
   labels:
     name: ucp-shipyard-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .source
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: ucp-shipyard-global
-    actions:
-      - method: replace
-        path: .source
-      - method: merge
-        path: .
+  name: ucp-shipyard
+  replacement: true
 spec:
-  wait:
-    timeout: 1800
   source:
-    type: local
     location: /airship-components/shipyard
     subpath: charts/shipyard
+    type: local
   values:
-    pod:
-      replicas:
-        shipyard:
-          api: 1
-        airflow:
-          worker: 1
-          scheduler: 1
     conf:
       shipyard:
-        # NOTE(drewwalters96): Since Drydock and Promenade are not deployed,
-        # temporarily alias those validations to Armada.
         drydock:
           service_type: armada
         promenade:
           service_type: armada
-...
+    pod:
+      replicas:
+        airflow:
+          scheduler: 1
+          worker: 1
+        shipyard:
+          api: 1
+  wait:
+    timeout: 1800

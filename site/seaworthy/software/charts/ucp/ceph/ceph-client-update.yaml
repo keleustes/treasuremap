@@ -1,25 +1,19 @@
 ---
-# The purpose of this file is to define environment-specific parameters for ceph
-# client update
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-client-update
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-ceph-client-update-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-ceph-client-update
 spec:
   values:
     conf:
       pool:
         target:
-          # NEWSITE-CHANGEME: Total number of OSDs. Does not need to change if
-          # your HW matches this site's HW. Verify for your environment.
-          # 8 OSDs per node x 3 nodes = 24
           osd: 24
-...

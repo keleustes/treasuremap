@@ -2,95 +2,83 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kibana
   layeringDefinition:
     abstract: false
     layer: global
+  name: kibana
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.kibana
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.kibana
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.elasticsearch
-      dest:
-        path: .values.endpoints.elasticsearch
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.kibana
-      dest:
-        path: .values.endpoints.kibana
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.ldap
-      dest:
-        path: .values.endpoints.ldap
-    # Accounts
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.elasticsearch.admin
-      dest:
-        path: .values.endpoints.elasticsearch.auth.admin
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.elasticsearch.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_elasticsearch_admin_password
-        path: .
-
-    # LDAP Details
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.ldap.admin
-      dest:
-        path: .values.endpoints.ldap.auth.admin
-    - dest:
-        path: .values.endpoints.ldap.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_ldap_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.kibana
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.kibana
+  - dest:
+      path: .values.endpoints.elasticsearch
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.elasticsearch
+  - dest:
+      path: .values.endpoints.kibana
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.kibana
+  - dest:
+      path: .values.endpoints.ldap
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.ldap
+  - dest:
+      path: .values.endpoints.elasticsearch.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.elasticsearch.admin
+  - dest:
+      path: .values.endpoints.elasticsearch.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_elasticsearch_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.ldap.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.ldap.admin
+  - dest:
+      path: .values.endpoints.ldap.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_ldap_password
+      path: .
 spec:
   chart_name: kibana
-  release: kibana
-  namespace: osh-infra
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-kibana
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: false
+  namespace: osh-infra
+  release: kibana
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-kibana
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-kibana
+        type: job
   values:
     conf:
       apache:
@@ -114,12 +102,13 @@ spec:
             </Proxy>
           </VirtualHost>
     labels:
-      kibana:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+      kibana:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+  wait:
+    labels:
+      release_group: airship-kibana
+    timeout: 900

@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: osh-infra-prometheus-openstack-exporter
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-prometheus-openstack-exporter
 spec:
-  description: Prometheus OpenStack Exporter
   chart_group:
-    - prometheus-openstack-exporter
+  - prometheus-openstack-exporter
+  description: Prometheus OpenStack Exporter

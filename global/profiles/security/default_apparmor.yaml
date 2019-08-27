@@ -2,13 +2,12 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegAppArmorProfile
 metadata:
-  schema: 'metadata/Document/v1'
-  name: airship-default
   layeringDefinition:
     abstract: false
     layer: global
+  name: airship-default
+  schema: metadata/Document/v1
 spec:
-  savePath: /etc/apparmor.d/profile_airship_default
   content: |
     #include <tunables/global>
 
@@ -76,3 +75,4 @@ spec:
       deny /sys/firmware/** rwklx,
       deny /sys/kernel/security/** rwklx,
     }
+  savePath: /etc/apparmor.d/profile_airship_default

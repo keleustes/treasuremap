@@ -2,18 +2,15 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: heat-aiab
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: heat-type
-    actions:
-      - method: merge
-        path: .
-
+  name: heat-aiab
 spec:
   test:
-    # Heat test for virtual Airship in a bottle installation
-    # usually takes much more time to finish than for baremetal one.
     timeout: 1200

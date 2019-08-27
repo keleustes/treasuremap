@@ -2,14 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-mariadb
   labels:
-    name: openstack-mariadb-chart-group-global
     component: mariadb
+    name: openstack-mariadb-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-mariadb
 spec:
-  description: Deploy MariaDB
   chart_group:
-    - openstack-mariadb
+  - openstack-mariadb
+  description: Deploy MariaDB

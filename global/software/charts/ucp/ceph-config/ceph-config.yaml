@@ -2,71 +2,71 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-config
   labels:
-    name: ucp-ceph-config-global
     components: ceph
+    name: ucp-ceph-config-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-ceph-config
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ceph-provisioners
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.ceph-provisioners
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ceph-provisioners
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.ceph-provisioners
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.ceph_mon
 spec:
   chart_name: ucp-ceph-config
-  release: ucp-ceph-config
-  namespace: ucp
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-ucp-ceph-config
+  dependencies:
+  - ceph-htk
   install:
     no_hooks: false
+  namespace: ucp
+  release: ucp-ceph-config
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-ceph-config
+      - labels:
+          release_group: airship-ucp-ceph-config
+        type: job
   values:
+    bootstrap:
+      enabled: false
+    conf:
+      rgw_ks:
+        enabled: true
+    deployment:
+      ceph: false
+      cephfs_provisioner: false
+      client_secrets: true
+      rbd_provisioner: false
+      rgw_keystone_user_and_endpoints: false
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -74,24 +74,14 @@ spec:
       provisioner:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-    deployment:
-      ceph: false
-      client_secrets: true
-      rbd_provisioner: false
-      cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: false
-    bootstrap:
-      enabled: false
-    conf:
-      rgw_ks:
-        enabled: true
     storageclass:
+      cephfs:
+        provision_storage_class: false
       rbd:
         ceph_configmap_name: ceph-etc
         parameters:
           userSecretName: pvc-ceph-client-key
-      cephfs:
-        provision_storage_class: false
-  dependencies:
-    - ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-ucp-ceph-config
+    timeout: 900

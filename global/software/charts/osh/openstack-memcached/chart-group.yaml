@@ -2,14 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-memcached
   labels:
-    name: openstack-memcached-chart-group-global
     component: memcached
+    name: openstack-memcached-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-memcached
 spec:
-  description: Deploy Memcached
   chart_group:
-    - openstack-memcached
+  - openstack-memcached
+  description: Deploy Memcached

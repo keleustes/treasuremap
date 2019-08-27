@@ -2,16 +2,16 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-glance-aiab
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .chart_group
     layer: site
     parentSelector:
-      name: openstack-glance-chart-group-global
       component: glance
-    actions:
-      - method: replace
-        path: .chart_group
+      name: openstack-glance-chart-group-global
+  name: openstack-glance-aiab
 spec:
   chart_group:
-    - glance-aiab
+  - glance-aiab

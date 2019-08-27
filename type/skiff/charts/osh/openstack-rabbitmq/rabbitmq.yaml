@@ -2,28 +2,27 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openstack-rabbitmq
-  replacement: true
   labels:
     name: openstack-rabbitmq-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: delete
+      path: .values.labels.prometheus_rabbitmq_exporter
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: openstack-rabbitmq-global
-    actions:
-      - method: delete
-        path: .values.labels.prometheus_rabbitmq_exporter
-      - method: merge
-        path: .
+  name: openstack-rabbitmq
+  replacement: true
 spec:
   test:
     enabled: false
   values:
-    pod:
-      replicas:
-        server: 1
     monitoring:
       prometheus:
         enabled: false
-...
+    pod:
+      replicas:
+        server: 1

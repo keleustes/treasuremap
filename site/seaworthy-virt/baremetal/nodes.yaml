@@ -2,57 +2,56 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  schema: 'metadata/Document/v1'
+  layeringDefinition:
+    abstract: false
+    layer: site
   name: n1
-  layeringDefinition:
-    abstract: false
-    layer: site
+  schema: metadata/Document/v1
 spec:
-  host_profile: cp-global
   addressing:
-    - network: gp
-      address: 172.24.1.11
+  - address: 172.24.1.11
+    network: gp
+  host_profile: cp-global
   metadata:
-    boot_mac: '52:54:00:00:a3:31'
+    boot_mac: 52:54:00:00:a3:31
     rack: rack1
     tags:
-      - 'masters'
+    - masters
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  schema: 'metadata/Document/v1'
+  layeringDefinition:
+    abstract: false
+    layer: site
   name: n2
-  layeringDefinition:
-    abstract: false
-    layer: site
+  schema: metadata/Document/v1
 spec:
-  host_profile: cp-global
   addressing:
-    - network: gp
-      address: 172.24.1.12
+  - address: 172.24.1.12
+    network: gp
+  host_profile: cp-global
   metadata:
-    boot_mac: '52:54:00:1a:95:0d'
+    boot_mac: 52:54:00:1a:95:0d
     rack: rack1
     tags:
-      - 'masters'
+    - masters
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBaremetalNode
 metadata:
-  schema: 'metadata/Document/v1'
-  name: n3
   layeringDefinition:
     abstract: false
     layer: site
+  name: n3
+  schema: metadata/Document/v1
 spec:
-  host_profile: cp-secondary
   addressing:
-    - network: gp
-      address: 172.24.1.13
+  - address: 172.24.1.13
+    network: gp
+  host_profile: cp-secondary
   metadata:
-    boot_mac: '52:54:00:31:c2:36'
+    boot_mac: 52:54:00:31:c2:36
     rack: rack1
     tags:
-      - 'masters'
-...
+    - masters

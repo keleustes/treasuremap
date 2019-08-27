@@ -1,226 +1,267 @@
 ---
-# The purpose of this file is to define the site's endpoint catalog. This should
-# not need to be modified for a new site.
-# #GLOBAL-CANDIDATE#
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  name: ucp_endpoints
   layeringDefinition:
     abstract: false
     layer: site
+  name: ucp_endpoints
   substitutions:
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        - path: .ucp.identity.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ucp.identity.host_fqdn_override.admin.host
-          pattern: DOMAIN
-        - path: .ucp.shipyard.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ucp.physicalprovisioner.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ucp.maas_region.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ceph.object_store.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ceph.ceph_object_store.host_fqdn_override.public.host
-          pattern: DOMAIN
-    - src:
-        kind: DeckhandCertificate
-        name: ingress-crt
-        path: .
-      dest:
-        - path: .ucp.identity.host_fqdn_override.public.tls.crt
-        - path: .ucp.shipyard.host_fqdn_override.public.tls.crt
-        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.crt
-        - path: .ceph.object_store.host_fqdn_override.public.tls.crt
-        - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: ingress-ca
-        path: .
-      dest:
-        - path: .ucp.identity.host_fqdn_override.public.tls.ca
-        - path: .ucp.shipyard.host_fqdn_override.public.tls.ca
-        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.ca
-        - path: .ceph.object_store.host_fqdn_override.public.tls.ca
-        - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
-    - src:
-        kind: DeckhandCertificateKey
-        name: ingress-key
-        path: .
-      dest:
-        - path: .ucp.identity.host_fqdn_override.public.tls.key
-        - path: .ucp.shipyard.host_fqdn_override.public.tls.key
-        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
-        - path: .ceph.object_store.host_fqdn_override.public.tls.key
-        - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
+  - dest:
+    - path: .ucp.identity.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .ucp.identity.host_fqdn_override.admin.host
+      pattern: DOMAIN
+    - path: .ucp.shipyard.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .ucp.physicalprovisioner.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .ucp.maas_region.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .ceph.object_store.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .ceph.ceph_object_store.host_fqdn_override.public.host
+      pattern: DOMAIN
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.ingress_domain
+  - dest:
+    - path: .ucp.identity.host_fqdn_override.public.tls.crt
+    - path: .ucp.shipyard.host_fqdn_override.public.tls.crt
+    - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.crt
+    - path: .ceph.object_store.host_fqdn_override.public.tls.crt
+    - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
+    src:
+      kind: DeckhandCertificate
+      name: ingress-crt
+      path: .
+  - dest:
+    - path: .ucp.identity.host_fqdn_override.public.tls.ca
+    - path: .ucp.shipyard.host_fqdn_override.public.tls.ca
+    - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.ca
+    - path: .ceph.object_store.host_fqdn_override.public.tls.ca
+    - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: ingress-ca
+      path: .
+  - dest:
+    - path: .ucp.identity.host_fqdn_override.public.tls.key
+    - path: .ucp.shipyard.host_fqdn_override.public.tls.key
+    - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
+    - path: .ceph.object_store.host_fqdn_override.public.tls.key
+    - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: ingress-key
+      path: .
 spec:
-  ucp:
-    identity:
-      namespace: ucp
-      name: keystone
+  ceph:
+    ceph_mgr:
+      host_fqdn_override:
+        default: null
       hosts:
-        default: keystone
-        internal: keystone-api
+        default: ceph-mgr
+      namespace: ceph
+      port:
+        mgr:
+          default: 7000
+      scheme:
+        default: http
+    ceph_mon:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: ceph-mon
+        discovery: ceph-mon-discovery
+      namespace: ceph
+      port:
+        mon:
+          default: 6789
+    ceph_object_store:
       host_fqdn_override:
         default: null
         public:
-          host: iam-sw.DOMAIN
-        admin:
-          host: iam-sw.DOMAIN
+          host: object-store-sw.DOMAIN
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      name: radosgw
+      namespace: ceph
       path:
-        default: /v3
-      scheme:
-        default: "https"
-        internal: "http"
+        default: /auth/v1.0
       port:
         api:
-          default: 443
-          internal: 5000
-    armada:
-      name: armada
+          default: 8088
+          public: 443
+      scheme:
+        default: http
+        public: https
+    object_store:
+      host_fqdn_override:
+        default: null
+        public:
+          host: object-store-sw.DOMAIN
       hosts:
-        default: armada-api
-        public: armada
+        default: ceph-rgw
+        public: radosgw
+      name: swift
+      namespace: ceph
+      path:
+        default: /swift
       port:
         api:
-          default: 8000
-      path:
-        default: /api/v1.0
+          default: 8088
+          public: 443
       scheme:
-        default: "http"
+        default: http
+        public: https
+    tenant_ceph_mgr:
       host_fqdn_override:
         default: null
-    deckhand:
-      name: deckhand
       hosts:
-        default: deckhand-int
-        public: deckhand-api
+        default: ceph-mgr
+      namespace: tenant-ceph
       port:
-        api:
-          default: 9000
-      path:
-        default: /api/v1.0
+        metrics:
+          default: 9284
+        mgr:
+          default: 7001
       scheme:
-        default: "http"
+        default: http
+    tenant_ceph_mon:
       host_fqdn_override:
         default: null
-    postgresql:
-      name: postgresql
       hosts:
-        default: postgresql
-      path: /DB_NAME
-      scheme: postgresql+psycopg2
+        default: ceph-mon
+        discovery: ceph-mon-discovery
+      namespace: tenant-ceph
       port:
-        postgresql:
-          default: 5432
-      host_fqdn_override:
-        default: null
-    postgresql_airflow_celery:
-      name: postgresql_airflow_celery_db
-      hosts:
-        default: postgresql
-      path: /DB_NAME
-      scheme: db+postgresql
-      port:
-        postgresql:
-          default: 5432
-      host_fqdn_override:
-        default: null
-    oslo_db:
-      hosts:
-        default: mariadb
-        discovery: mariadb-discovery
-      host_fqdn_override:
-        default: null
-      path: /DB_NAME
-      scheme: mysql+pymysql
-      port:
-        mysql:
-          default: 3306
-        wsrep:
-          default: 4567
-    key_manager:
-      name: barbican
-      hosts:
-        default: barbican-api
-        public: barbican
-      host_fqdn_override:
-        default: null
-      path:
-        default: 
-      scheme:
-        default: "http"
-      port:
-        api:
-          default: 9311
-          public: 80
+        mon:
+          default: 6790
+  ucp:
     airflow_oslo_messaging:
-      namespace: null
+      host_fqdn_override:
+        default: null
       hosts:
         default: rabbitmq
-      host_fqdn_override:
-        default: null
+      namespace: null
       path: /airflow
-      scheme: amqp
       port:
         amqp:
           default: 5672
         http:
           default: 15672
-    oslo_messaging:
-      namespace: null
-      statefulset:
-        name: airship-ucp-rabbitmq-rabbitmq
-      hosts:
-        default: rabbitmq
+      scheme: amqp
+    armada:
       host_fqdn_override:
         default: null
-      path: /keystone
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-    oslo_cache:
       hosts:
-        default: memcached
+        default: armada-api
+        public: armada
+      name: armada
+      path:
+        default: /api/v1.0
+      port:
+        api:
+          default: 8000
+      scheme:
+        default: http
+    deckhand:
       host_fqdn_override:
         default: null
-      port:
-        memcache:
-          default: 11211
-    physicalprovisioner:
-      name: drydock
       hosts:
-        default: drydock-api
+        default: deckhand-int
+        public: deckhand-api
+      name: deckhand
+      path:
+        default: /api/v1.0
       port:
         api:
           default: 9000
-          nodeport: 31900
-          public: 443
+      scheme:
+        default: http
+    identity:
+      host_fqdn_override:
+        admin:
+          host: iam-sw.DOMAIN
+        default: null
+        public:
+          host: iam-sw.DOMAIN
+      hosts:
+        default: keystone
+        internal: keystone-api
+      name: keystone
+      namespace: ucp
+      path:
+        default: /v3
+      port:
+        api:
+          default: 443
+          internal: 5000
+      scheme:
+        default: https
+        internal: http
+    key_manager:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: barbican-api
+        public: barbican
+      name: barbican
+      path:
+        default: null
+      port:
+        api:
+          default: 9311
+          public: 80
+      scheme:
+        default: http
+    kubernetesprovisioner:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: promenade-api
+      name: promenade
       path:
         default: /api/v1.0
+      port:
+        api:
+          default: 80
       scheme:
-        default: "http"
-        public: "https"
+        default: http
+    maas_ingress:
+      host_fqdn_override:
+        public: null
+      hosts:
+        default: maas-ingress
+        error_pages: maas-ingress-error
+      port:
+        error_pages:
+          default: 8080
+          podport: 8080
+        healthz:
+          podport: 10259
+        http:
+          default: 80
+        https:
+          default: 443
+        ingress_default_server:
+          default: 8383
+        status:
+          podport: 18089
+    maas_region:
       host_fqdn_override:
         default: null
         public:
-          host: drydock-sw.DOMAIN
-    maas_region:
-      name: maas-region
+          host: maas-sw.DOMAIN
       hosts:
         default: maas-region
         public: maas
+      name: maas-region
       path:
         default: /MAAS
-      scheme:
-        default: "http"
       port:
         region_api:
           default: 80
@@ -229,968 +270,921 @@ spec:
           public: 80
         region_proxy:
           default: 8000
-      host_fqdn_override:
-        default: null
-        public:
-          host: maas-sw.DOMAIN
-    maas_ingress:
-      hosts:
-        default: maas-ingress
-        error_pages: maas-ingress-error
-      host_fqdn_override:
-        public: null
-      port:
-        http:
-          default: 80
-        https:
-          default: 443
-        ingress_default_server:
-          default: 8383
-        error_pages:
-          default: 8080
-          podport: 8080
-        healthz:
-          podport: 10259
-        status:
-          podport: 18089
-    kubernetesprovisioner:
-      name: promenade
-      hosts:
-        default: promenade-api
-      port:
-        api:
-          default: 80
-      path:
-        default: /api/v1.0
-      scheme:
-        default: "http"
-      host_fqdn_override:
-        default: null
-    shipyard:
-      name: shipyard
-      hosts:
-        default: shipyard-int
-        public: shipyard-api
-      port:
-        api:
-          default: 9000
-          public: 443
-      path:
-        default: /api/v1.0
-      scheme:
-        default: "http"
-        public: "https"
-      host_fqdn_override:
-        default: null
-        public:
-          host: shipyard-sw.DOMAIN
-    prometheus_openstack_exporter:
-      namespace: ucp
-      hosts:
-        default: openstack-metrics
-      host_fqdn_override:
-        default: null
-      path:
-        default: null
-      scheme:
-        default: "http"
-      port:
-        exporter:
-          default: 9103
-  ceph:
-    object_store:
-      name: swift
-      namespace: ceph
-      hosts:
-        default: ceph-rgw
-        public: radosgw
-      host_fqdn_override:
-        default: null
-        public:
-          host: object-store-sw.DOMAIN
-      path:
-        default: /swift
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8088
-          public: 443
-    ceph_object_store:
-      name: radosgw
-      namespace: ceph
-      hosts:
-        default: ceph-rgw
-        public: radosgw
-      host_fqdn_override:
-        default: null
-        public:
-          host: object-store-sw.DOMAIN
-      path:
-        default: /auth/v1.0
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8088
-          public: 443
-    ceph_mon:
-      namespace: ceph
-      hosts:
-        default: ceph-mon
-        discovery: ceph-mon-discovery
-      host_fqdn_override:
-        default: null
-      port:
-        mon:
-          default: 6789
-    ceph_mgr:
-      namespace: ceph
-      hosts:
-        default: ceph-mgr
-      host_fqdn_override:
-        default: null
-      port:
-        mgr:
-          default: 7000
-      scheme:
-        default: "http"
-    tenant_ceph_mon:
-      namespace: tenant-ceph
-      hosts:
-        default: ceph-mon
-        discovery: ceph-mon-discovery
-      host_fqdn_override:
-        default: null
-      port:
-        mon:
-          default: 6790
-    tenant_ceph_mgr:
-      namespace: tenant-ceph
-      hosts:
-        default: ceph-mgr
-      host_fqdn_override:
-        default: null
-      port:
-        mgr:
-          default: 7001
-        metrics:
-          default: 9284
       scheme:
         default: http
-...
----
-apiVersion: pegleg.airshipit.org/v1alpha1
-kind: PeglegEndpointCatalogue
-metadata:
-  name: osh_endpoints
-  layeringDefinition:
-    abstract: false
-    layer: site
-  substitutions:
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        - path: .osh.object_store.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.ceph_object_store.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.image.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.cloudformation.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.orchestration.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.compute.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.compute_novnc_proxy.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.placement.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.network.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.identity.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.identity.host_fqdn_override.admin.host
-          pattern: DOMAIN
-        - path: .osh.dashboard.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.volume.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.volumev2.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh.volumev3.host_fqdn_override.public.host
-          pattern: DOMAIN
-    - src:
-        kind: DeckhandCertificate
-        name: ingress-crt
-        path: .
-      dest:
-        - path: .osh.object_store.host_fqdn_override.public.tls.crt
-        - path: .osh.ceph_object_store.host_fqdn_override.public.tls.crt
-        - path: .osh.identity.host_fqdn_override.public.tls.crt
-        - path: .osh.orchestration.host_fqdn_override.public.tls.crt
-        - path: .osh.cloudformation.host_fqdn_override.public.tls.crt
-        - path: .osh.dashboard.host_fqdn_override.public.tls.crt
-        - path: .osh.image.host_fqdn_override.public.tls.crt
-        - path: .osh.volume.host_fqdn_override.public.tls.crt
-        - path: .osh.volumev2.host_fqdn_override.public.tls.crt
-        - path: .osh.volumev3.host_fqdn_override.public.tls.crt
-        - path: .osh.compute.host_fqdn_override.public.tls.crt
-        - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.crt
-        - path: .osh.placement.host_fqdn_override.public.tls.crt
-        - path: .osh.network.host_fqdn_override.public.tls.crt
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: ingress-ca
-        path: .
-      dest:
-        - path: .osh.object_store.host_fqdn_override.public.tls.ca
-        - path: .osh.ceph_object_store.host_fqdn_override.public.tls.ca
-        - path: .osh.identity.host_fqdn_override.public.tls.ca
-        - path: .osh.orchestration.host_fqdn_override.public.tls.ca
-        - path: .osh.cloudformation.host_fqdn_override.public.tls.ca
-        - path: .osh.dashboard.host_fqdn_override.public.tls.ca
-        - path: .osh.image.host_fqdn_override.public.tls.ca
-        - path: .osh.volume.host_fqdn_override.public.tls.ca
-        - path: .osh.volumev2.host_fqdn_override.public.tls.ca
-        - path: .osh.volumev3.host_fqdn_override.public.tls.ca
-        - path: .osh.compute.host_fqdn_override.public.tls.ca
-        - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.ca
-        - path: .osh.placement.host_fqdn_override.public.tls.ca
-        - path: .osh.network.host_fqdn_override.public.tls.ca
-    - src:
-        kind: DeckhandCertificateKey
-        name: ingress-key
-        path: .
-      dest:
-        - path: .osh.object_store.host_fqdn_override.public.tls.key
-        - path: .osh.ceph_object_store.host_fqdn_override.public.tls.key
-        - path: .osh.identity.host_fqdn_override.public.tls.key
-        - path: .osh.orchestration.host_fqdn_override.public.tls.key
-        - path: .osh.cloudformation.host_fqdn_override.public.tls.key
-        - path: .osh.dashboard.host_fqdn_override.public.tls.key
-        - path: .osh.image.host_fqdn_override.public.tls.key
-        - path: .osh.volume.host_fqdn_override.public.tls.key
-        - path: .osh.volumev2.host_fqdn_override.public.tls.key
-        - path: .osh.volumev3.host_fqdn_override.public.tls.key
-        - path: .osh.compute.host_fqdn_override.public.tls.key
-        - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
-        - path: .osh.placement.host_fqdn_override.public.tls.key
-        - path: .osh.network.host_fqdn_override.public.tls.key
-spec:
-  osh:
-    object_store:
-      name: swift
-      namespace: openstack
-      hosts:
-        default: ceph-rgw
-        public: radosgw
+    oslo_cache:
       host_fqdn_override:
         default: null
-        public:
-          host: object-store-sw.DOMAIN
-      path:
-        default: /swift/v1/KEY_$(tenant_id)s
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8088
-          public: 443
-    ceph_object_store:
-      name: radosgw
-      namespace: openstack
       hosts:
-        default: ceph-rgw
-        public: radosgw
-      host_fqdn_override:
-        default: null
-        public:
-          host: object-store-sw.DOMAIN
-      path:
-        default: /auth/v1.0
-      scheme:
-        default: "http"
-        public: "https"
+        default: memcached
       port:
-        api:
-          default: 8088
-          public: 443
+        memcache:
+          default: 11211
     oslo_db:
+      host_fqdn_override:
+        default: null
       hosts:
         default: mariadb
         discovery: mariadb-discovery
-      host_fqdn_override:
-        default: null
       path: /DB_NAME
-      scheme: mysql+pymysql
       port:
         mysql:
           default: 3306
         wsrep:
           default: 4567
-    prometheus_mysql_exporter:
-      namespace: openstack
-      hosts:
-        default: mysql-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: 'http'
-      port:
-        metrics:
-          default: 9104
+      scheme: mysql+pymysql
     oslo_messaging:
-      statefulset:
-        name: airship-openstack-rabbitmq-rabbitmq
-      namespace: openstack
-      hosts:
-        default: openstack-rabbitmq
       host_fqdn_override:
         default: null
-      path: /VHOST_NAME
-      scheme: rabbit
+      hosts:
+        default: rabbitmq
+      namespace: null
+      path: /keystone
       port:
         amqp:
           default: 5672
-        http:
-          default: 15672
-    openstack_rabbitmq_exporter:
+      scheme: rabbit
+      statefulset:
+        name: airship-ucp-rabbitmq-rabbitmq
+    physicalprovisioner:
+      host_fqdn_override:
+        default: null
+        public:
+          host: drydock-sw.DOMAIN
+      hosts:
+        default: drydock-api
+      name: drydock
+      path:
+        default: /api/v1.0
+      port:
+        api:
+          default: 9000
+          nodeport: 31900
+          public: 443
+      scheme:
+        default: http
+        public: https
+    postgresql:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: postgresql
+      name: postgresql
+      path: /DB_NAME
+      port:
+        postgresql:
+          default: 5432
+      scheme: postgresql+psycopg2
+    postgresql_airflow_celery:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: postgresql
+      name: postgresql_airflow_celery_db
+      path: /DB_NAME
+      port:
+        postgresql:
+          default: 5432
+      scheme: db+postgresql
+    prometheus_openstack_exporter:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: openstack-metrics
+      namespace: ucp
+      path:
+        default: null
+      port:
+        exporter:
+          default: 9103
+      scheme:
+        default: http
+    shipyard:
+      host_fqdn_override:
+        default: null
+        public:
+          host: shipyard-sw.DOMAIN
+      hosts:
+        default: shipyard-int
+        public: shipyard-api
+      name: shipyard
+      path:
+        default: /api/v1.0
+      port:
+        api:
+          default: 9000
+          public: 443
+      scheme:
+        default: http
+        public: https
+---
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
+metadata:
+  layeringDefinition:
+    abstract: false
+    layer: site
+  name: osh_endpoints
+  substitutions:
+  - dest:
+    - path: .osh.object_store.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.ceph_object_store.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.image.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.cloudformation.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.orchestration.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.compute.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.placement.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.network.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.identity.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.identity.host_fqdn_override.admin.host
+      pattern: DOMAIN
+    - path: .osh.dashboard.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.volume.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.volumev2.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh.volumev3.host_fqdn_override.public.host
+      pattern: DOMAIN
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.ingress_domain
+  - dest:
+    - path: .osh.object_store.host_fqdn_override.public.tls.crt
+    - path: .osh.ceph_object_store.host_fqdn_override.public.tls.crt
+    - path: .osh.identity.host_fqdn_override.public.tls.crt
+    - path: .osh.orchestration.host_fqdn_override.public.tls.crt
+    - path: .osh.cloudformation.host_fqdn_override.public.tls.crt
+    - path: .osh.dashboard.host_fqdn_override.public.tls.crt
+    - path: .osh.image.host_fqdn_override.public.tls.crt
+    - path: .osh.volume.host_fqdn_override.public.tls.crt
+    - path: .osh.volumev2.host_fqdn_override.public.tls.crt
+    - path: .osh.volumev3.host_fqdn_override.public.tls.crt
+    - path: .osh.compute.host_fqdn_override.public.tls.crt
+    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.crt
+    - path: .osh.placement.host_fqdn_override.public.tls.crt
+    - path: .osh.network.host_fqdn_override.public.tls.crt
+    src:
+      kind: DeckhandCertificate
+      name: ingress-crt
+      path: .
+  - dest:
+    - path: .osh.object_store.host_fqdn_override.public.tls.ca
+    - path: .osh.ceph_object_store.host_fqdn_override.public.tls.ca
+    - path: .osh.identity.host_fqdn_override.public.tls.ca
+    - path: .osh.orchestration.host_fqdn_override.public.tls.ca
+    - path: .osh.cloudformation.host_fqdn_override.public.tls.ca
+    - path: .osh.dashboard.host_fqdn_override.public.tls.ca
+    - path: .osh.image.host_fqdn_override.public.tls.ca
+    - path: .osh.volume.host_fqdn_override.public.tls.ca
+    - path: .osh.volumev2.host_fqdn_override.public.tls.ca
+    - path: .osh.volumev3.host_fqdn_override.public.tls.ca
+    - path: .osh.compute.host_fqdn_override.public.tls.ca
+    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.ca
+    - path: .osh.placement.host_fqdn_override.public.tls.ca
+    - path: .osh.network.host_fqdn_override.public.tls.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: ingress-ca
+      path: .
+  - dest:
+    - path: .osh.object_store.host_fqdn_override.public.tls.key
+    - path: .osh.ceph_object_store.host_fqdn_override.public.tls.key
+    - path: .osh.identity.host_fqdn_override.public.tls.key
+    - path: .osh.orchestration.host_fqdn_override.public.tls.key
+    - path: .osh.cloudformation.host_fqdn_override.public.tls.key
+    - path: .osh.dashboard.host_fqdn_override.public.tls.key
+    - path: .osh.image.host_fqdn_override.public.tls.key
+    - path: .osh.volume.host_fqdn_override.public.tls.key
+    - path: .osh.volumev2.host_fqdn_override.public.tls.key
+    - path: .osh.volumev3.host_fqdn_override.public.tls.key
+    - path: .osh.compute.host_fqdn_override.public.tls.key
+    - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
+    - path: .osh.placement.host_fqdn_override.public.tls.key
+    - path: .osh.network.host_fqdn_override.public.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: ingress-key
+      path: .
+spec:
+  osh:
+    ceph_object_store:
+      host_fqdn_override:
+        default: null
+        public:
+          host: object-store-sw.DOMAIN
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      name: radosgw
       namespace: openstack
-      hosts:
-        default: openstack-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
       path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
-    oslo_cache:
-      namespace: openstack
-      hosts:
-        default: memcached
-      host_fqdn_override:
-        default: null
-      port:
-        memcache:
-          default: 11211
-    identity:
-      namespace: openstack
-      name: keystone
-      hosts:
-        default: keystone
-        internal: keystone-api
-      host_fqdn_override:
-        default: null
-        public:
-          host: identity-sw.DOMAIN
-        admin:
-          host: identity-sw.DOMAIN
-      path:
-        default: /v3
-      scheme:
-        default: "https"
-        internal: "http"
+        default: /auth/v1.0
       port:
         api:
-          default: 443
-          internal: 5000
-    image:
-      name: glance
-      hosts:
-        default: glance-api
-        public: glance
-      host_fqdn_override:
-        default: null
-        public:
-          host: image-sw.DOMAIN
-      path:
-        default: null
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 9292
+          default: 8088
           public: 443
-    image_registry:
-      name: glance-registry
-      hosts:
-        default: glance-registry
-        public: glance-reg
-      host_fqdn_override:
-        default: null
-      path:
-        default: null
       scheme:
-        default: "http"
-      port:
-        api:
-          default: 9191
-          public: 80
-    volume:
-      name: cinder
-      hosts:
-        default: cinder-api
-        public: cinder
-      host_fqdn_override:
-        default: null
-        public:
-          host: volume-sw.DOMAIN
-      path:
-        default: "/v1/%(tenant_id)s"
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8776
-          public: 443
-    volumev2:
-      name: cinderv2
-      hosts:
-        default: cinder-api
-        public: cinder
-      host_fqdn_override:
-        default: null
-        public:
-          host: volume-sw.DOMAIN
-      path:
-        default: "/v2/%(tenant_id)s"
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8776
-          public: 443
-    volumev3:
-      name: cinderv3
-      hosts:
-        default: cinder-api
-        public: cinder
-      host_fqdn_override:
-        default: null
-        public:
-          host: volume-sw.DOMAIN
-      path:
-        default: "/v3/%(tenant_id)s"
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8776
-          public: 443
-    orchestration:
-      name: heat
-      hosts:
-        default: heat-api
-        public: heat
-      host_fqdn_override:
-        default: null
-        public:
-          host: orchestration-sw.DOMAIN
-      path:
-        default: "/v1/%(project_id)s"
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8004
-          public: 443
+        default: http
+        public: https
     cloudformation:
-      name: heat-cfn
-      hosts:
-        default: heat-cfn
-        public: cloudformation
       host_fqdn_override:
         default: null
         public:
           host: cloudformation-sw.DOMAIN
+      hosts:
+        default: heat-cfn
+        public: cloudformation
+      name: heat-cfn
       path:
-        default: 
-      scheme:
-        default: "http"
-        public: "https"
+        default: null
       port:
         api:
           default: 8000
           public: 443
+      scheme:
+        default: http
+        public: https
     cloudwatch:
-      name: heat-cloudwatch
+      host_fqdn_override:
+        default: null
       hosts:
         default: heat-cloudwatch
         public: cloudwatch
-      host_fqdn_override:
-        default: null
+      name: heat-cloudwatch
       path:
         default: null
-      type: null
-      scheme:
-        default: "http"
       port:
         api:
           default: 8003
           public: 80
-    network:
-      name: neutron
-      hosts:
-        default: neutron-server
-        public: neutron
-      host_fqdn_override:
-        default: null
-        public:
-          host: network-sw.DOMAIN
-      path:
-        default: null
       scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 9696
-          public: 443
+        default: http
+      type: null
     compute:
-      name: nova
-      hosts:
-        default: nova-api
-        public: nova
       host_fqdn_override:
         default: null
         public:
           host: compute-sw.DOMAIN
+      hosts:
+        default: nova-api
+        public: nova
+      name: nova
       path:
-        default: "/v2/%(tenant_id)s"
-      scheme:
-        default: "http"
-        public: "https"
+        default: /v2/%(tenant_id)s
       port:
         api:
           default: 8774
           public: 443
         novncproxy:
           default: 443
+      scheme:
+        default: http
+        public: https
     compute_metadata:
-      name: nova
+      host_fqdn_override:
+        default: null
       hosts:
         default: nova-metadata
         public: metadata
-      host_fqdn_override:
-        default: null
+      name: nova
       path:
         default: /
-      scheme:
-        default: "http"
       port:
         metadata:
           default: 8775
           public: 80
+      scheme:
+        default: http
     compute_novnc_proxy:
-      name: nova
-      hosts:
-        default: nova-novncproxy
-        public: novncproxy
       host_fqdn_override:
         default: null
         public:
           host: nova-novncproxy-sw.DOMAIN
+      hosts:
+        default: nova-novncproxy
+        public: novncproxy
+      name: nova
       path:
         default: /vnc_auto.html
-      scheme:
-        default: "http"
-        public: "https"
       port:
         novnc_proxy:
           default: 6080
           public: 443
+      scheme:
+        default: http
+        public: https
     compute_spice_proxy:
-      name: nova
-      hosts:
-        default: nova-spiceproxy
       host_fqdn_override:
         default: null
+      hosts:
+        default: nova-spiceproxy
+      name: nova
       path:
         default: /spice_auto.html
-      scheme:
-        default: "http"
       port:
         spice_proxy:
           default: 6082
-    placement:
-      name: placement
-      hosts:
-        default: placement-api
-        public: placement
-      host_fqdn_override:
-        default: null
-        public:
-          host: placement-sw.DOMAIN
-      path:
-        default: /
       scheme:
-        default: "http"
-        public: "https"
-      port:
-        api:
-          default: 8778
-          public: 443
+        default: http
     dashboard:
-      name: horizon
-      hosts:
-        default: horizon-int
-        public: horizon
       host_fqdn_override:
         default: null
         public:
           host: dashboard-sw.DOMAIN
+      hosts:
+        default: horizon-int
+        public: horizon
+      name: horizon
       path:
         default: null
-      scheme:
-        default: "http"
-        public: "https"
       port:
         web:
           default: 80
           public: 443
-...
+      scheme:
+        default: http
+        public: https
+    identity:
+      host_fqdn_override:
+        admin:
+          host: identity-sw.DOMAIN
+        default: null
+        public:
+          host: identity-sw.DOMAIN
+      hosts:
+        default: keystone
+        internal: keystone-api
+      name: keystone
+      namespace: openstack
+      path:
+        default: /v3
+      port:
+        api:
+          default: 443
+          internal: 5000
+      scheme:
+        default: https
+        internal: http
+    image:
+      host_fqdn_override:
+        default: null
+        public:
+          host: image-sw.DOMAIN
+      hosts:
+        default: glance-api
+        public: glance
+      name: glance
+      path:
+        default: null
+      port:
+        api:
+          default: 9292
+          public: 443
+      scheme:
+        default: http
+        public: https
+    image_registry:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: glance-registry
+        public: glance-reg
+      name: glance-registry
+      path:
+        default: null
+      port:
+        api:
+          default: 9191
+          public: 80
+      scheme:
+        default: http
+    network:
+      host_fqdn_override:
+        default: null
+        public:
+          host: network-sw.DOMAIN
+      hosts:
+        default: neutron-server
+        public: neutron
+      name: neutron
+      path:
+        default: null
+      port:
+        api:
+          default: 9696
+          public: 443
+      scheme:
+        default: http
+        public: https
+    object_store:
+      host_fqdn_override:
+        default: null
+        public:
+          host: object-store-sw.DOMAIN
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      name: swift
+      namespace: openstack
+      path:
+        default: /swift/v1/KEY_$(tenant_id)s
+      port:
+        api:
+          default: 8088
+          public: 443
+      scheme:
+        default: http
+        public: https
+    openstack_rabbitmq_exporter:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: openstack-rabbitmq-exporter
+      namespace: openstack
+      path:
+        default: /metrics
+      port:
+        metrics:
+          default: 9095
+      scheme:
+        default: http
+    orchestration:
+      host_fqdn_override:
+        default: null
+        public:
+          host: orchestration-sw.DOMAIN
+      hosts:
+        default: heat-api
+        public: heat
+      name: heat
+      path:
+        default: /v1/%(project_id)s
+      port:
+        api:
+          default: 8004
+          public: 443
+      scheme:
+        default: http
+        public: https
+    oslo_cache:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: memcached
+      namespace: openstack
+      port:
+        memcache:
+          default: 11211
+    oslo_db:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: mariadb
+        discovery: mariadb-discovery
+      path: /DB_NAME
+      port:
+        mysql:
+          default: 3306
+        wsrep:
+          default: 4567
+      scheme: mysql+pymysql
+    oslo_messaging:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: openstack-rabbitmq
+      namespace: openstack
+      path: /VHOST_NAME
+      port:
+        amqp:
+          default: 5672
+        http:
+          default: 15672
+      scheme: rabbit
+      statefulset:
+        name: airship-openstack-rabbitmq-rabbitmq
+    placement:
+      host_fqdn_override:
+        default: null
+        public:
+          host: placement-sw.DOMAIN
+      hosts:
+        default: placement-api
+        public: placement
+      name: placement
+      path:
+        default: /
+      port:
+        api:
+          default: 8778
+          public: 443
+      scheme:
+        default: http
+        public: https
+    prometheus_mysql_exporter:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: mysql-exporter
+      namespace: openstack
+      path:
+        default: /metrics
+      port:
+        metrics:
+          default: 9104
+      scheme:
+        default: http
+    volume:
+      host_fqdn_override:
+        default: null
+        public:
+          host: volume-sw.DOMAIN
+      hosts:
+        default: cinder-api
+        public: cinder
+      name: cinder
+      path:
+        default: /v1/%(tenant_id)s
+      port:
+        api:
+          default: 8776
+          public: 443
+      scheme:
+        default: http
+        public: https
+    volumev2:
+      host_fqdn_override:
+        default: null
+        public:
+          host: volume-sw.DOMAIN
+      hosts:
+        default: cinder-api
+        public: cinder
+      name: cinderv2
+      path:
+        default: /v2/%(tenant_id)s
+      port:
+        api:
+          default: 8776
+          public: 443
+      scheme:
+        default: http
+        public: https
+    volumev3:
+      host_fqdn_override:
+        default: null
+        public:
+          host: volume-sw.DOMAIN
+      hosts:
+        default: cinder-api
+        public: cinder
+      name: cinderv3
+      path:
+        default: /v3/%(tenant_id)s
+      port:
+        api:
+          default: 8776
+          public: 443
+      scheme:
+        default: http
+        public: https
 ---
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegEndpointCatalogue
 metadata:
-  name: osh_infra_endpoints
   layeringDefinition:
     abstract: false
     layer: site
+  name: osh_infra_endpoints
   substitutions:
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        - path: .osh_infra.kibana.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh_infra.grafana.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .osh_infra.nagios.host_fqdn_override.public.host
-          pattern: DOMAIN
-    - src:
-        kind: DeckhandCertificate
-        name: ingress-crt
-        path: .
-      dest:
-        - path: .osh_infra.kibana.host_fqdn_override.public.tls.crt
-        - path: .osh_infra.grafana.host_fqdn_override.public.tls.crt
-        - path: .osh_infra.nagios.host_fqdn_override.public.tls.crt
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: ingress-ca
-        path: .
-      dest:
-        - path: .osh_infra.kibana.host_fqdn_override.public.tls.ca
-        - path: .osh_infra.grafana.host_fqdn_override.public.tls.ca
-        - path: .osh_infra.nagios.host_fqdn_override.public.tls.ca
-    - src:
-        kind: DeckhandCertificateKey
-        name: ingress-key
-        path: .
-      dest:
-        - path: .osh_infra.kibana.host_fqdn_override.public.tls.key
-        - path: .osh_infra.grafana.host_fqdn_override.public.tls.key
-        - path: .osh_infra.nagios.host_fqdn_override.public.tls.key
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .ldap.base_url
-      dest:
-        path: .osh_infra.ldap.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .ldap.auth_path
-      dest:
-        path: .osh_infra.ldap.path.default
-        pattern: AUTH_PATH
+  - dest:
+    - path: .osh_infra.kibana.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh_infra.grafana.host_fqdn_override.public.host
+      pattern: DOMAIN
+    - path: .osh_infra.nagios.host_fqdn_override.public.host
+      pattern: DOMAIN
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.ingress_domain
+  - dest:
+    - path: .osh_infra.kibana.host_fqdn_override.public.tls.crt
+    - path: .osh_infra.grafana.host_fqdn_override.public.tls.crt
+    - path: .osh_infra.nagios.host_fqdn_override.public.tls.crt
+    src:
+      kind: DeckhandCertificate
+      name: ingress-crt
+      path: .
+  - dest:
+    - path: .osh_infra.kibana.host_fqdn_override.public.tls.ca
+    - path: .osh_infra.grafana.host_fqdn_override.public.tls.ca
+    - path: .osh_infra.nagios.host_fqdn_override.public.tls.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: ingress-ca
+      path: .
+  - dest:
+    - path: .osh_infra.kibana.host_fqdn_override.public.tls.key
+    - path: .osh_infra.grafana.host_fqdn_override.public.tls.key
+    - path: .osh_infra.nagios.host_fqdn_override.public.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: ingress-key
+      path: .
+  - dest:
+      path: .osh_infra.ldap.host_fqdn_override.public.host
+      pattern: DOMAIN
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .ldap.base_url
+  - dest:
+      path: .osh_infra.ldap.path.default
+      pattern: AUTH_PATH
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .ldap.auth_path
 spec:
   osh_infra:
-    ceph_object_store:
-      name: radosgw
-      namespace: osh-infra
-      hosts:
-        default: ceph-rgw
-        public: radosgw
-      host_fqdn_override:
-        default: null
-      path:
-        default: null
-      scheme:
-        default: "http"
-      port:
-        api:
-          default: 8088
-          public: 80
-    elasticsearch:
-      name: elasticsearch
-      namespace: osh-infra
-      hosts:
-        data: elasticsearch-data
-        default: elasticsearch-logging
-        discovery: elasticsearch-discovery
-        public: elasticsearch
-      host_fqdn_override:
-        default: null
-      path:
-        default: null
-      scheme:
-        default: "http"
-    prometheus_elasticsearch_exporter:
-      namespace: null
-      hosts:
-        default: elasticsearch-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9108
-    fluentd:
-      namespace: osh-infra
-      name: fluentd
-      hosts:
-        default: fluentd-logging
-      host_fqdn_override:
-        default: null
-      path:
-        default: null
-      scheme:
-        default: "http"
-      port:
-        service:
-          default: 24224
-        metrics:
-          default: 24220
-    prometheus_fluentd_exporter:
-      namespace: osh-infra
-      hosts:
-        default: fluentd-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9309
-    oslo_db:
-      namespace: osh-infra
-      hosts:
-        default: mariadb
-      host_fqdn_override:
-        default: null
-      path: /DB_NAME
-      scheme: mysql+pymysql
-      port:
-        mysql:
-          default: 3306
-    prometheus_mysql_exporter:
-      namespace: osh-infra
-      hosts:
-        default: mysql-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: 'http'
-      port:
-        metrics:
-          default: 9104
-    grafana:
-      name: grafana
-      namespace: osh-infra
-      hosts:
-        default: grafana-dashboard
-        public: grafana
-      host_fqdn_override:
-        default: null
-        public:
-          host: grafana-sw.DOMAIN
-      path:
-        default: null
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        grafana:
-          default: 3000
-          public: 443
-    monitoring:
-      name: prometheus
-      namespace: osh-infra
-      hosts:
-        default: prom-metrics
-        public: prometheus
-      host_fqdn_override:
-        default: null
-      path:
-        default: null
-      scheme:
-        default: "http"
-      port:
-        api:
-          default: 9090
-        http:
-          default: 80
-    kibana:
-      name: kibana
-      namespace: osh-infra
-      hosts:
-        default: kibana-dash
-        public: kibana
-      host_fqdn_override:
-        default: null
-        public:
-          host: kibana-sw.DOMAIN
-      path:
-        default: null
-      scheme:
-        default: "http"
-        public: "https"
-      port:
-        kibana:
-          default: 5601
-          public: 443
     alerts:
-      name: alertmanager
-      namespace: osh-infra
+      host_fqdn_override:
+        default: null
       hosts:
         default: alerts-engine
-        public: alertmanager
         discovery: alertmanager-discovery
-      host_fqdn_override:
-        default: null
+        public: alertmanager
+      name: alertmanager
+      namespace: osh-infra
       path:
         default: null
-      scheme:
-        default: "http"
       port:
         api:
           default: 9093
           public: 80
         mesh:
           default: 6783
-    kube_state_metrics:
-      namespace: kube-system
-      hosts:
-        default: kube-state-metrics
+      scheme:
+        default: http
+    ceph_object_store:
       host_fqdn_override:
         default: null
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      name: radosgw
+      namespace: osh-infra
+      path:
+        default: null
+      port:
+        api:
+          default: 8088
+          public: 80
+      scheme:
+        default: http
+    elasticsearch:
+      host_fqdn_override:
+        default: null
+      hosts:
+        data: elasticsearch-data
+        default: elasticsearch-logging
+        discovery: elasticsearch-discovery
+        public: elasticsearch
+      name: elasticsearch
+      namespace: osh-infra
       path:
         default: null
       scheme:
-        default: "http"
+        default: http
+    fluentd:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: fluentd-logging
+      name: fluentd
+      namespace: osh-infra
+      path:
+        default: null
+      port:
+        metrics:
+          default: 24220
+        service:
+          default: 24224
+      scheme:
+        default: http
+    grafana:
+      host_fqdn_override:
+        default: null
+        public:
+          host: grafana-sw.DOMAIN
+      hosts:
+        default: grafana-dashboard
+        public: grafana
+      name: grafana
+      namespace: osh-infra
+      path:
+        default: null
+      port:
+        grafana:
+          default: 3000
+          public: 443
+      scheme:
+        default: http
+        public: https
+    kibana:
+      host_fqdn_override:
+        default: null
+        public:
+          host: kibana-sw.DOMAIN
+      hosts:
+        default: kibana-dash
+        public: kibana
+      name: kibana
+      namespace: osh-infra
+      path:
+        default: null
+      port:
+        kibana:
+          default: 5601
+          public: 443
+      scheme:
+        default: http
+        public: https
+    kube_controller_manager:
+      path:
+        default: /metrics
+      scheme:
+        default: http
+    kube_scheduler:
+      path:
+        default: /metrics
+      scheme:
+        default: http
+    kube_state_metrics:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: kube-state-metrics
+      namespace: kube-system
+      path:
+        default: null
       port:
         http:
           default: 8080
-    kube_scheduler:
       scheme:
-        default: "http"
-      path:
-        default: /metrics
-    kube_controller_manager:
-      scheme:
-        default: "http"
-      path:
-        default: /metrics
-    node_metrics:
-      namespace: kube-system
-      hosts:
-        default: node-exporter
+        default: http
+    ldap:
       host_fqdn_override:
         default: null
+        public:
+          host: DOMAIN
+      hosts:
+        default: ldap
+      path:
+        default: /AUTH_PATH
+      port:
+        ldap:
+          default: 389
+      scheme:
+        default: ldap
+    monitoring:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: prom-metrics
+        public: prometheus
+      name: prometheus
+      namespace: osh-infra
       path:
         default: null
+      port:
+        api:
+          default: 9090
+        http:
+          default: 80
       scheme:
-        default: "http"
+        default: http
+    nagios:
+      host_fqdn_override:
+        default: null
+        public:
+          host: nagios-sw.DOMAIN
+      hosts:
+        default: nagios-metrics
+        public: nagios
+      name: nagios
+      namespace: osh-infra
+      path:
+        default: null
+      port:
+        http:
+          default: 80
+          public: 443
+      scheme:
+        default: http
+        public: https
+    node_metrics:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: node-exporter
+      namespace: kube-system
+      path:
+        default: null
       port:
         metrics:
           default: 9100
         prometheus_port:
           default: 9100
-    process_exporter_metrics:
-      namespace: kube-system
-      hosts:
-        default: process-exporter
+      scheme:
+        default: http
+    oslo_db:
       host_fqdn_override:
         default: null
+      hosts:
+        default: mariadb
+      namespace: osh-infra
+      path: /DB_NAME
+      port:
+        mysql:
+          default: 3306
+      scheme: mysql+pymysql
+    process_exporter_metrics:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: process-exporter
+      namespace: kube-system
       path:
         default: null
-      scheme:
-        default: "http"
       port:
         metrics:
           default: 9256
-    prometheus_openstack_exporter:
-      namespace: openstack
-      hosts:
-        default: openstack-metrics
+      scheme:
+        default: http
+    prometheus_elasticsearch_exporter:
       host_fqdn_override:
         default: null
+      hosts:
+        default: elasticsearch-exporter
+      namespace: null
+      path:
+        default: /metrics
+      port:
+        metrics:
+          default: 9108
+      scheme:
+        default: http
+    prometheus_fluentd_exporter:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: fluentd-exporter
+      namespace: osh-infra
+      path:
+        default: /metrics
+      port:
+        metrics:
+          default: 9309
+      scheme:
+        default: http
+    prometheus_mysql_exporter:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: mysql-exporter
+      namespace: osh-infra
+      path:
+        default: /metrics
+      port:
+        metrics:
+          default: 9104
+      scheme:
+        default: http
+    prometheus_openstack_exporter:
+      host_fqdn_override:
+        default: null
+      hosts:
+        default: openstack-metrics
+      namespace: openstack
       path:
         default: null
-      scheme:
-        default: "http"
       port:
         exporter:
           default: 9103
-    nagios:
-      name: nagios
-      namespace: osh-infra
-      hosts:
-        default: nagios-metrics
-        public: nagios
-      host_fqdn_override:
-        default: null
-        public:
-          host: nagios-sw.DOMAIN
-      path:
-        default: null
       scheme:
-        default: "http"
-        public: "https"
-      port:
-        http:
-          default: 80
-          public: 443
-    ldap:
-      hosts:
-        default: ldap
-      host_fqdn_override:
-        default: null
-        public:
-          host: DOMAIN
-      path:
-        default: /AUTH_PATH
-      scheme:
-        default: "ldap"
-      port:
-        ldap:
-          default: 389
-...
+        default: http

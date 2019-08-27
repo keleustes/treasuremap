@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: kubernetes-haproxy
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-haproxy
 spec:
-  description: HAProxy for Kubernetes
   chart_group:
-    - haproxy
+  - haproxy
+  description: HAProxy for Kubernetes

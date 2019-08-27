@@ -2,10 +2,10 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegScript
 metadata:
-  name: hanging-cgroup-release
   layeringDefinition:
     abstract: false
     layer: global
+  name: hanging-cgroup-release
 spec: |-
   #!/bin/bash
   set -ex

@@ -2,119 +2,108 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openstack-rabbitmq
   labels:
     name: openstack-rabbitmq-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-rabbitmq
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.rabbitmq
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.rabbitmq
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.oslo_messaging
-      dest:
-        path: .values.endpoints.oslo_messaging
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.openstack_rabbitmq_exporter
-      dest:
-        path: .values.endpoints.prometheus_rabbitmq_exporter
-    # Credentials
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.oslo_messaging.admin
-      dest:
-        path: .values.endpoints.oslo_messaging.auth.user
-
-    # Secrets
-
-    - src:
-        kind: DeckhandPassphrase
-        name: osh_rabbitmq_erlang_cookie
-        path: .
-      dest:
-        path: .values.endpoints.oslo_messaging.auth.erlang_cookie
-    - src:
-        kind: DeckhandPassphrase
-        name: osh_oslo_messaging_admin_password
-        path: .
-      dest:
-        path: .values.endpoints.oslo_messaging.auth.user.password
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.rabbitmq
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.rabbitmq
+  - dest:
+      path: .values.endpoints.oslo_messaging
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.oslo_messaging
+  - dest:
+      path: .values.endpoints.prometheus_rabbitmq_exporter
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.openstack_rabbitmq_exporter
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.user
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.oslo_messaging.admin
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.erlang_cookie
+    src:
+      kind: DeckhandPassphrase
+      name: osh_rabbitmq_erlang_cookie
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.user.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_oslo_messaging_admin_password
+      path: .
 spec:
   chart_name: openstack-rabbitmq
-  release: openstack-rabbitmq
-  namespace: openstack
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-openstack-rabbitmq
-    resources:
-      - type: statefulset
+  dependencies:
+  - openstack-rabbitmq-htk
   install:
     no_hooks: false
+  namespace: openstack
+  release: openstack-rabbitmq
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-openstack-rabbitmq
+      - labels:
+          release_group: airship-openstack-rabbitmq
+        type: job
   values:
-    pod:
-      replicas:
-        server: 2
     labels:
-      server:
+      prometheus_rabbitmq_exporter:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-      prometheus_rabbitmq_exporter:
+      server:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
     monitoring:
       prometheus:
         enabled: true
-  dependencies:
-    - openstack-rabbitmq-htk
-...
+    pod:
+      replicas:
+        server: 2
+  wait:
+    labels:
+      release_group: airship-openstack-rabbitmq
+    resources:
+    - type: statefulset
+    timeout: 900
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openstack-rabbitmq-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-rabbitmq-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.rabbitmq-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.rabbitmq-htk
 spec:
   chart_name: openstack-rabbitmq-htk
-  release: openstack-rabbitmq-htk
-  namespace: openstack-rabbitmq-htk
-  values: {}
   dependencies: []
-...
+  namespace: openstack-rabbitmq-htk
+  release: openstack-rabbitmq-htk
+  values: {}

@@ -2,89 +2,79 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: coredns
+  labels:
+    name: coredns-global
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: coredns-global
+  name: coredns
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.coredns
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.coredns
-      dest:
-        path: .values.images.tags
-
-    # IP Addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.service_ip
-      dest:
-        path: .values.service.ip
-
-    # Zones
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.cluster_domain
-      dest:
-        path: .values.conf.coredns.corefile
-        pattern: '(CLUSTER_DOMAIN)'
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.service_cidr
-      dest:
-        path: .values.conf.coredns.corefile
-        pattern: '(SERVICE_CIDR)'
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.pod_cidr
-      dest:
-        path:  .values.conf.coredns.corefile
-        pattern: '(POD_CIDR)'
-
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.upstream_servers[0]
-      dest:
-        path: .values.conf.coredns.corefile
-        pattern: '(UPSTREAM1)'
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .dns.upstream_servers[1]
-      dest:
-        path: .values.conf.coredns.corefile
-        pattern: '(UPSTREAM2)'
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.coredns
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.coredns
+  - dest:
+      path: .values.service.ip
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.service_ip
+  - dest:
+      path: .values.conf.coredns.corefile
+      pattern: (CLUSTER_DOMAIN)
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.cluster_domain
+  - dest:
+      path: .values.conf.coredns.corefile
+      pattern: (SERVICE_CIDR)
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.service_cidr
+  - dest:
+      path: .values.conf.coredns.corefile
+      pattern: (POD_CIDR)
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.pod_cidr
+  - dest:
+      path: .values.conf.coredns.corefile
+      pattern: (UPSTREAM1)
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.upstream_servers[0]
+  - dest:
+      path: .values.conf.coredns.corefile
+      pattern: (UPSTREAM2)
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .dns.upstream_servers[1]
 spec:
   chart_name: coredns
-  release: coredns
+  dependencies:
+  - coredns-htk
   namespace: kube-system
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-coredns
+  release: coredns
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-coredns
+      - labels:
+          release_group: airship-coredns
+        type: job
   values:
     conf:
       coredns:
@@ -103,45 +93,38 @@ spec:
               forward . UPSTREAM1 UPSTREAM2
               cache 30
           }
-
     labels:
       coredns:
         node_selector_key: kube-dns
         node_selector_value: enabled
-
-  dependencies:
-    - coredns-htk
+  wait:
+    labels:
+      release_group: airship-coredns
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: coredns-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: coredns-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.coredns-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.coredns-htk
 spec:
   chart_name: coredns-htk
-  release: coredns-htk
+  dependencies: []
   namespace: coredns-htk
+  release: coredns-htk
   values:
-    pod:
-      # TODO: replicas can be removed once we switch coredns to
-      # DaemonSet-only.  It will be deployed with both DaemonSet
-      # and Deployment-managed pods as we transition to DaemonSet.
-      replicas:
-        coredns: 2
     manifests:
       daemonset: true
-      # TODO: `deployment` can be set to false once we switch coredns to
-      # DaemonSet-only.  It will be deployed with both DaemonSet
-      # and Deployment-managed pods as we transition to DaemonSet.
       deployment: true
-  dependencies: []
-...
+    pod:
+      replicas:
+        coredns: 2

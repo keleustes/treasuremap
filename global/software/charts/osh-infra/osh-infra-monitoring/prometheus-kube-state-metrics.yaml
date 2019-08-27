@@ -2,75 +2,68 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: prometheus-kube-state-metrics
   layeringDefinition:
     abstract: false
     layer: global
+  name: prometheus-kube-state-metrics
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.prometheus_kube_state_metrics
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.prometheus_kube_state_metrics
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.kube_state_metrics
-      dest:
-        path: .values.endpoints.kube_state_metrics
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.kube_scheduler
-      dest:
-        path: .values.endpoints.kube_scheduler
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.kube_controller_manager
-      dest:
-        path: .values.endpoints.kube_controller_manager
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.prometheus_kube_state_metrics
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.prometheus_kube_state_metrics
+  - dest:
+      path: .values.endpoints.kube_state_metrics
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.kube_state_metrics
+  - dest:
+      path: .values.endpoints.kube_scheduler
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.kube_scheduler
+  - dest:
+      path: .values.endpoints.kube_controller_manager
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.kube_controller_manager
 spec:
   chart_name: prometheus-kube-state-metrics
-  release: prometheus-kube-state-metrics
-  namespace: kube-system
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-prometheus-kube-state-metrics
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: false
+  namespace: kube-system
+  release: prometheus-kube-state-metrics
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-prometheus-kube-state-metrics
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-prometheus-kube-state-metrics
+        type: job
   values:
     labels:
-      kube_state_metrics:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+      kube_state_metrics:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+  wait:
+    labels:
+      release_group: airship-prometheus-kube-state-metrics
+    timeout: 900

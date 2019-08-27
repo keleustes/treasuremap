@@ -2,71 +2,65 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  schema: 'metadata/Document/v1'
-  name: oob
   layeringDefinition:
     abstract: false
     layer: site
+  name: oob
+  schema: metadata/Document/v1
 spec:
   cidr: 192.168.1.0/24
-...
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  schema: 'metadata/Document/v1'
-  name: pxe
   layeringDefinition:
     abstract: false
     layer: site
+  name: pxe
+  schema: metadata/Document/v1
 spec:
   cidr: 192.168.2.0/24
-...
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  schema: 'metadata/Document/v1'
-  name: oam
   layeringDefinition:
     abstract: false
     layer: site
+  name: oam
+  schema: metadata/Document/v1
 spec:
   cidr: 192.168.3.0/24
-...
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  schema: 'metadata/Document/v1'
-  name: storage
   layeringDefinition:
     abstract: false
     layer: site
+  name: storage
+  schema: metadata/Document/v1
 spec:
   cidr: 192.168.4.0/24
-...
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  schema: 'metadata/Document/v1'
-  name: calico
   layeringDefinition:
     abstract: false
     layer: site
+  name: calico
+  schema: metadata/Document/v1
 spec:
   cidr: 192.168.5.0/24
-...
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockNetwork
 metadata:
-  schema: 'metadata/Document/v1'
-  name: overlay
   layeringDefinition:
     abstract: false
     layer: site
+  name: overlay
+  schema: metadata/Document/v1
 spec:
   cidr: 192.168.6.0/24
-...

@@ -2,107 +2,112 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-rgw
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-ceph-rgw
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ceph-rgw
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.ceph-rgw
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.object_store
-      dest:
-        path: .values.endpoints.object_store
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-    # Credentials
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.swift.keystone
-      dest:
-        path: .values.endpoints.identity.auth.swift
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.identity.auth.swift.password
-      src:
-        kind: DeckhandPassphrase
-        name: ceph_swift_keystone_password
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ceph-rgw
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.ceph-rgw
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.identity
+  - dest:
+      path: .values.endpoints.object_store
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.object_store
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.ceph_mon
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.keystone.admin
+  - dest:
+      path: .values.endpoints.identity.auth.swift
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.swift.keystone
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.identity.auth.swift.password
+    src:
+      kind: DeckhandPassphrase
+      name: ceph_swift_keystone_password
+      path: .
 spec:
   chart_name: ucp-ceph-rgw
-  release: ucp-ceph-rgw
-  namespace: ceph
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-ucp-ceph-rgw
+  dependencies:
+  - ceph-htk
   install:
     no_hooks: false
+  namespace: ceph
+  release: ucp-ceph-rgw
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-ceph-rgw
+      - labels:
+          release_group: airship-ucp-ceph-rgw
+        type: job
   values:
+    bootstrap:
+      enabled: false
+    ceph_client:
+      configmap: ceph-client-keys-etc
+    conf:
+      config:
+        rgw_keystone_token_cache_size: '0'
+      rgw_ks:
+        enabled: true
+    deployment:
+      ceph: true
+      rgw_keystone_user_and_endpoints: false
+    endpoints:
+      ceph_mon:
+        namespace: ceph
+      identity:
+        namespace: openstack
+      object_store:
+        namespace: ceph
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -110,29 +115,10 @@ spec:
       rgw:
         node_selector_key: ceph-rgw
         node_selector_value: enabled
-    endpoints:
-      identity:
-        namespace: openstack
-      object_store:
-        namespace: ceph
-      ceph_mon:
-        namespace: ceph
-    deployment:
-      ceph: true
-      rgw_keystone_user_and_endpoints: false
-    bootstrap:
-      enabled: false
     pod:
       replicas:
         rgw: 2
-    conf:
-      rgw_ks:
-        enabled: true
-      config:
-          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
-          rgw_keystone_token_cache_size: '0'
-    ceph_client:
-      configmap: ceph-client-keys-etc
-  dependencies:
-    - ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-ucp-ceph-rgw
+    timeout: 900

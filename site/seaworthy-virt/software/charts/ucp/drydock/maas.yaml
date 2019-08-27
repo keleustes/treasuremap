@@ -2,29 +2,29 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-maas-global
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-maas-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-maas-global
+  replacement: true
   substitutions:
-    - src:
-        kind: DeckhandCertificateKey
-        name: airship_drydock_kvm_ssh_key
-        path: .
-      dest:
-        path: .values.conf.ssh.private_key
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .vip.maas_vip
-      dest:
-        path: .values.network.maas_ingress.addr
+  - dest:
+      path: .values.conf.ssh.private_key
+    src:
+      kind: DeckhandCertificateKey
+      name: airship_drydock_kvm_ssh_key
+      path: .
+  - dest:
+      path: .values.network.maas_ingress.addr
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .vip.maas_vip
 spec:
   values:
     endpoints:
@@ -34,4 +34,3 @@ spec:
             default: 8182
     manifests:
       secret_ssh_key: true
-...

@@ -2,71 +2,56 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: podsecuritypolicy
   labels:
     name: podsecuritypolicy-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: podsecuritypolicy
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.podsecuritypolicy
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.podsecuritypolicy
 spec:
   chart_name: podsecuritypolicy
-  release: podsecuritypolicy
-  namespace: ucp
-  wait:
-    resources: []
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: true
+  namespace: ucp
+  release: podsecuritypolicy
   upgrade:
     no_hooks: true
   values:
     conf:
-      # This defines creation of ClusterRoleBindings that configure
-      # default PodSecurityPolicies for the subjects below.
-      # `nil` avoids creation of a default binding for the subject.
-      #
       defaults:
-        serviceaccounts: psp-default
         authenticated: psp-default
+        serviceaccounts: psp-default
         unauthenticated: nil
     data:
-      # Each of these corresponds to the `spec` of a PodSecurityPolicy object.
-      # Note that this default PodSecurityPolicy is incredibly permissive.  It is
-      # intended to be tuned over time as a default, and to be overridden by
-      # operators as appropriate.
-      #
-      # A ClusterRole will be created for the PSP, with the same `metadata.name`.
-      #
-      # Note: you can define as many PSPs here as you need.
-      #
-      psp-default:  # This will be the `metadata.name` of the PodSecurityPolicy
-        privileged: true
+      psp-default:
         allowPrivilegeEscalation: true
+        allowedCapabilities:
+        - '*'
+        fsGroup:
+          rule: RunAsAny
+        hostIPC: true
         hostNetwork: true
         hostPID: true
-        hostIPC: true
+        hostPorts:
+        - max: 65536
+          min: 1
+        privileged: true
+        runAsUser:
+          rule: RunAsAny
         seLinux:
           rule: RunAsAny
         supplementalGroups:
           rule: RunAsAny
-        runAsUser:
-          rule: RunAsAny
-        fsGroup:
-          rule: RunAsAny
         volumes:
         - '*'
-        allowedCapabilities:
-        - '*'
-        hostPorts:
-        - min: 1
-          max: 65536
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+  wait:
+    resources: []

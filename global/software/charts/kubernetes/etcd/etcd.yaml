@@ -2,104 +2,84 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-etcd-global
+  labels:
+    name: kubernetes-etcd-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: kubernetes-etcd-global
+  name: kubernetes-etcd-global
   substitutions:
-
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.etcd
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.etcd
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    -
-      src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.etcd_service_ip
-      dest:
-        path: .values.service.ip
-    -
-      src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.etcd_service_ip
-      dest:
-        path: .values.anchor.etcdctl_endpoint
-
-    # CAs
-    -
-      src:
-        kind: DeckhandCertificateAuthority
-        name: kubernetes-etcd
-        path: .
-      dest:
-        path: .values.secrets.tls.client.ca
-    -
-      src:
-        kind: DeckhandCertificateAuthority
-        name: kubernetes-etcd-peer
-        path: .
-      dest:
-        path: .values.secrets.tls.peer.ca
-
-    -
-      src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-anchor
-        path: .
-      dest:
-        path: .values.secrets.anchor.tls.cert
-    -
-      src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-anchor
-        path: .
-      dest:
-        path: .values.secrets.anchor.tls.key
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.etcd
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.etcd
+  - dest:
+      path: .values.service.ip
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.etcd_service_ip
+  - dest:
+      path: .values.anchor.etcdctl_endpoint
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.etcd_service_ip
+  - dest:
+      path: .values.secrets.tls.client.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: kubernetes-etcd
+      path: .
+  - dest:
+      path: .values.secrets.tls.peer.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: kubernetes-etcd-peer
+      path: .
+  - dest:
+      path: .values.secrets.anchor.tls.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-anchor
+      path: .
+  - dest:
+      path: .values.secrets.anchor.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-anchor
+      path: .
 spec:
   chart_name: etcd
-  release: kubernetes-etcd
+  dependencies:
+  - kubernetes-etcd-htk
   namespace: kube-system
   protected:
     continue_processing: true
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-kubernetes-etcd
+  release: kubernetes-etcd
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-kubernetes-etcd
+      - labels:
+          release_group: airship-kubernetes-etcd
+        type: job
   values:
+    etcd:
+      host_data_path: /var/lib/etcd/kubernetes
+      host_etc_path: /etc/etcd/kubernetes
     labels:
       anchor:
         node_selector_key: kubernetes-etcd
         node_selector_value: enabled
-    etcd:
-      host_data_path: /var/lib/etcd/kubernetes
-      host_etc_path: /etc/etcd/kubernetes
-    service:
-      name: kubernetes-etcd
     network:
       service_client:
         name: service_client
@@ -109,27 +89,30 @@ spec:
         name: service_peer
         port: 2380
         target_port: 2380
-  dependencies:
-    - kubernetes-etcd-htk
+    service:
+      name: kubernetes-etcd
+  wait:
+    labels:
+      release_group: airship-kubernetes-etcd
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-etcd-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-etcd-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.etcd-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.etcd-htk
 spec:
   chart_name: kubernetes-etcd-htk
-  release: kubernetes-etcd-htk
-  namespace: kubernetes-etcd-htk
-  values: {}
   dependencies: []
-...
+  namespace: kubernetes-etcd-htk
+  release: kubernetes-etcd-htk
+  values: {}

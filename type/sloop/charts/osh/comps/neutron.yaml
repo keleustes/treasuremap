@@ -2,20 +2,19 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: neutron-fixme
   labels:
     name: neutron-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: neutron-global
-    actions:
-      - method: merge
-        path: .
+  name: neutron-fixme
 spec:
   values:
     pod:
       replicas:
         server: 1
-...

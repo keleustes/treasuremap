@@ -2,14 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: osh-infra-logging
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-logging
 spec:
-  description: OSH Infra Logging
-  sequenced: True
   chart_group:
-    - elasticsearch
-    - fluentbit
-    - fluentd
+  - elasticsearch
+  - fluentbit
+  - fluentd
+  description: OSH Infra Logging
+  sequenced: true

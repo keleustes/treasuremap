@@ -2,42 +2,41 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
-  name: full-site-aiab
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: full-site-global
-    actions:
-      - method: merge
-        path: .
+  name: full-site-aiab
 spec:
-  release_prefix: airship
   chart_groups:
-    - podsecuritypolicy
-    - kubernetes-proxy
-    - kubernetes-container-networking
-    - kubernetes-dns
-    - kubernetes-etcd
-    - kubernetes-haproxy
-    - kubernetes-core
-    - ingress-kube-system
-    - osh-infra-nfs-provisioner
-    - ucp-core
-    - ucp-keystone
-    - ucp-divingbell
-    - ucp-armada
-    - ucp-deckhand
-    - ucp-drydock
-    - ucp-promenade
-    - ucp-shipyard
-    - openstack-ingress-controller
-    - openstack-mariadb
-    - openstack-rabbitmq
-    - openstack-memcached
-    - openstack-keystone
-    - openstack-glance-aiab
-    - openstack-compute-kit
-    - openstack-heat-aiab
-    - openstack-horizon
-...
+  - podsecuritypolicy
+  - kubernetes-proxy
+  - kubernetes-container-networking
+  - kubernetes-dns
+  - kubernetes-etcd
+  - kubernetes-haproxy
+  - kubernetes-core
+  - ingress-kube-system
+  - osh-infra-nfs-provisioner
+  - ucp-core
+  - ucp-keystone
+  - ucp-divingbell
+  - ucp-armada
+  - ucp-deckhand
+  - ucp-drydock
+  - ucp-promenade
+  - ucp-shipyard
+  - openstack-ingress-controller
+  - openstack-mariadb
+  - openstack-rabbitmq
+  - openstack-memcached
+  - openstack-keystone
+  - openstack-glance-aiab
+  - openstack-compute-kit
+  - openstack-heat-aiab
+  - openstack-horizon
+  release_prefix: airship

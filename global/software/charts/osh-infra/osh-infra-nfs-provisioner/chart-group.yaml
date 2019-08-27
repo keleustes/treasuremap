@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: osh-infra-nfs-provisioner
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-nfs-provisioner
 spec:
-  description: OSH Infra NFS Provisioner
   chart_group:
-    - nfs-provisioner
+  - nfs-provisioner
+  description: OSH Infra NFS Provisioner

@@ -2,14 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-tempest
   labels:
-    name: openstack-tempest-chart-group-global
     component: tempest
+    name: openstack-tempest-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-tempest
 spec:
-  description: Deploy Tempest
   chart_group:
-    - tempest
+  - tempest
+  description: Deploy Tempest

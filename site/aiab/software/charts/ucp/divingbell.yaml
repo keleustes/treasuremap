@@ -2,27 +2,26 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-divingbell
+  labels:
+    name: ucp-divingbell-site
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-divingbell-global
-    actions:
-      - method: merge
-        path: .
-  labels:
-    name: ucp-divingbell-site
+  name: ucp-divingbell
 spec:
   values:
     manifests:
-      daemonset_ethtool: false
-      daemonset_mounts: false
-      daemonset_uamlite: false
-      daemonset_sysctl: false
-      daemonset_limits: false
-      daemonset_apt: true
-      daemonset_perm: false
-      daemonset_exec: true
       daemonset_apparmor: false
-...
+      daemonset_apt: true
+      daemonset_ethtool: false
+      daemonset_exec: true
+      daemonset_limits: false
+      daemonset_mounts: false
+      daemonset_perm: false
+      daemonset_sysctl: false
+      daemonset_uamlite: false

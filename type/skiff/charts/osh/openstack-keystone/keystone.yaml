@@ -2,22 +2,21 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: keystone
-  replacement: true
   labels:
     name: keystone-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .values.pod
     layer: type
     parentSelector:
-      name: keystone-global
       component: keystone
-    actions:
-      - method: replace
-        path: .values.pod
+      name: keystone-global
+  name: keystone
+  replacement: true
 spec:
   values:
     pod:
       replicas:
         api: 1
-...

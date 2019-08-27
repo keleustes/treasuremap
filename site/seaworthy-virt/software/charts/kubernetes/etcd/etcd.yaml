@@ -1,162 +1,135 @@
 ---
-# The purpose of this file is to build the list of k8s etcd nodes and the
-# k8s etcd certs for those nodes in the environment.
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-etcd
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: kubernetes-etcd-global
-    actions:
-      - method: merge
-        path: .
+  name: kubernetes-etcd
   substitutions:
-    # Generate a list of control plane nodes (i.e. genesis node + master node
-    # list) on which k8s etcd will run and will need certs. It is assumed
-    # that Airship sites will have 4 control plane nodes, so this should not need to
-    # change for a new site.
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .genesis.hostname
-      dest:
-        path: .values.nodes[0].name
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .masters[0].hostname
-      dest:
-        path: .values.nodes[1].name
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .masters[1].hostname
-      dest:
-        path: .values.nodes[2].name
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .masters[2].hostname
-      dest:
-        path: .values.nodes[3].name
-
-    # Certificate substitutions for the node names assembled on the above list.
-    # NEWSITE-CHANGEME: Per above, the number of substitutions should not need
-    # to change with a standard Airship deployment. However, the names of each
-    # deckhand certficiate should be updated with the correct hostnames for your
-    # environment. The ordering is important (Genesis is index 0, then master
-    # nodes in the order they are specified in common-addresses).
-
-    # Genesis Exception*
-    # *NOTE: This is an exception in that `genesis` is not the hostname of the
-    # genesis node, but `genesis` is reference here in the certificate names
-    # because of certain Promenade assumptions that may be addressed in the
-    # future. Therefore `genesis` is used instead of `cab23-r720-11` here.
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-genesis
-        path: .
-      dest:
-        path: .values.nodes[0].tls.client.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-genesis
-        path: .
-      dest:
-        path: .values.nodes[0].tls.client.key
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-genesis-peer
-        path: .
-      dest:
-        path: .values.nodes[0].tls.peer.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-genesis-peer
-        path: .
-      dest:
-        path: .values.nodes[0].tls.peer.key
-
-    # master node 1 hostname - n1
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-n1
-        path: .
-      dest:
-        path: .values.nodes[1].tls.client.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-n1
-        path: .
-      dest:
-        path: .values.nodes[1].tls.client.key
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-n1-peer
-        path: .
-      dest:
-        path: .values.nodes[1].tls.peer.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-n1-peer
-        path: .
-      dest:
-        path: .values.nodes[1].tls.peer.key
-
-    # master node 2 hostname - n2
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-n2
-        path: .
-      dest:
-        path: .values.nodes[2].tls.client.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-n2
-        path: .
-      dest:
-        path: .values.nodes[2].tls.client.key
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-n2-peer
-        path: .
-      dest:
-        path: .values.nodes[2].tls.peer.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-n2-peer
-        path: $
-      dest:
-        path: .values.nodes[2].tls.peer.key
-
-    # master node 3 hostname - n3
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-n3
-        path: .
-      dest:
-        path: .values.nodes[3].tls.client.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-n3
-        path: .
-      dest:
-        path: .values.nodes[3].tls.client.key
-    - src:
-        kind: DeckhandCertificate
-        name: kubernetes-etcd-n3-peer
-        path: .
-      dest:
-        path: .values.nodes[3].tls.peer.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: kubernetes-etcd-n3-peer
-        path: $
-      dest:
-        path: .values.nodes[3].tls.peer.key
-
+  - dest:
+      path: .values.nodes[0].name
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .genesis.hostname
+  - dest:
+      path: .values.nodes[1].name
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .masters[0].hostname
+  - dest:
+      path: .values.nodes[2].name
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .masters[1].hostname
+  - dest:
+      path: .values.nodes[3].name
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .masters[2].hostname
+  - dest:
+      path: .values.nodes[0].tls.client.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-genesis
+      path: .
+  - dest:
+      path: .values.nodes[0].tls.client.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-genesis
+      path: .
+  - dest:
+      path: .values.nodes[0].tls.peer.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-genesis-peer
+      path: .
+  - dest:
+      path: .values.nodes[0].tls.peer.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-genesis-peer
+      path: .
+  - dest:
+      path: .values.nodes[1].tls.client.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-n1
+      path: .
+  - dest:
+      path: .values.nodes[1].tls.client.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-n1
+      path: .
+  - dest:
+      path: .values.nodes[1].tls.peer.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-n1-peer
+      path: .
+  - dest:
+      path: .values.nodes[1].tls.peer.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-n1-peer
+      path: .
+  - dest:
+      path: .values.nodes[2].tls.client.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-n2
+      path: .
+  - dest:
+      path: .values.nodes[2].tls.client.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-n2
+      path: .
+  - dest:
+      path: .values.nodes[2].tls.peer.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-n2-peer
+      path: .
+  - dest:
+      path: .values.nodes[2].tls.peer.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-n2-peer
+      path: $
+  - dest:
+      path: .values.nodes[3].tls.client.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-n3
+      path: .
+  - dest:
+      path: .values.nodes[3].tls.client.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-n3
+      path: .
+  - dest:
+      path: .values.nodes[3].tls.peer.cert
+    src:
+      kind: DeckhandCertificate
+      name: kubernetes-etcd-n3-peer
+      path: .
+  - dest:
+      path: .values.nodes[3].tls.peer.key
+    src:
+      kind: DeckhandCertificateKey
+      name: kubernetes-etcd-n3-peer
+      path: $
 spec: {}
-...

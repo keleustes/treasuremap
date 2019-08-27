@@ -2,15 +2,15 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-armada
   labels:
     name: ucp-armada-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-armada
 spec:
+  chart_group:
+  - ucp-tiller
+  - ucp-armada
   description: Armada
   sequenced: true
-  chart_group:
-    - ucp-tiller
-    - ucp-armada

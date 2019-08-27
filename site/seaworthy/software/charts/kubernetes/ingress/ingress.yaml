@@ -1,30 +1,27 @@
 ---
-# The purpose of this file is to define the environment-specific public-facing
-# VIP for the ingress controller
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ingress-kube-system
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       ingress: kube-system
-    actions:
-      - method: merge
-        path: .
+  name: ingress-kube-system
   substitutions:
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .vip.ingress_vip
-      dest:
-        path: .values.network.vip.addr
+  - dest:
+      path: .values.network.vip.addr
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .vip.ingress_vip
 spec:
   values:
     network:
       ingress:
-        disable-ipv6: "true"
+        disable-ipv6: 'true'
       vip:
         manage: true
-...

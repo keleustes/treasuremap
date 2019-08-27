@@ -2,18 +2,17 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHardwareProfile
 metadata:
-  schema: 'metadata/Document/v1'
-  name: DELL_HP_Generic
   layeringDefinition:
     abstract: false
     layer: global
+  name: DELL_HP_Generic
+  schema: metadata/Document/v1
 spec:
-  vendor: Dell
-  generation: '8'
-  hw_version: '3'
-  bios_version: '2.2.3'
+  bios_version: 2.2.3
   boot_mode: bios
   bootstrap_protocol: pxe
-  pxe_interface: 0
   device_aliases: {}
-...
+  generation: '8'
+  hw_version: '3'
+  pxe_interface: 0
+  vendor: Dell

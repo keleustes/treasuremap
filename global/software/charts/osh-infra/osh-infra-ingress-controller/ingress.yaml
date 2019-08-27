@@ -2,55 +2,53 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: osh-infra-ingress-controller
   labels:
     name: osh-infra-ingress-controller-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-ingress-controller
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.ingress
-      dest:
-        path: .source
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.ingress
-      dest:
-        path: .values.images.tags
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.ingress
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.ingress
 spec:
   chart_name: osh-infra-ingress-controller
-  release: osh-infra-ingress-controller
-  namespace: osh-infra
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-osh-infra-ingress-controller
+  dependencies:
+  - osh-helm-toolkit
   install:
     no_hooks: false
+  namespace: osh-infra
+  release: osh-infra-ingress-controller
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-osh-infra-ingress-controller
+      - labels:
+          release_group: airship-osh-infra-ingress-controller
+        type: job
   values:
     labels:
-      server:
+      error_server:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-      error_server:
+      server:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
     pod:
       replicas:
-        ingress: 2
         error_page: 2
-  dependencies:
-    - osh-helm-toolkit
+        ingress: 2
+  wait:
+    labels:
+      release_group: airship-osh-infra-ingress-controller
+    timeout: 900

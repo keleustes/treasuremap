@@ -2,22 +2,21 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  replacement: true
-  name: openstack-mariadb
   labels:
     name: openstack-mariadb-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: openstack-mariadb-global
-    actions:
-      - method: merge
-        path: .
+  name: openstack-mariadb
+  replacement: true
 spec:
   values:
     pod:
       replicas:
-        server: 1
         ingress: 1
-...
+        server: 1

@@ -2,103 +2,88 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-calico-etcd-global
+  labels:
+    name: kubernetes-calico-etcd-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: kubernetes-calico-etcd-global
+  name: kubernetes-calico-etcd-global
   substitutions:
-
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.calico.etcd
-      dest:
-        path: .source
-
-    # Image versions
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.calico.etcd
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .calico.etcd.service_ip
-      dest:
-        path: .values.service.ip
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .calico.etcd.service_ip
-      dest:
-        path: .values.anchor.etcdctl_endpoint
-
-    # CAs
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: calico-etcd
-        path: .
-      dest:
-        path: .values.secrets.tls.client.ca
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: calico-etcd-peer
-        path: .
-      dest:
-        path: .values.secrets.tls.peer.ca
-
-    # Anchor client cert
-    - src:
-        kind: DeckhandCertificate
-        name: calico-etcd-anchor
-        path: .
-      dest:
-        path: .values.secrets.anchor.tls.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: calico-etcd-anchor
-        path: .
-      dest:
-        path: .values.secrets.anchor.tls.key
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.calico.etcd
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.calico.etcd
+  - dest:
+      path: .values.service.ip
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .calico.etcd.service_ip
+  - dest:
+      path: .values.anchor.etcdctl_endpoint
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .calico.etcd.service_ip
+  - dest:
+      path: .values.secrets.tls.client.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: calico-etcd
+      path: .
+  - dest:
+      path: .values.secrets.tls.peer.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: calico-etcd-peer
+      path: .
+  - dest:
+      path: .values.secrets.anchor.tls.cert
+    src:
+      kind: DeckhandCertificate
+      name: calico-etcd-anchor
+      path: .
+  - dest:
+      path: .values.secrets.anchor.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: calico-etcd-anchor
+      path: .
 spec:
   chart_name: etcd
-  release: kubernetes-calico-etcd
+  dependencies:
+  - kubernetes-calico-etcd-htk
   namespace: kube-system
   protected:
     continue_processing: true
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-kubernetes-calico-etcd
+  release: kubernetes-calico-etcd
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-kubernetes-calico-etcd
+      - labels:
+          release_group: airship-kubernetes-calico-etcd
+        type: job
   values:
+    bootstrapping:
+      enabled: true
+      filename: calico-etcd-bootstrap
+      host_directory: /var/lib/anchor
+    etcd:
+      host_data_path: /var/lib/etcd/calico
+      host_etc_path: /etc/etcd/calico
     labels:
       anchor:
         node_selector_key: calico-etcd
         node_selector_value: enabled
-    etcd:
-      host_data_path: /var/lib/etcd/calico
-      host_etc_path: /etc/etcd/calico
-    bootstrapping:
-      enabled: true
-      host_directory: /var/lib/anchor
-      filename: calico-etcd-bootstrap
-    service:
-      name: calico-etcd
     network:
       service_client:
         name: service_client
@@ -108,27 +93,30 @@ spec:
         name: service_peer
         port: 6667
         target_port: 6667
-  dependencies:
-    - kubernetes-calico-etcd-htk
+    service:
+      name: calico-etcd
+  wait:
+    labels:
+      release_group: airship-kubernetes-calico-etcd
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-calico-etcd-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-calico-etcd-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.calico.etcd-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.calico.etcd-htk
 spec:
   chart_name: kubernetes-calico-etcd-htk
-  release: kubernetes-calico-etcd-htk
-  namespace: kubernetes-calico-etcd-htk
-  values: {}
   dependencies: []
-...
+  namespace: kubernetes-calico-etcd-htk
+  release: kubernetes-calico-etcd-htk
+  values: {}

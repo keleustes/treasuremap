@@ -2,74 +2,65 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-tiller
   labels:
     name: ucp-tiller-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-tiller
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.tiller
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.tiller
-      dest:
-        path: .values.images.tags
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.tiller
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.tiller
 spec:
   chart_name: tiller
-  release: ucp-tiller
-  namespace: kube-system
-  wait:
-    timeout: 100
-    labels:
-      release_group: airship-ucp-tiller
-    native:
-      # Allows tiller to update its own release's status to DEPLOYED before it
-      # goes away during an upgrade, otherwise it can get stuck in
-      # PENDING_UPGRADE status.
-      enabled: false
+  dependencies:
+  - tiller-htk
   install:
     no_hooks: false
+  namespace: kube-system
+  release: ucp-tiller
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-tiller
+      - labels:
+          release_group: airship-ucp-tiller
+        type: job
   values: {}
-  dependencies:
-    - tiller-htk
-...
+  wait:
+    labels:
+      release_group: airship-ucp-tiller
+    native:
+      enabled: false
+    timeout: 100
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: tiller-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: tiller-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.tiller-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.tiller-htk
 spec:
   chart_name: tiller-htk
-  release: tiller-htk
-  namespace: tiller-htk
-  values: {}
   dependencies: []
-...
+  namespace: tiller-htk
+  release: tiller-htk
+  values: {}

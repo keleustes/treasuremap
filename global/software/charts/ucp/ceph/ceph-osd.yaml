@@ -2,95 +2,83 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-osd-global
+  labels:
+    name: ucp-ceph-osd-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: ucp-ceph-osd-global
+  name: ucp-ceph-osd-global
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ceph-osd
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.ceph-osd
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-    # Secrets
-    - dest:
-       path: .values.conf.ceph.global.fsid
-      src:
-        kind: DeckhandPassphrase
-        name: ceph_fsid
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ceph-osd
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.ceph-osd
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.ceph_mon
+  - dest:
+      path: .values.conf.ceph.global.fsid
+    src:
+      kind: DeckhandPassphrase
+      name: ceph_fsid
+      path: .
 spec:
   chart_name: ucp-ceph-osd
-  release: ucp-ceph-osd
+  dependencies:
+  - ceph-htk
+  install:
+    no_hooks: false
   namespace: ceph
   protected:
     continue_processing: true
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-ucp-ceph-osd
-  install:
-    no_hooks: false
+  release: ucp-ceph-osd
   upgrade:
     no_hooks: false
   values:
+    bootstrap:
+      enabled: true
+    conf:
+      osd:
+        osd_crush_chooseleaf_type: 0
+      storage:
+        osd:
+        - data:
+            location: /var/lib/openstack-helm/ceph/osd/osd-one
+            type: directory
+          journal:
+            location: /var/lib/openstack-helm/ceph/osd/journal-one
+            type: directory
+    endpoints:
+      ceph_mon:
+        namespace: ceph
     labels:
       osd:
         node_selector_key: ceph-osd
         node_selector_value: enabled
-    endpoints:
-      ceph_mon:
-        namespace: ceph
-    bootstrap:
-      enabled: true
-    conf:
-      storage:
-        osd:
-          - data:
-              type: directory
-              location: /var/lib/openstack-helm/ceph/osd/osd-one
-            journal:
-              type: directory
-              location: /var/lib/openstack-helm/ceph/osd/journal-one
-      osd:
-        # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-        # cluster with only one OSD.  Depending on OSD targeting & site
-        # configuration this can be changed.
-        osd_crush_chooseleaf_type: 0
-  dependencies:
-    - ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-ucp-ceph-osd
+    timeout: 900

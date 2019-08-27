@@ -2,101 +2,88 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-postgresql
   labels:
     name: ucp-postgresql-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-postgresql
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.postgresql
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.postgresql
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.postgresql
-      dest:
-        path: .values.endpoints.postgresql
-    # Credentials
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.postgres.admin
-      dest:
-        path: .values.endpoints.postgresql.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.postgres.replica
-      dest:
-        path: .values.endpoints.postgresql.auth.replica
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.postgres.exporter
-      dest:
-        path: .values.endpoints.postgresql.auth.exporter
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.postgresql.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_postgres_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.replica.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_postgres_replication_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.exporter.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_postgres_exporter_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.postgresql
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.postgresql
+  - dest:
+      path: .values.endpoints.postgresql
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.postgresql
+  - dest:
+      path: .values.endpoints.postgresql.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.postgres.admin
+  - dest:
+      path: .values.endpoints.postgresql.auth.replica
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.postgres.replica
+  - dest:
+      path: .values.endpoints.postgresql.auth.exporter
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.postgres.exporter
+  - dest:
+      path: .values.endpoints.postgresql.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_postgres_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.postgresql.auth.replica.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_postgres_replication_password
+      path: .
+  - dest:
+      path: .values.endpoints.postgresql.auth.exporter.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_postgres_exporter_password
+      path: .
 spec:
   chart_name: ucp-postgresql
-  release: ucp-postgresql
-  namespace: ucp
-  wait:
-    timeout: 1800
-    labels:
-      release_group: airship-ucp-postgresql
+  dependencies:
+  - postgres-htk
   install:
     no_hooks: false
+  namespace: ucp
+  release: ucp-postgresql
   upgrade:
+    no_hooks: false
     options:
       force: true
-    no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-postgresql
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-ucp-postgresql
+        type: job
   values:
-    pod:
-      replicas:
-        server: 3
     conf:
       postgresql:
         max_connections: 1000
@@ -107,28 +94,31 @@ spec:
       server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-  dependencies:
-    - postgres-htk
-...
+    pod:
+      replicas:
+        server: 3
+  wait:
+    labels:
+      release_group: airship-ucp-postgresql
+    timeout: 1800
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: postgres-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: postgres-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.postgresql-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.postgresql-htk
 spec:
   chart_name: postgres-htk
-  release: postgres-htk
-  namespace: postgres-htk
-  values: {}
   dependencies: []
-...
+  namespace: postgres-htk
+  release: postgres-htk
+  values: {}

@@ -2,20 +2,19 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: fluentbit
   labels:
     name: fluentbit-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       hosttype: fluentbit-global
-    actions:
-      - method: merge
-        path: .
+  name: fluentbit
 spec:
   values:
     pod:
       replicas:
         fluentd: 1
-...

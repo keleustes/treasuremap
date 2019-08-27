@@ -2,76 +2,81 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-provisioners
+  labels:
+    name: ucp-ceph-provisioners
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: ucp-ceph-provisioners
+  name: ucp-ceph-provisioners
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ceph-provisioners
-      dest:
-        path: .source
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.ceph-provisioners
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-
-    # Secrets
-    - dest:
-       path: .values.conf.ceph.global.fsid
-      src:
-        kind: DeckhandPassphrase
-        name: ceph_fsid
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ceph-provisioners
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.ceph-provisioners
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.ceph_mon
+  - dest:
+      path: .values.conf.ceph.global.fsid
+    src:
+      kind: DeckhandPassphrase
+      name: ceph_fsid
+      path: .
 spec:
   chart_name: ucp-ceph-provisioners
-  release: ucp-ceph-provisioners
+  dependencies:
+  - ceph-htk
+  install:
+    no_hooks: false
   namespace: ceph
   protected:
     continue_processing: true
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-ucp-ceph-provisioners
-  install:
-    no_hooks: false
+  release: ucp-ceph-provisioners
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-ceph-provisioners
+      - labels:
+          release_group: airship-ucp-ceph-provisioners
+        type: job
   values:
+    bootstrap:
+      enabled: true
+    conf:
+      ceph:
+        global:
+          osd_mkfs_type: xfs
+    deployment:
+      ceph: true
+      cephfs_provisioner: true
+      client_secrets: false
+      rbd_provisioner: true
+    endpoints:
+      ceph_mon:
+        namespace: ceph
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -79,30 +84,16 @@ spec:
       provisioner:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-    endpoints:
-      ceph_mon:
-        namespace: ceph
-    deployment:
-      ceph: true
-      client_secrets: false
-      rbd_provisioner: true
-      cephfs_provisioner: true
-    bootstrap:
-      enabled: true
     pod:
       replicas:
         cephfs_provisioner: 2
         rbd_provisioner: 2
-
-    conf:
-      ceph:
-        global:
-          osd_mkfs_type: xfs
     storageclass:
       rbd:
         ceph_configmap_name: ceph-client-keys-etc
         parameters:
           userSecretName: pvc-ceph-client-key
-  dependencies:
-    - ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-ucp-ceph-provisioners
+    timeout: 900

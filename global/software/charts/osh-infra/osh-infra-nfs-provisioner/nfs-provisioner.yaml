@@ -2,37 +2,33 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: nfs-provisioner
   layeringDefinition:
     abstract: false
     layer: global
+  name: nfs-provisioner
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.nfs_provisioner
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.nfs_provisioner
-      dest:
-        path: .values.images.tags
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.nfs_provisioner
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.nfs_provisioner
 spec:
   chart_name: nfs-provisioner
-  release: nfs-provisioner
+  dependencies:
+  - osh-infra-helm-toolkit
   namespace: nfs
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-nfs-provisioner
+  release: nfs-provisioner
   values:
     storageclass:
       name: general
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+  wait:
+    labels:
+      release_group: airship-nfs-provisioner
+    timeout: 900

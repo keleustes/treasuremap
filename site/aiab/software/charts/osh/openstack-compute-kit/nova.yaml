@@ -2,18 +2,18 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: nova
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .values.conf
+    - method: delete
+      path: .values.ceph_client
     layer: site
     parentSelector:
       name: nova-type
-    actions:
-      - method: merge
-        path: .values.conf
-      - method: delete
-        path: .values.ceph_client
+  name: nova
+  replacement: true
 spec:
   values:
     conf:
@@ -21,6 +21,5 @@ spec:
         enabled: false
       nova:
         libvirt:
-          virt_type: qemu
           cpu_mode: host-model
-...
+          virt_type: qemu

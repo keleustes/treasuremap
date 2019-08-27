@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: osh-infra-radosgw
   layeringDefinition:
     abstract: false
     layer: global
+  name: osh-infra-radosgw
 spec:
-  description: Deploy Radosgw for OSH-Infra
   chart_group:
-    - osh-infra-radosgw
+  - osh-infra-radosgw
+  description: Deploy Radosgw for OSH-Infra

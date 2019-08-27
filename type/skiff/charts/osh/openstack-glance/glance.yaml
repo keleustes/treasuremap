@@ -2,23 +2,23 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: glance
-  replacement: true
   labels:
     name: glance-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
+    - method: replace
+      path: .values.pod
+    - method: delete
+      path: .values.ceph_client
     layer: type
     parentSelector:
-      name: glance-global
       component: glance
-    actions:
-      - method: merge
-        path: .
-      - method: replace
-        path: .values.pod
-      - method: delete
-        path: .values.ceph_client
+      name: glance-global
+  name: glance
+  replacement: true
 spec:
   test:
     enabled: false
@@ -30,4 +30,3 @@ spec:
         api: 1
         registry: 1
     storage: pvc
-...

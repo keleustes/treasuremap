@@ -2,21 +2,20 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-keystone
-  replacement: true
   labels:
     name: ucp-keystone-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: ucp-keystone-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-keystone
+  replacement: true
 spec:
   values:
     pod:
       replicas:
         api: 1
-...

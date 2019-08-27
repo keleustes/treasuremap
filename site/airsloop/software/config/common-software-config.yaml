@@ -1,15 +1,11 @@
 ---
-# The purpose of this file is to define site-specific common software config
-# paramters.
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegCommonSoftwareConfig
 metadata:
-  name: common-software-config
   layeringDefinition:
     abstract: false
     layer: site
+  name: common-software-config
 spec:
   osh:
-    # NEWSITE-CHANGEME: Replace with the site name
     region_name: airsloop
-...

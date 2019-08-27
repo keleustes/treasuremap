@@ -2,72 +2,68 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: libvirt
   labels:
-    name: libvirt-global
     component: libvirt
+    name: libvirt-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: libvirt
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.libvirt
-      dest:
-        path: .source
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.libvirt
-      dest:
-        path: .values.images.tags
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.libvirt
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.libvirt
 spec:
   chart_name: libvirt
-  release: libvirt
-  namespace: openstack
+  dependencies:
+  - libvirt-htk
   install:
     no_hooks: false
+  namespace: openstack
+  release: libvirt
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-libvirt
+      - labels:
+          release_group: airship-libvirt
+        type: job
   values:
+    ceph_client:
+      configmap: tenant-ceph-etc
+      user_secret_name: pvc-tceph-client-key
     labels:
       agent:
         libvirt:
           node_selector_key: openstack-libvirt
           node_selector_value: kernel
-    ceph_client:
-      configmap: tenant-ceph-etc
-      user_secret_name: pvc-tceph-client-key
-  dependencies:
-    - libvirt-htk
-...
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: libvirt-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: libvirt-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.libvirt-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.libvirt-htk
 spec:
   chart_name: libvirt-htk
-  release: libvirt-htk
-  namespace: libvirt-htk
-  values: {}
   dependencies: []
-...
+  namespace: libvirt-htk
+  release: libvirt-htk
+  values: {}

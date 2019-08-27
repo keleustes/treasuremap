@@ -2,14 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-heat
   labels:
-    name: openstack-heat-chart-group-global
     component: heat
+    name: openstack-heat-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-heat
 spec:
-  description: Deploy Heat
   chart_group:
-    - heat
+  - heat
+  description: Deploy Heat

@@ -1,5 +1,4 @@
 ---
-# High-level pegleg site definition file
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSiteDefinition
 metadata:
@@ -8,7 +7,4 @@ metadata:
     layer: site
   name: aiab
 spec:
-  # The type layer this site will delpoy with. Type layer is found in the
-  # type folder.
   site_type: sloop
-...

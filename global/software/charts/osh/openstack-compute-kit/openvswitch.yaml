@@ -2,71 +2,67 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openvswitch
+  labels:
+    name: openvswitch-global
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: openvswitch-global
+  name: openvswitch
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.openvswitch
-      dest:
-        path: .source
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.openvswitch
-      dest:
-        path: .values.images.tags
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.openvswitch
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.openvswitch
 spec:
   chart_name: openvswitch
-  release: openvswitch
-  namespace: openstack
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-openvswitch
+  dependencies:
+  - openvswitch-htk
   install:
     no_hooks: false
+  namespace: openstack
+  release: openvswitch
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-openvswitch
+      - labels:
+          release_group: airship-openvswitch
+        type: job
   values:
     labels:
       ovs:
         node_selector_key: openvswitch
         node_selector_value: enabled
-  dependencies:
-    - openvswitch-htk
-...
+  wait:
+    labels:
+      release_group: airship-openvswitch
+    timeout: 900
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openvswitch-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: openvswitch-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.openvswitch-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.openvswitch-htk
 spec:
   chart_name: openvswitch-htk
-  release: openvswitch-htk
-  namespace: openvswitch-htk
-  values: {}
   dependencies: []
-...
+  namespace: openvswitch-htk
+  release: openvswitch-htk
+  values: {}

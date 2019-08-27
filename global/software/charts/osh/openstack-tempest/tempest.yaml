@@ -2,114 +2,103 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: tempest
   labels:
-    name: tempest-global
     component: tempest
+    name: tempest-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: tempest
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.tempest
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh.tempest
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_endpoints
-        path: .osh.identity
-      dest:
-        path: .values.endpoints.identity
-
-    # Service Accounts
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_service_accounts
-        path: .osh.tempest.tempest
-      dest:
-        path: .values.endpoints.identity.auth.tempest
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.identity.auth.tempest.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_tempest_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.tempest
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh.tempest
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_endpoints
+      path: .osh.identity
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.keystone.admin
+  - dest:
+      path: .values.endpoints.identity.auth.tempest
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_service_accounts
+      path: .osh.tempest.tempest
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.identity.auth.tempest.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_tempest_password
+      path: .
 spec:
   chart_name: tempest
-  release: tempest
-  namespace: openstack
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-tempest
+  dependencies:
+  - tempest-htk
   install:
     no_hooks: false
+  namespace: openstack
+  release: tempest
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-tempest
     post:
       create: []
+    pre:
+      delete:
+      - labels:
+          release_group: airship-tempest
+        type: job
   values:
+    ceph_client:
+      configmap: tenant-ceph-etc
+      user_secret_name: pvc-tceph-client-key
     labels:
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    ceph_client:
-      configmap: tenant-ceph-etc
-      user_secret_name: pvc-tceph-client-key
-  dependencies:
-    - tempest-htk
-...
+  wait:
+    labels:
+      release_group: airship-tempest
+    timeout: 900
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: tempest-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: tempest-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh.tempest-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh.tempest-htk
 spec:
   chart_name: tempest-htk
-  release: tempest-htk
-  namespace: tempest-htk
-  values: {}
   dependencies: []
-...
+  namespace: tempest-htk
+  release: tempest-htk
+  values: {}

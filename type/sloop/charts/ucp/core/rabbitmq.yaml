@@ -2,21 +2,20 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  replacement: true
-  name: ucp-rabbitmq
   labels:
     name: ucp-rabbitmq-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: ucp-rabbitmq-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-rabbitmq
+  replacement: true
 spec:
   values:
     pod:
       replicas:
         server: 1
-...

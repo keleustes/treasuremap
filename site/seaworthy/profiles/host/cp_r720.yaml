@@ -1,226 +1,206 @@
 ---
-# The primary control plane host profile for Airship for DELL R720s, and
-# should not need to be altered if you are using matching HW. The active
-# participants in the Ceph cluster run on this profile. Other control plane
-# services are not affected by primary vs secondary designation.
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  name: cp_r720-primary
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .interfaces
+    - method: replace
+      path: .storage
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       hosttype: cp-global
-    actions:
-      - method: replace
-        path: .interfaces
-      - method: replace
-        path: .storage
-      - method: merge
-        path: .
+  name: cp_r720-primary
 spec:
   hardware_profile: dell_r720
-
-  primary_network: oam
   interfaces:
-    pxe:
-      device_link: pxe
-      slaves:
-        - pxe_nic01
-      networks:
-        - pxe
     bond0:
       device_link: data
-      slaves:
-        - data_nic01
-        - data_nic02
-        - data_nic03
-        - data_nic04
       networks:
-        - oam
-        - storage
-        - overlay
-        - calico
-
+      - oam
+      - storage
+      - overlay
+      - calico
+      slaves:
+      - data_nic01
+      - data_nic02
+      - data_nic03
+      - data_nic04
+    pxe:
+      device_link: pxe
+      networks:
+      - pxe
+      slaves:
+      - pxe_nic01
+  metadata:
+    owner_data:
+      openstack-l3-agent: enabled
+  platform:
+    kernel: hwe-16.04
+    kernel_params:
+      console: ttyS1,115200n8
+  primary_network: oam
   storage:
     physical_devices:
       bootdisk:
         labels:
           bootdrive: 'true'
         partitions:
-          - name: 'root'
-            size: '30g'
-            bootable: true
-            filesystem:
-              mountpoint: '/'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'boot'
-            size: '1g'
-            filesystem:
-              mountpoint: '/boot'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'var_log'
-            size: '100g'
-            filesystem:
-              mountpoint: '/var/log'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'var'
-            size: '>100g'
-            filesystem:
-              mountpoint: '/var'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-
-  platform:
-    kernel: 'hwe-16.04'
-    kernel_params:
-      console: 'ttyS1,115200n8'
-
-  metadata:
-    owner_data:
-      openstack-l3-agent: enabled
-...
+        - bootable: true
+          filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /
+          name: root
+          size: 30g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /boot
+          name: boot
+          size: 1g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /var/log
+          name: var_log
+          size: 100g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /var
+          name: var
+          size: '>100g'
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  name: cp_r740-secondary
   layeringDefinition:
     abstract: false
+    actions:
+    - method: replace
+      path: .interfaces
+    - method: replace
+      path: .storage
+    - method: replace
+      path: .metadata.owner_data
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       hosttype: cp-global
-    actions:
-      - method: replace
-        path: .interfaces
-      - method: replace
-        path: .storage
-      - method: replace
-        path: .metadata.owner_data
-      - method: merge
-        path: .
+  name: cp_r740-secondary
 spec:
   hardware_profile: dell_r720
-
-  primary_network: oam
   interfaces:
-    pxe:
-      device_link: pxe
-      slaves:
-        - pxe_nic01
-      networks:
-        - pxe
     bond0:
       device_link: data
-      slaves:
-        - data_nic01
-        - data_nic02
-        - data_nic03
-        - data_nic04
       networks:
-        - oam
-        - storage
-        - overlay
-        - calico
-
+      - oam
+      - storage
+      - overlay
+      - calico
+      slaves:
+      - data_nic01
+      - data_nic02
+      - data_nic03
+      - data_nic04
+    pxe:
+      device_link: pxe
+      networks:
+      - pxe
+      slaves:
+      - pxe_nic01
+  metadata:
+    owner_data:
+      IAM: enabled
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      calico-node: enabled
+      calico-policy: enabled
+      ceph-mds: enabled
+      ceph-mgr: enabled
+      ceph-osd: enabled
+      ceph-rgw: enabled
+      control-plane: enabled
+      elasticsearch-client: enabled
+      elasticsearch-data: enabled
+      elasticsearch-master: enabled
+      fluentd: enabled
+      influxdb: enabled
+      kibana: enabled
+      kube-dns: enabled
+      kube-ingress: enabled
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      kubernetes-scheduler: enabled
+      node-exporter: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-control-plane: enabled
+      openstack-dns-helper: enabled
+      openstack-glance: enabled
+      openstack-heat: enabled
+      openstack-horizon: enabled
+      openstack-keystone: enabled
+      openstack-mariadb: enabled
+      openstack-memcached: enabled
+      openstack-mistral: enabled
+      openstack-neutron: enabled
+      openstack-nova-control: enabled
+      openstack-rabbitmq: enabled
+      openvswitch: enabled
+      postgresql: enabled
+      prometheus-client: enabled
+      prometheus-server: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-mgr: enabled
+      tenant-ceph-rgw: enabled
+      tiller-helm: enabled
+      ucp-armada: enabled
+      ucp-barbican: enabled
+      ucp-control-plane: enabled
+      ucp-deckhand: enabled
+      ucp-drydock: enabled
+      ucp-maas: enabled
+      ucp-promenade: enabled
+      ucp-shipyard: enabled
+  platform:
+    kernel: hwe-16.04
+    kernel_params:
+      console: ttyS1,115200n8
+  primary_network: oam
   storage:
     physical_devices:
       bootdisk:
         labels:
           bootdrive: 'true'
         partitions:
-          - name: 'root'
-            size: '30g'
-            bootable: true
-            filesystem:
-              mountpoint: '/'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'boot'
-            size: '1g'
-            filesystem:
-              mountpoint: '/boot'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'var_log'
-            size: '100g'
-            filesystem:
-              mountpoint: '/var/log'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'var'
-            size: '>100g'
-            filesystem:
-              mountpoint: '/var'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-
-  platform:
-    kernel: 'hwe-16.04'
-    kernel_params:
-      console: 'ttyS1,115200n8'
-
-  metadata:
-    owner_data:
-      control-plane: enabled
-      ucp-control-plane: enabled
-      openstack-control-plane: enabled
-      openstack-heat: enabled
-      openstack-keystone: enabled
-      openstack-rabbitmq: enabled
-      openstack-dns-helper: enabled
-      openstack-mariadb: enabled
-      openstack-nova-control: enabled
-      # openstack-etcd: enabled
-      openstack-mistral: enabled
-      openstack-memcached: enabled
-      openstack-glance: enabled
-      openstack-horizon: enabled
-      openstack-cinder-control: enabled
-      openstack-cinder-volume: control
-      openstack-neutron: enabled
-      openvswitch: enabled
-      ucp-barbican: enabled
-      # ceph-mon: enabled
-      ceph-mgr: enabled
-      ceph-osd: enabled
-      ceph-mds: enabled
-      ceph-rgw: enabled
-      ucp-maas: enabled
-      kube-dns: enabled
-      tenant-ceph-control-plane: enabled
-      # tenant-ceph-mon: enabled
-      tenant-ceph-rgw: enabled
-      tenant-ceph-mgr: enabled
-      kubernetes-apiserver: enabled
-      kubernetes-controller-manager: enabled
-      # kubernetes-etcd: enabled
-      kubernetes-scheduler: enabled
-      tiller-helm: enabled
-      # kube-etcd: enabled
-      calico-policy: enabled
-      calico-node: enabled
-      # calico-etcd: enabled
-      ucp-armada: enabled
-      ucp-drydock: enabled
-      ucp-deckhand: enabled
-      ucp-shipyard: enabled
-      IAM: enabled
-      ucp-promenade: enabled
-      prometheus-server: enabled
-      prometheus-client: enabled
-      fluentd: enabled
-      influxdb: enabled
-      kibana: enabled
-      elasticsearch-client: enabled
-      elasticsearch-master: enabled
-      elasticsearch-data: enabled
-      postgresql: enabled
-      kube-ingress: enabled
-      beta.kubernetes.io/fluentd-ds-ready: 'true'
-      node-exporter: enabled
-...
+        - bootable: true
+          filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /
+          name: root
+          size: 30g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /boot
+          name: boot
+          size: 1g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /var/log
+          name: var_log
+          size: 100g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /var
+          name: var
+          size: '>100g'

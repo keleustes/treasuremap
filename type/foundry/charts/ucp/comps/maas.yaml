@@ -1,23 +1,21 @@
 ---
-# This file defines site-specific deviations for MaaS.
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-maas
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: ucp-maas-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-maas
   substitutions:
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .vip.maas_vip
-      dest:
-        path: .values.network.maas_ingress.addr
+  - dest:
+      path: .values.network.maas_ingress.addr
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .vip.maas_vip
 spec: {}
-...

@@ -2,82 +2,169 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: tenant-ceph-client-global
+  labels:
+    name: tenant-ceph-client-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: tenant-ceph-client-global
+  name: tenant-ceph-client-global
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.tenant-ceph-client
-      dest:
-        path: .source
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ceph.tenant-ceph-client
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.public_cidr
-      dest:
-        path: .values.network.public
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .storage.ceph.cluster_cidr
-      dest:
-        path: .values.network.cluster
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.tenant_ceph_mon
-      dest:
-        path: .values.endpoints.ceph_mon
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ceph.tenant_ceph_mgr
-      dest:
-        path: .values.endpoints.ceph_mgr
-
-    # Secrets
-    - dest:
-       path: .values.conf.ceph.global.fsid
-      src:
-        kind: DeckhandPassphrase
-        name: tenant_ceph_fsid
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.tenant-ceph-client
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ceph.tenant-ceph-client
+  - dest:
+      path: .values.network.public
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.public_cidr
+  - dest:
+      path: .values.network.cluster
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .storage.ceph.cluster_cidr
+  - dest:
+      path: .values.endpoints.ceph_mon
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.tenant_ceph_mon
+  - dest:
+      path: .values.endpoints.ceph_mgr
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ceph.tenant_ceph_mgr
+  - dest:
+      path: .values.conf.ceph.global.fsid
+    src:
+      kind: DeckhandPassphrase
+      name: tenant_ceph_fsid
+      path: .
 spec:
   chart_name: tenant-ceph-client
-  release: tenant-ceph-client
+  dependencies:
+  - tenant-ceph-htk
+  install:
+    no_hooks: false
   namespace: tenant-ceph
   protected:
     continue_processing: true
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-tenant-ceph-client
-  install:
-    no_hooks: false
+  release: tenant-ceph-client
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-tenant-ceph-client
+      - labels:
+          release_group: airship-tenant-ceph-client
+        type: job
   values:
+    bootstrap:
+      enabled: true
+    ceph_mgr_modules_config:
+      prometheus:
+        server_port: 9284
+    conf:
+      ceph:
+        global:
+          osd_pool_default_size: 1
+      features:
+        mds: false
+      pool:
+        crush:
+          tunables: hammer
+        default:
+          crush_rule: replicated_rule
+        spec:
+        - application: rbd
+          name: rbd
+          percent_total_data: 10
+          replication: 3
+        - application: cinder-volume
+          name: cinder.volumes
+          percent_total_data: 40
+          replication: 3
+        - application: rgw
+          name: .rgw.root
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.control
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.data.root
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.gc
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.log
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.intent-log
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.meta
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.usage
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.users.keys
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.users.email
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.users.swift
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.users.uid
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.buckets.extra
+          percent_total_data: 0.1
+          replication: 3
+        - application: rgw
+          name: default.rgw.buckets.index
+          percent_total_data: 3
+          replication: 3
+        - application: rgw
+          name: default.rgw.buckets.data
+          percent_total_data: 30
+          replication: 3
+        target:
+          osd: 1
+          pg_per_osd: 100
+          protected: true
+    deployment:
+      ceph: true
+    endpoints:
+      ceph_mgr:
+        namespace: tenant-ceph
+      ceph_mon:
+        namespace: tenant-ceph
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
@@ -88,125 +175,13 @@ spec:
       mgr:
         node_selector_key: tenant-ceph-mgr
         node_selector_value: enabled
-    endpoints:
-      ceph_mon:
-        namespace: tenant-ceph
-      ceph_mgr:
-        namespace: tenant-ceph
+    manifests:
+      deployment_mds: false
     monitoring:
       prometheus:
         ceph_mgr:
           port: 9284
-    ceph_mgr_modules_config:
-      prometheus:
-        server_port: 9284
-    deployment:
-      ceph: true
-    bootstrap:
-      enabled: true
-    manifests:
-      deployment_mds: false
-    conf:
-      features:
-        mds: false
-      pool:
-        spec:
-          # RBD pool
-          - name: rbd
-            application: rbd
-            replication: 3
-            percent_total_data: 10
-          # Cinder volumes  pool
-          - name: cinder.volumes
-            application: cinder-volume
-            replication: 3
-            percent_total_data: 40
-          # RadosGW pools
-          - name: .rgw.root
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.control
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.data.root
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.gc
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.log
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.intent-log
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.meta
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.usage
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.users.keys
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.users.email
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.users.swift
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.users.uid
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.buckets.extra
-            application: rgw
-            replication: 3
-            percent_total_data: 0.1
-          - name: default.rgw.buckets.index
-            application: rgw
-            replication: 3
-            percent_total_data: 3
-          - name: default.rgw.buckets.data
-            application: rgw
-            replication: 3
-            percent_total_data: 30
-        # NOTE(alanmeadowS) spport 4.x 16.04 kernels (non-HWE)
-        crush:
-          tunables: 'hammer'
-
-        # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-        # cluster with only one OSD.  Depending on OSD targeting & site
-        # configuration this can be changed.
-        target:
-          osd: 1
-          pg_per_osd: 100
-          protected: true
-
-        default:
-          # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-          # cluster with only one OSD.  Depending on OSD targeting & site
-          # configuration this can be changed.
-          crush_rule: replicated_rule
-
-      ceph:
-        global:
-        # NOTE(mb874d): This is required ATM for bootstrapping a Ceph
-        # cluster with only one OSD.  Depending on OSD targeting & site
-        # configuration this can be changed.
-          osd_pool_default_size: 1
-
-  dependencies:
-    - tenant-ceph-htk
-...
+  wait:
+    labels:
+      release_group: airship-tenant-ceph-client
+    timeout: 900

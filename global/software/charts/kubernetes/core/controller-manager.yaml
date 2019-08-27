@@ -2,135 +2,122 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-controller-manager
   labels:
     name: kubernetes-controller-manager-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-controller-manager
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.controller-manager
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.controller-manager
-      dest:
-        path: .values.images.tags
-
-    # IP addresses
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.pod_cidr
-      dest:
-        path: .values.network.pod_cidr
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.service_cidr
-      dest:
-        path: .values.network.service_cidr
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.pod_cidr
-      dest:
-        path: .values.command_prefix[1]
-        pattern: SUB_POD_CIDR
-    - src:
-        kind: PeglegCommonAddresses
-        name: common-addresses
-        path: .kubernetes.service_cidr
-      dest:
-        path: .values.command_prefix[2]
-        pattern: SUB_SERVICE_CIDR
-
-    # CA
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: kubernetes
-        path: .
-      dest:
-        path: .values.secrets.tls.ca
-
-    # Certificates
-    - src:
-        kind: DeckhandCertificate
-        name: controller-manager
-        path: .
-      dest:
-        path: .values.secrets.tls.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: controller-manager
-        path: .
-      dest:
-        path: .values.secrets.tls.key
-
-    # Private key for Kubernetes service account token signing
-    - src:
-        kind: DeckhandPrivateKey
-        name: service-account
-        path: .
-      dest:
-        path: .values.secrets.service_account.private_key
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.controller-manager
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.controller-manager
+  - dest:
+      path: .values.network.pod_cidr
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.pod_cidr
+  - dest:
+      path: .values.network.service_cidr
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.service_cidr
+  - dest:
+      path: .values.command_prefix[1]
+      pattern: SUB_POD_CIDR
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.pod_cidr
+  - dest:
+      path: .values.command_prefix[2]
+      pattern: SUB_SERVICE_CIDR
+    src:
+      kind: PeglegCommonAddresses
+      name: common-addresses
+      path: .kubernetes.service_cidr
+  - dest:
+      path: .values.secrets.tls.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: kubernetes
+      path: .
+  - dest:
+      path: .values.secrets.tls.cert
+    src:
+      kind: DeckhandCertificate
+      name: controller-manager
+      path: .
+  - dest:
+      path: .values.secrets.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: controller-manager
+      path: .
+  - dest:
+      path: .values.secrets.service_account.private_key
+    src:
+      kind: DeckhandPrivateKey
+      name: service-account
+      path: .
 spec:
   chart_name: controller-manager
-  release: kubernetes-controller-manager
+  dependencies:
+  - kubernetes-controller-manager-htk
   namespace: kube-system
   protected:
     continue_processing: true
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-kubernetes-controller-manager
+  release: kubernetes-controller-manager
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-kubernetes-controller-manager
+      - labels:
+          release_group: airship-kubernetes-controller-manager
+        type: job
   values:
     command_prefix:
-      - /controller-manager
-      - --cluster-cidr=SUB_POD_CIDR
-      - --service-cluster-ip-range=SUB_SERVICE_CIDR
-      - --node-monitor-period=5s
-      - --node-monitor-grace-period=20s
-      - --pod-eviction-timeout=60s
+    - /controller-manager
+    - --cluster-cidr=SUB_POD_CIDR
+    - --service-cluster-ip-range=SUB_SERVICE_CIDR
+    - --node-monitor-period=5s
+    - --node-monitor-grace-period=20s
+    - --pod-eviction-timeout=60s
     network:
       kubernetes_netloc: 127.0.0.1:6553
-  dependencies:
-    - kubernetes-controller-manager-htk
+  wait:
+    labels:
+      release_group: airship-kubernetes-controller-manager
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-controller-manager-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-controller-manager-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.controller-manager-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.controller-manager-htk
 spec:
   chart_name: kubernetes-controller-manager-htk
-  release: kubernetes-controller-manager-htk
-  namespace: kubernetes-controller-manager-htk
-  values: {}
   dependencies: []
-...
+  namespace: kubernetes-controller-manager-htk
+  release: kubernetes-controller-manager-htk
+  values: {}

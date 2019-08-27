@@ -1,17 +1,14 @@
 ---
-# The purpose of this file is to define environment-specific parameters for
-# ceph-osd
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-osd
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-ceph-osd-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-ceph-osd
 spec: {}
-...

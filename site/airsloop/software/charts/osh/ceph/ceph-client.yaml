@@ -2,20 +2,19 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  replacement: true
-  name: tenant-ceph-client
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: tenant-ceph-client-type
-    actions:
-      - method: merge
-        path: .
+  name: tenant-ceph-client
+  replacement: true
 spec:
   values:
     conf:
       pool:
         target:
           osd: 1
-...

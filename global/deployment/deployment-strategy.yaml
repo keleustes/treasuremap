@@ -1,38 +1,35 @@
 ---
-# The global deployment strategy assumes nodes are marked with node_tags
-# of masters and workers.
 apiVersion: shipyard.airshipit.org/v1alpha1
 kind: ShipyardDeploymentStrategy
 metadata:
-  name: deployment-strategy
-  layeringDefinition:
-      abstract: false
-      layer: global
   labels:
     name: deployment-strategy-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  name: deployment-strategy
 spec:
   groups:
-    - name: masters
-      critical: true
-      depends_on: []
-      selectors:
-        - node_names: []
-          node_labels: []
-          node_tags:
-            - masters
-          rack_names: []
-      success_criteria:
-        percent_successful_nodes: 100
-    - name: workers
-      critical: true
-      depends_on:
-        - masters
-      selectors:
-        - node_names: []
-          node_labels: []
-          node_tags:
-            - workers
-          rack_names: []
-      success_criteria:
-        percent_successful_nodes: 60
-...
+  - critical: true
+    depends_on: []
+    name: masters
+    selectors:
+    - node_labels: []
+      node_names: []
+      node_tags:
+      - masters
+      rack_names: []
+    success_criteria:
+      percent_successful_nodes: 100
+  - critical: true
+    depends_on:
+    - masters
+    name: workers
+    selectors:
+    - node_labels: []
+      node_names: []
+      node_tags:
+      - workers
+      rack_names: []
+    success_criteria:
+      percent_successful_nodes: 60

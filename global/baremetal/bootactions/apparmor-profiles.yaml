@@ -2,46 +2,44 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBootAction
 metadata:
-  schema: 'metadata/Document/v1'
-  name: apparmor-profiles
   layeringDefinition:
     abstract: false
     layer: global
+  name: apparmor-profiles
+  schema: metadata/Document/v1
   substitutions:
-    - src:
-        kind: PeglegAppArmorProfile
-        name: airship-default
-        path: .savePath
-      dest:
-        path: .assets[0].path
-    - src:
-        kind: PeglegAppArmorProfile
-        name: airship-default
-        path: .content
-      dest:
-        path: .assets[0].data
-    - src:
-        kind: PeglegAppArmorProfile
-        name: airship-apparmor-loader
-        path: .savePath
-      dest:
-        path: .assets[1].path
-    - src:
-        kind: PeglegAppArmorProfile
-        name: airship-apparmor-loader
-        path: .content
-      dest:
-        path: .assets[1].data
-
+  - dest:
+      path: .assets[0].path
+    src:
+      kind: PeglegAppArmorProfile
+      name: airship-default
+      path: .savePath
+  - dest:
+      path: .assets[0].data
+    src:
+      kind: PeglegAppArmorProfile
+      name: airship-default
+      path: .content
+  - dest:
+      path: .assets[1].path
+    src:
+      kind: PeglegAppArmorProfile
+      name: airship-apparmor-loader
+      path: .savePath
+  - dest:
+      path: .assets[1].data
+    src:
+      kind: PeglegAppArmorProfile
+      name: airship-apparmor-loader
+      path: .content
 spec:
-  signaling: false
   assets:
-    - type: file
-      permissions: '600'
-      data_pipeline:
-        - utf8_decode
-    - type: file
-      permissions: '600'
-      data_pipeline:
-        - utf8_decode
-...
+  - data_pipeline:
+    - utf8_decode
+    permissions: '600'
+    type: file
+  - data_pipeline:
+    - utf8_decode
+    permissions: '600'
+    type: file
+  signaling: false

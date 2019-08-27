@@ -2,10 +2,10 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegScript
 metadata:
-  name: configure-ip-rules
   layeringDefinition:
     abstract: false
     layer: global
+  name: configure-ip-rules
 spec: |-
   #!/bin/bash
   set -ex

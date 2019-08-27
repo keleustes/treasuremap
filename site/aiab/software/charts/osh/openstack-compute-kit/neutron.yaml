@@ -2,38 +2,33 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: neutron
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: neutron-global
-    actions:
-      - method: merge
-        path: .
-
+  name: neutron
+  replacement: true
 spec:
   test:
-    # Neutron test for virtual Airship in a bottle installation
-    # usually take much more time to finish than for baremetal one.
     timeout: 2700
-
   values:
     conf:
       neutron:
         DEFAULT:
-          l3_ha: False
-          max_l3_agents_per_router: 1
           dhcp_agents_per_network: 1
-
+          l3_ha: false
+          max_l3_agents_per_router: 1
       plugins:
+        linuxbridge_agent:
+          linux_bridge:
+            bridge_mappings: public:br-ex
         ml2_conf:
           ml2_type_vlan:
             network_vlan_ranges: null
         openvswitch_agent:
           ovs:
-            bridge_mappings: public:br-ex
-        linuxbridge_agent:
-          linux_bridge:
             bridge_mappings: public:br-ex

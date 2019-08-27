@@ -2,93 +2,50 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: fluentbit-global
+  labels:
+    hosttype: fluentbit-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    hosttype: fluentbit-global
+  name: fluentbit-global
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.fluentbit
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.fluentbit
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd # TODO change it in OSH repo
-      dest:
-        path: .values.endpoints.fluentbit
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.fluentbit
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.fluentbit
+  - dest:
+      path: .values.endpoints.fluentbit
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.fluentd
 spec:
   chart_name: fluentbit
-  release: fluentbit
-  namespace: osh-infra
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-fluentbit
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: false
+  namespace: osh-infra
+  release: fluentbit
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-fluentbit
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-fluentbit
+        type: job
   values:
-    monitoring:
-      prometheus:
-        enabled: true
-    pod:
-      resources:
-        enabled: true
-        fluentbit:
-          limits:
-            memory: '4Gi'
-            cpu: '2000m'
-          requests:
-            memory: '2Gi'
-            cpu: '1000m'
-        jobs:
-          image_repo_sync:
-            requests:
-              memory: '0'
-              cpu: '0'
-            limits:
-              memory: '1024Mi'
-              cpu: '2000m'
-          tests:
-            requests:
-              memory: '0'
-              cpu: '0'
-            limits:
-              memory: '1024Mi'
-              cpu: '2000m'
-    labels:
-      fluentbit:
-        node_selector_key: fluentbit
-        node_selector_value: enabled
-      job:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
     conf:
       fluentbit:
         template: |
@@ -249,6 +206,42 @@ spec:
             Time_Format "%Y-%m-%dT%H:%M:%S.%L"
             Time_Keep On
             Types "pid:integer"
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+    labels:
+      fluentbit:
+        node_selector_key: fluentbit
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      resources:
+        enabled: true
+        fluentbit:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+        jobs:
+          image_repo_sync:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+          tests:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+  wait:
+    labels:
+      release_group: airship-fluentbit
+    timeout: 900

@@ -2,22 +2,21 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockBootAction
 metadata:
-  schema: 'metadata/Document/v1'
-  name: nested-virt
   labels:
+    application: drydock
     name: nested-virt-global
-    application: 'drydock'
   layeringDefinition:
     abstract: false
     layer: global
+  name: nested-virt
+  schema: metadata/Document/v1
 spec:
-  signaling: false
   assets:
-    - path: /etc/modprobe.d/nested-virt.conf
-      type: file
-      permissions: '644'
-      data_pipeline:
-        - utf8_decode
-      data: |
-        options kvm-intel nested=y
-...
+  - data: |
+      options kvm-intel nested=y
+    data_pipeline:
+    - utf8_decode
+    path: /etc/modprobe.d/nested-virt.conf
+    permissions: '644'
+    type: file
+  signaling: false

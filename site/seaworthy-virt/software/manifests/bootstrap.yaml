@@ -2,36 +2,35 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaManifest
 metadata:
-  name: cluster-bootstrap
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
+    - method: replace
+      path: .chart_groups
     layer: site
     parentSelector:
       name: cluster-bootstrap-global
-    actions:
-      - method: merge
-        path: .
-      - method: replace
-        path: .chart_groups
+  name: cluster-bootstrap
+  replacement: true
 spec:
   chart_groups:
-    - podsecuritypolicy
-    - kubernetes-proxy
-    - kubernetes-container-networking
-    - kubernetes-dns
-    - kubernetes-etcd
-    - kubernetes-haproxy
-    - kubernetes-core
-    - ingress-kube-system
-    - ucp-ceph
-    - ucp-ceph-config
-    - ucp-core
-    - ucp-keystone
-    - ucp-divingbell
-    - ucp-armada
-    - ucp-deckhand
-    - ucp-drydock
-    - ucp-promenade
-    - ucp-shipyard
-...
+  - podsecuritypolicy
+  - kubernetes-proxy
+  - kubernetes-container-networking
+  - kubernetes-dns
+  - kubernetes-etcd
+  - kubernetes-haproxy
+  - kubernetes-core
+  - ingress-kube-system
+  - ucp-ceph
+  - ucp-ceph-config
+  - ucp-core
+  - ucp-keystone
+  - ucp-divingbell
+  - ucp-armada
+  - ucp-deckhand
+  - ucp-drydock
+  - ucp-promenade
+  - ucp-shipyard

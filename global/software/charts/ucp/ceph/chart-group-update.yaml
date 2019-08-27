@@ -2,17 +2,16 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-ceph-update
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-ceph-update
 spec:
+  chart_group:
+  - ucp-ceph-ingress
+  - ucp-ceph-mon
+  - ucp-ceph-osd
+  - ucp-ceph-client-update
+  - ucp-ceph-provisioners
   description: Ceph post-install update
   sequenced: true
-  chart_group:
-    - ucp-ceph-ingress
-    - ucp-ceph-mon
-    - ucp-ceph-osd
-    - ucp-ceph-client-update
-    - ucp-ceph-provisioners
-...

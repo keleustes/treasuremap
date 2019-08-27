@@ -1,11 +1,11 @@
 ---
-apiVersion: deckhand.airshipit.org/v1alpha1
-kind: DeckhandDataSchema
+schema: deckhand/DataSchema/v1
 metadata:
-  name: promenade/Docker
+  schema: metadata/Control/v1
+  name: promenade/Docker/v1
   labels:
     application: promenade
-spec:
+data:
   $schema: http://json-schema.org/schema#
   type: object
   properties:

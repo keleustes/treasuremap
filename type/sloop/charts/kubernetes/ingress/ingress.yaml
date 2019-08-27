@@ -2,16 +2,15 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ingress-kube-system
   labels:
     name: ingress-kube-system-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       ingress: kube-system
-    actions:
-      - method: merge
-        path: .
+  name: ingress-kube-system
 spec: {}
-...

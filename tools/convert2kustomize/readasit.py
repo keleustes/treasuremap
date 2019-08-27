@@ -548,6 +548,26 @@ def add_target_state(filename):
 
     return docs2
 
+def reformat(filename):
+    """
+    TBD
+    Args:
+       tbd
+    Returns:
+       tbd
+    """
+    docs2 = []
+    vars = {}
+    varrefs = {}
+    with open(filename, 'r') as stream:
+        try:
+            docs = yaml.load_all(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+        docs2 = list(docs)
+
+    return docs2
 
 if __name__ == "__main__":
     __represent_multiline_yaml_str()
@@ -555,7 +575,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-c', '--command',
                         help="Command to run",
-                        type=str, choices=["extract_subst", "remove_metadata", "move_namespace", "add_namespace", "check", "values", "onevalue", "togo", "add_target_state"],
+                        type=str, choices=["extract_subst", "remove_metadata", "move_namespace", "add_namespace", "check", "values", "onevalue", "togo", "add_target_state", "reformat"],
                         default="extract_subst")
     parser.add_argument('-f', '--filename',
                         help="filename",
@@ -571,6 +591,9 @@ if __name__ == "__main__":
         save_file(args.filename + ".new", docs3)
     elif (args.command == "add_target_state"):
         docs = add_target_state(args.filename)
+        save_file(args.filename + ".new", docs)
+    elif (args.command == "reformat"):
+        docs = reformat(args.filename)
         save_file(args.filename + ".new", docs)
     elif (args.command == "remove_metadata"):
         docs = remove_metadata(args.filename)

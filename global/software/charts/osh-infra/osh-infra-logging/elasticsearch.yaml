@@ -2,219 +2,175 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: elasticsearch-global
   labels:
     hosttype: elasticsearch-global
   layeringDefinition:
     abstract: true
     layer: global
+  name: elasticsearch-global
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.elasticsearch
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.elasticsearch
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.elasticsearch
-      dest:
-        path: .values.endpoints.elasticsearch
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.prometheus_elasticsearch_exporter
-      dest:
-        path: .values.endpoints.prometheus_elasticsearch_exporter
-
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.ldap
-      dest:
-        path: .values.endpoints.ldap
-
-    # Accounts
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.elasticsearch.admin
-      dest:
-        path: .values.endpoints.elasticsearch.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.ceph_object_store.admin
-      dest:
-        path: .values.endpoints.ceph_object_store.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.ceph_object_store.elasticsearch
-      dest:
-        path: .values.endpoints.ceph_object_store.auth.elasticsearch
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.elasticsearch.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_elasticsearch_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.ceph_object_store.auth.admin.access_key
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_rgw_s3_admin_access_key
-        path: .
-    - dest:
-        path: .values.endpoints.ceph_object_store.auth.admin.secret_key
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_rgw_s3_admin_secret_key
-        path: .
-    - dest:
-        path: .values.endpoints.ceph_object_store.auth.elasticsearch.access_key
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_rgw_s3_elasticsearch_access_key
-        path: .
-    - dest:
-        path: .values.endpoints.ceph_object_store.auth.elasticsearch.secret_key
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_rgw_s3_elasticsearch_secret_key
-        path: .
-
-    # LDAP Details
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.ldap.admin
-      dest:
-        path: .values.endpoints.ldap.auth.admin
-    - dest:
-        path: .values.endpoints.ldap.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_keystone_ldap_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.elasticsearch
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.elasticsearch
+  - dest:
+      path: .values.endpoints.elasticsearch
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.elasticsearch
+  - dest:
+      path: .values.endpoints.prometheus_elasticsearch_exporter
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.prometheus_elasticsearch_exporter
+  - dest:
+      path: .values.endpoints.ldap
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.ldap
+  - dest:
+      path: .values.endpoints.elasticsearch.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.elasticsearch.admin
+  - dest:
+      path: .values.endpoints.ceph_object_store.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.ceph_object_store.admin
+  - dest:
+      path: .values.endpoints.ceph_object_store.auth.elasticsearch
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.ceph_object_store.elasticsearch
+  - dest:
+      path: .values.endpoints.elasticsearch.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_elasticsearch_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.ceph_object_store.auth.admin.access_key
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_rgw_s3_admin_access_key
+      path: .
+  - dest:
+      path: .values.endpoints.ceph_object_store.auth.admin.secret_key
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_rgw_s3_admin_secret_key
+      path: .
+  - dest:
+      path: .values.endpoints.ceph_object_store.auth.elasticsearch.access_key
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_rgw_s3_elasticsearch_access_key
+      path: .
+  - dest:
+      path: .values.endpoints.ceph_object_store.auth.elasticsearch.secret_key
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_rgw_s3_elasticsearch_secret_key
+      path: .
+  - dest:
+      path: .values.endpoints.ldap.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.ldap.admin
+  - dest:
+      path: .values.endpoints.ldap.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_keystone_ldap_password
+      path: .
 spec:
   chart_name: elasticsearch
-  release: elasticsearch
-  namespace: osh-infra
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-elasticsearch
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: false
+  namespace: osh-infra
+  release: elasticsearch
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-elasticsearch
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-elasticsearch
+        type: job
   values:
-    pod:
-      replicas:
-        client: 5
-      resources:
-        enabled: true
-        apache_proxy:
-          limits:
-            memory: "1024Mi"
-            cpu: "2000m"
-          requests:
-            memory: "0"
-            cpu: "0"
-        client:
-          requests:
-            memory: "8Gi"
-            cpu: "1000m"
-          limits:
-            memory: "16Gi"
-            cpu: "2000m"
-        master:
-          requests:
-            memory: "8Gi"
-            cpu: "1000m"
-          limits:
-            memory: "16Gi"
-            cpu: "2000m"
-        data:
-          requests:
-            memory: "8Gi"
-            cpu: "1000m"
-          limits:
-            memory: "16Gi"
-            cpu: "2000m"
-        prometheus_elasticsearch_exporter:
-          requests:
-            memory: "0"
-            cpu: "0"
-          limits:
-            memory: "1024Mi"
-            cpu: "2000m"
-        jobs:
-          curator:
-            requests:
-              memory: "0"
-              cpu: "0"
-            limits:
-              memory: "1024Mi"
-              cpu: "2000m"
-          image_repo_sync:
-            requests:
-              memory: "0"
-              cpu: "0"
-            limits:
-              memory: "1024Mi"
-              cpu: "2000m"
-          snapshot_repository:
-            requests:
-              memory: "0"
-              cpu: "0"
-            limits:
-              memory: "1024Mi"
-              cpu: "2000m"
-          tests:
-            requests:
-              memory: "0"
-              cpu: "0"
-            limits:
-              memory: "1024Mi"
-              cpu: "2000m"
-    labels:
-      elasticsearch:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-      job:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-      test:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-    monitoring:
-      prometheus:
-        enabled: true
     conf:
+      curator:
+        action_file:
+          actions:
+            1:
+              action: delete_indices
+              description: '"Delete indices older than 7 days"'
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: logstash-
+              - direction: older
+                filtertype: age
+                source: name
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 7
+              options:
+                continue_if_exception: false
+                disable_action: false
+                ignore_empty_list: true
+                timeout_override: null
+            2:
+              action: delete_indices
+              description: |-
+                "Delete indices by age if available disk space is
+                 less than 80% total disk"
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: logstash-
+              - disk_space: 1200
+                filtertype: space
+                source: creation_date
+                use_age: true
+              options:
+                continue_if_exception: false
+                disable_action: false
+                ignore_empty_list: true
+                timeout_override: 600
+        schedule: 0 */6 * * *
+      elasticsearch:
+        config:
+          http:
+            max_content_length: 2gb
+            pipelining: false
+        env:
+          java_opts:
+            client: -Xms8g -Xmx8g
+            data: -Xms8g -Xmx8g
+            master: -Xms8g -Xmx8g
+        snapshots:
+          enabled: true
       httpd: |
         ServerRoot "/usr/local/apache2"
         Listen 80
@@ -295,69 +251,92 @@ spec:
               Require valid-user
           </Proxy>
         </VirtualHost>
+    labels:
       elasticsearch:
-        config:
-          http:
-            max_content_length: 2gb
-            pipelining: false
-        env:
-          java_opts:
-            client: "-Xms8g -Xmx8g"
-            data: "-Xms8g -Xmx8g"
-            master: "-Xms8g -Xmx8g"
-        snapshots:
-          enabled: true
-      curator:
-        #run every 6th hour
-        schedule:  "0 */6 * * *"
-        action_file:
-          # Remember, leave a key empty if there is no value.  None will be a string,
-          # not a Python "NoneType"
-          #
-          # Also remember that all examples have 'disable_action' set to True.  If you
-          # want to use this action as a template, be sure to set this to False after
-          # copying it.
-          actions:
-            1:
-              action: delete_indices
-              description: >-
-                "Delete indices older than 7 days"
-              options:
-                timeout_override:
-                continue_if_exception: False
-                ignore_empty_list: True
-                disable_action: False
-              filters:
-              - filtertype: pattern
-                kind: prefix
-                value: logstash-
-              - filtertype: age
-                source: name
-                direction: older
-                timestring: '%Y.%m.%d'
-                unit: days
-                unit_count: 7
-            2:
-              action: delete_indices
-              description: >-
-                "Delete indices by age if available disk space is
-                 less than 80% total disk"
-              options:
-                timeout_override: 600
-                continue_if_exception: False
-                ignore_empty_list: True
-                disable_action: False
-              filters:
-              - filtertype: pattern
-                kind: prefix
-                value: logstash-
-              - filtertype: space
-                source: creation_date
-                use_age: True
-                disk_space: 1200
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      test:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      replicas:
+        client: 5
+      resources:
+        apache_proxy:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: '0'
+            memory: '0'
+        client:
+          limits:
+            cpu: 2000m
+            memory: 16Gi
+          requests:
+            cpu: 1000m
+            memory: 8Gi
+        data:
+          limits:
+            cpu: 2000m
+            memory: 16Gi
+          requests:
+            cpu: 1000m
+            memory: 8Gi
+        enabled: true
+        jobs:
+          curator:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+          image_repo_sync:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+          snapshot_repository:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+          tests:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+        master:
+          limits:
+            cpu: 2000m
+            memory: 16Gi
+          requests:
+            cpu: 1000m
+            memory: 8Gi
+        prometheus_elasticsearch_exporter:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: '0'
+            memory: '0'
     storage:
       requests:
         storage: 500Gi
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+  wait:
+    labels:
+      release_group: airship-elasticsearch
+    timeout: 900

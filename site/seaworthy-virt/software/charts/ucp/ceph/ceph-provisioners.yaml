@@ -2,18 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-provisioners
-  replacement: true
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-ceph-provisioners
-    actions:
-      - method: merge
-        path: .
+  name: ucp-ceph-provisioners
+  replacement: true
 spec:
   values:
     deployment:
       cephfs_provisioner: false
-...

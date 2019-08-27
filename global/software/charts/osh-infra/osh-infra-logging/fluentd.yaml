@@ -2,125 +2,68 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: fluentd-global
+  labels:
+    hosttype: fluentd-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    hosttype: fluentd-global
+  name: fluentd-global
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.fluentd
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.fluentd
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.prometheus_fluentd_exporter
-      dest:
-        path: .values.endpoints.prometheus_fluentd_exporter
-
-    # Accounts
-    - src:
-        kind: PeglegAccountCatalogue
-        name: osh_infra_service_accounts
-        path: .osh_infra.elasticsearch.admin
-      dest:
-        path: .values.endpoints.elasticsearch.auth.admin
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.elasticsearch.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: osh_infra_elasticsearch_admin_password
-        path: .
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.fluentd
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.fluentd
+  - dest:
+      path: .values.endpoints.fluentd
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.fluentd
+  - dest:
+      path: .values.endpoints.prometheus_fluentd_exporter
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.prometheus_fluentd_exporter
+  - dest:
+      path: .values.endpoints.elasticsearch.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: osh_infra_service_accounts
+      path: .osh_infra.elasticsearch.admin
+  - dest:
+      path: .values.endpoints.elasticsearch.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: osh_infra_elasticsearch_admin_password
+      path: .
 spec:
   chart_name: fluentd
-  release: fluentd
-  namespace: osh-infra
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-fluentd
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: false
+  namespace: osh-infra
+  release: fluentd
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-fluentd
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-fluentd
+        type: job
   values:
-    monitoring:
-      prometheus:
-        enabled: true
-    pod:
-      resources:
-        enabled: true
-        fluentd:
-          limits:
-            memory: '4Gi'
-            cpu: '2000m'
-          requests:
-            memory: '2Gi'
-            cpu: '1000m'
-        prometheus_fluentd_exporter:
-          limits:
-            memory: '1024Mi'
-            cpu: '2000m'
-          requests:
-            memory: '0'
-            cpu: '0'
-        jobs:
-          image_repo_sync:
-            requests:
-              memory: '0'
-              cpu: '0'
-            limits:
-              memory: '1024Mi'
-              cpu: '2000m'
-          tests:
-            requests:
-              memory: '0'
-              cpu: '0'
-            limits:
-              memory: '1024Mi'
-              cpu: '2000m'
-    labels:
-      fluentd:
-        node_selector_key: fluentd
-        node_selector_value: enabled
-      prometheus_fluentd_exporter:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-      job:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
     conf:
       fluentd:
         template: |
@@ -369,6 +312,52 @@ spec:
             @type elasticsearch
             user "#{ENV['ELASTICSEARCH_USERNAME']}"
           </match>
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+    labels:
+      fluentd:
+        node_selector_key: fluentd
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      prometheus_fluentd_exporter:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      resources:
+        enabled: true
+        fluentd:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+        jobs:
+          image_repo_sync:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+          tests:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: '0'
+              memory: '0'
+        prometheus_fluentd_exporter:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: '0'
+            memory: '0'
+  wait:
+    labels:
+      release_group: airship-fluentd
+    timeout: 900

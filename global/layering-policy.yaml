@@ -5,8 +5,7 @@ metadata:
   name: layering-policy
 spec:
   layerOrder:
-    - global
-    - type
-    - site
-    - cicd  # overrides for pipeline automation
-...
+  - global
+  - type
+  - site
+  - cicd

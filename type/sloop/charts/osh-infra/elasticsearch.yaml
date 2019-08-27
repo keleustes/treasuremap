@@ -2,32 +2,31 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: elasticsearch
   labels:
     name: elasticsearch-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       hosttype: elasticsearch-global
-    actions:
-      - method: merge
-        path: .
+  name: elasticsearch
 spec:
   values:
-    pod:
-      replicas:
-        master: 2
-        data: 1
-        client: 2
-    storage:
-      requests:
-        storage: 50Gi
     conf:
       elasticsearch:
         env:
           java_opts:
-            client: "-Xms768m -Xmx768m"
-            data: "-Xms768m -Xmx768m"
-            master: "-Xms768m -Xmx768m"
-...
+            client: -Xms768m -Xmx768m
+            data: -Xms768m -Xmx768m
+            master: -Xms768m -Xmx768m
+    pod:
+      replicas:
+        client: 2
+        data: 1
+        master: 2
+    storage:
+      requests:
+        storage: 50Gi

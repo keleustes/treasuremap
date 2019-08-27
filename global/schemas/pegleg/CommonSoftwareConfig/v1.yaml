@@ -1,9 +1,9 @@
 ---
-apiVersion: deckhand.airshipit.org/v1alpha1
-kind: DeckhandDataSchema
+schema: 'deckhand/DataSchema/v1'
 metadata:
-  name: pegleg/CommonSoftwareConfig
-spec:
+  schema: metadata/Control/v1
+  name: pegleg/CommonSoftwareConfig/v1
+data:
   $schema: 'http://json-schema.org/schema#'
   type: object
   properties:

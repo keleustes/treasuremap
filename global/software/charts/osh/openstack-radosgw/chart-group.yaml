@@ -2,12 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-radosgw
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-radosgw
 spec:
-  description: Deploy Radosgw
   chart_group:
-    - tenant-ceph-rgw
-...
+  - tenant-ceph-rgw
+  description: Deploy Radosgw

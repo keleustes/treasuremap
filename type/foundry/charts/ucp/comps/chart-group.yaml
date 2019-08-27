@@ -2,12 +2,12 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-drydock-scaled
   layeringDefinition:
     abstract: false
     layer: type
+  name: ucp-drydock-scaled
 spec:
-  description: Drydock
   chart_group:
-    - ucp-maas-scaled
-    - ucp-drydock
+  - ucp-maas-scaled
+  - ucp-drydock
+  description: Drydock

@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-prometheus-openstack-exporter
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-prometheus-openstack-exporter
 spec:
-  description: Prometheus OpenStack Exporter for UCP Components
   chart_group:
-    - ucp-prometheus-openstack-exporter
+  - ucp-prometheus-openstack-exporter
+  description: Prometheus OpenStack Exporter for UCP Components

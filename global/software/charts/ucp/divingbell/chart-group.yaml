@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-divingbell
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-divingbell
 spec:
-  description: Divingbell
   chart_group:
-    - ucp-divingbell
+  - ucp-divingbell
+  description: Divingbell

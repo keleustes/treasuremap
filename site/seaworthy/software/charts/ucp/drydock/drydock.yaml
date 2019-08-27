@@ -2,17 +2,17 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-drydock
+  labels:
+    name: ucp-drydock-site
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: ucp-drydock-global
-    actions:
-      - method: merge
-        path: .
-  labels:
-    name: ucp-drydock-site
+  name: ucp-drydock
   replacement: true
 spec:
   values:
@@ -20,5 +20,4 @@ spec:
       api:
         ingress:
           classes:
-            cluster: "maas-ingress"
-...
+            cluster: maas-ingress

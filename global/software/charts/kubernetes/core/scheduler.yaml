@@ -2,92 +2,83 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-scheduler
   labels:
     name: kubernetes-scheduler-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-scheduler
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.scheduler
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.kubernetes.scheduler
-      dest:
-        path: .values.images.tags
-
-    # CA
-    - src:
-        kind: DeckhandCertificateAuthority
-        name: kubernetes
-        path: .
-      dest:
-        path: .values.secrets.tls.ca
-
-    # Certificates
-    - src:
-        kind: DeckhandCertificate
-        name: scheduler
-        path: .
-      dest:
-        path: .values.secrets.tls.cert
-    - src:
-        kind: DeckhandCertificateKey
-        name: scheduler
-        path: .
-      dest:
-        path: .values.secrets.tls.key
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.scheduler
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.kubernetes.scheduler
+  - dest:
+      path: .values.secrets.tls.ca
+    src:
+      kind: DeckhandCertificateAuthority
+      name: kubernetes
+      path: .
+  - dest:
+      path: .values.secrets.tls.cert
+    src:
+      kind: DeckhandCertificate
+      name: scheduler
+      path: .
+  - dest:
+      path: .values.secrets.tls.key
+    src:
+      kind: DeckhandCertificateKey
+      name: scheduler
+      path: .
 spec:
   chart_name: scheduler
-  release: kubernetes-scheduler
+  dependencies:
+  - kubernetes-scheduler-htk
   namespace: kube-system
   protected:
     continue_processing: true
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-kubernetes-scheduler
+  release: kubernetes-scheduler
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-kubernetes-scheduler
+      - labels:
+          release_group: airship-kubernetes-scheduler
+        type: job
   values:
     network:
       kubernetes_netloc: 127.0.0.1:6553
-  dependencies:
-    - kubernetes-scheduler-htk
+  wait:
+    labels:
+      release_group: airship-kubernetes-scheduler
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: kubernetes-scheduler-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: kubernetes-scheduler-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.kubernetes.scheduler-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.kubernetes.scheduler-htk
 spec:
   chart_name: kubernetes-scheduler-htk
-  release: kubernetes-scheduler-htk
-  namespace: kubernetes-scheduler-htk
-  values: {}
   dependencies: []
-...
+  namespace: kubernetes-scheduler-htk
+  release: kubernetes-scheduler-htk
+  values: {}

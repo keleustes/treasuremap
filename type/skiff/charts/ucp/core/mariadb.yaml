@@ -2,24 +2,23 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-mariadb
-  replacement: true
   labels:
     name: ucp-mariadb-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: type
     parentSelector:
       name: ucp-mariadb-global
-    actions:
-      - method: merge
-        path: .
+  name: ucp-mariadb
+  replacement: true
 spec:
-  wait:
-    timeout: 1800
   values:
     pod:
       replicas:
-        server: 1
         ingress: 1
-...
+        server: 1
+  wait:
+    timeout: 1800

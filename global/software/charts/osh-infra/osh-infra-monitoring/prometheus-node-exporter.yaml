@@ -2,63 +2,56 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: prometheus-node-exporter
   layeringDefinition:
     abstract: false
     layer: global
+  name: prometheus-node-exporter
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.osh_infra.prometheus_node_exporter
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.osh_infra.prometheus_node_exporter
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.node_metrics
-      dest:
-        path: .values.endpoints.node_metrics
-
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.osh_infra.prometheus_node_exporter
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.osh_infra.prometheus_node_exporter
+  - dest:
+      path: .values.endpoints.node_metrics
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.node_metrics
 spec:
   chart_name: prometheus-node-exporter
-  release: prometheus-node-exporter
-  namespace: kube-system
-  wait:
-    timeout: 900
-    labels:
-      release_group: airship-prometheus-node-exporter
+  dependencies:
+  - osh-infra-helm-toolkit
   install:
     no_hooks: false
+  namespace: kube-system
+  release: prometheus-node-exporter
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-prometheus-node-exporter
-      create: []
     post:
       create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-prometheus-node-exporter
+        type: job
   values:
     labels:
-      node_exporter:
-        node_selector_key: node-exporter
-        node_selector_value: enabled
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-  dependencies:
-    - osh-infra-helm-toolkit
-...
+      node_exporter:
+        node_selector_key: node-exporter
+        node_selector_value: enabled
+  wait:
+    labels:
+      release_group: airship-prometheus-node-exporter
+    timeout: 900

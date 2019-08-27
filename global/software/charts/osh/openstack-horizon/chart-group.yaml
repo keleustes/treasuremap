@@ -2,14 +2,14 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-horizon
   labels:
-    name: openstack-horizon-chart-group-global
     component: horizon
+    name: openstack-horizon-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-horizon
 spec:
-  description: Deploy Horizon
   chart_group:
-    - horizon
+  - horizon
+  description: Deploy Horizon

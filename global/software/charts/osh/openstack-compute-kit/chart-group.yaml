@@ -2,16 +2,16 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: openstack-compute-kit
   labels:
     name: openstack-compute-kit-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: openstack-compute-kit
 spec:
-  description: Deploy Nova, Neutron, Openvswitch, and Libvirt
   chart_group:
-    - libvirt
-    - openvswitch
-    - neutron
-    - nova
+  - libvirt
+  - openvswitch
+  - neutron
+  - nova
+  description: Deploy Nova, Neutron, Openvswitch, and Libvirt

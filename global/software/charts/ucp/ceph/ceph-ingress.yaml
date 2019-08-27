@@ -2,64 +2,61 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-ceph-ingress
+  labels:
+    name: ucp-ceph-ingress-global
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: ucp-ceph-ingress-global
+  name: ucp-ceph-ingress
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.ingress
-      dest:
-        path: .source
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.ingress
-      dest:
-        path: .values.images.tags
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.ingress
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.ingress
 spec:
   chart_name: ucp-ceph-ingress
-  release: ucp-ceph-ingress
-  namespace: ceph
-  wait:
-    timeout: 300
-    labels:
-      release_group: airship-ucp-ceph-ingress
+  dependencies:
+  - ucp-ingress-htk
   install:
     no_hooks: false
+  namespace: ceph
+  release: ucp-ceph-ingress
   upgrade:
     no_hooks: false
     pre:
       delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-ceph-ingress
+      - labels:
+          release_group: airship-ucp-ceph-ingress
+        type: job
   values:
     conf:
       ingress:
         proxy-body-size: 20m
     labels:
-      server:
-        node_selector_key: ucp-control-plane
-        node_selector_value: enabled
       error_server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-    pod:
-      replicas:
-        ingress: 2
-        error_page: 2
+      server:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
     network:
       ingress:
         annotations:
           nginx.ingress.kubernetes.io/proxy-body-size: 20m
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-  dependencies:
-    - ucp-ingress-htk
-...
+          nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+    pod:
+      replicas:
+        error_page: 2
+        ingress: 2
+  wait:
+    labels:
+      release_group: airship-ucp-ceph-ingress
+    timeout: 300

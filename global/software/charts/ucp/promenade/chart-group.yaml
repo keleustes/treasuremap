@@ -2,11 +2,11 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  name: ucp-promenade
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-promenade
 spec:
-  description: Promenade
   chart_group:
-    - ucp-promenade
+  - ucp-promenade
+  description: Promenade

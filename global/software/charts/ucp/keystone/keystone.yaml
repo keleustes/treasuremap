@@ -2,209 +2,197 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: ucp-keystone
   labels:
-    name: ucp-keystone-global
     component: keystone
+    name: ucp-keystone-global
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-keystone
   substitutions:
-    # Chart source
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.keystone
-      dest:
-        path: .source
-
-    # Images
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .images.ucp.keystone
-      dest:
-        path: .values.images.tags
-
-    # Endpoints
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.oslo_db
-      dest:
-        path: .values.endpoints.oslo_db
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.oslo_messaging
-      dest:
-        path: .values.endpoints.oslo_messaging
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: ucp_endpoints
-        path: .ucp.oslo_cache
-      dest:
-        path: .values.endpoints.oslo_cache
-    - src:
-        kind: PeglegEndpointCatalogue
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.oslo_messaging
-      dest:
-        path: .values.endpoints.oslo_messaging.auth
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.oslo_db
-      dest:
-        path: .values.endpoints.oslo_db.auth.keystone
-    - src:
-        kind: PeglegAccountCatalogue
-        name: ucp_service_accounts
-        path: .ucp.keystone.oslo_db.database
-      dest:
-        path: .values.endpoints.oslo_db.path
-        pattern: DB_NAME
-
-    # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_messaging.auth.keystone.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_oslo_messaging_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_messaging.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_oslo_messaging_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_db.auth.keystone.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_keystone_oslo_db_password
-        path: .
-    - dest:
-        path: .values.endpoints.oslo_db.auth.admin.password
-      src:
-        kind: DeckhandPassphrase
-        name: ucp_oslo_db_admin_password
-        path: .
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.keystone
+  - dest:
+      path: .values.images.tags
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .images.ucp.keystone
+  - dest:
+      path: .values.endpoints.identity
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.identity
+  - dest:
+      path: .values.endpoints.oslo_db
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.oslo_db
+  - dest:
+      path: .values.endpoints.oslo_messaging
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.oslo_messaging
+  - dest:
+      path: .values.endpoints.oslo_cache
+    src:
+      kind: PeglegEndpointCatalogue
+      name: ucp_endpoints
+      path: .ucp.oslo_cache
+  - dest:
+      path: .values.endpoints.fluentd
+    src:
+      kind: PeglegEndpointCatalogue
+      name: osh_infra_endpoints
+      path: .osh_infra.fluentd
+  - dest:
+      path: .values.endpoints.identity.auth.admin
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.admin
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.oslo_messaging
+  - dest:
+      path: .values.endpoints.oslo_db.auth.keystone
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.oslo_db
+  - dest:
+      path: .values.endpoints.oslo_db.path
+      pattern: DB_NAME
+    src:
+      kind: PeglegAccountCatalogue
+      name: ucp_service_accounts
+      path: .ucp.keystone.oslo_db.database
+  - dest:
+      path: .values.endpoints.identity.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_keystone_admin_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.keystone.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_oslo_messaging_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_messaging.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_oslo_messaging_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_db.auth.keystone.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_keystone_oslo_db_password
+      path: .
+  - dest:
+      path: .values.endpoints.oslo_db.auth.admin.password
+    src:
+      kind: DeckhandPassphrase
+      name: ucp_oslo_db_admin_password
+      path: .
 spec:
   chart_name: ucp-keystone
-  release: ucp-keystone
-  namespace: ucp
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-ucp-keystone
+  dependencies:
+  - ucp-keystone-htk
   install:
     no_hooks: false
+  namespace: ucp
+  release: ucp-keystone
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-keystone
     post:
       create: []
+    pre:
+      delete:
+      - labels:
+          release_group: airship-ucp-keystone
+        type: job
   values:
     conf:
       logging:
-        loggers:
-          keys:
-            - root
-            - keystone
-        handlers:
-          keys:
-            - stdout
-            - stderr
-            - 'null'
-            - fluent
-        formatters:
-          keys:
-            - context
-            - default
-            - fluent
-        logger_root:
-          level: WARNING
-          handlers: stdout
-        logger_keystone:
-          level: INFO
-          handlers:
-            - stdout
-            - fluent
-          qualname: keystone
-        logger_amqp:
-          level: WARNING
-          handlers: stderr
-          qualname: amqp
-        logger_amqplib:
-          level: WARNING
-          handlers: stderr
-          qualname: amqplib
-        logger_eventletwsgi:
-          level: WARNING
-          handlers: stderr
-          qualname: eventlet.wsgi.server
-        logger_sqlalchemy:
-          level: WARNING
-          handlers: stderr
-          qualname: sqlalchemy
-        logger_boto:
-          level: WARNING
-          handlers: stderr
-          qualname: boto
-        handler_null:
-          class: logging.NullHandler
-          formatter: default
-          args: ()
-        handler_stdout:
-          class: StreamHandler
-          args: (sys.stdout,)
-          formatter: context
-        handler_stderr:
-          class: StreamHandler
-          args: (sys.stderr,)
-          formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('ucp.keystone', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
-          format: "%(message)s"
-    pod:
-      replicas:
-        api: 2
+          format: '%(message)s'
+        formatter_fluent:
+          class: oslo_log.formatters.FluentFormatter
+        formatters:
+          keys:
+          - context
+          - default
+          - fluent
+        handler_fluent:
+          args: ('ucp.keystone', 'fluentd-logging.osh-infra', 24224)
+          class: fluent.handler.FluentHandler
+          formatter: fluent
+        handler_null:
+          args: ()
+          class: logging.NullHandler
+          formatter: default
+        handler_stderr:
+          args: (sys.stderr,)
+          class: StreamHandler
+          formatter: context
+        handler_stdout:
+          args: (sys.stdout,)
+          class: StreamHandler
+          formatter: context
+        handlers:
+          keys:
+          - stdout
+          - stderr
+          - 'null'
+          - fluent
+        logger_amqp:
+          handlers: stderr
+          level: WARNING
+          qualname: amqp
+        logger_amqplib:
+          handlers: stderr
+          level: WARNING
+          qualname: amqplib
+        logger_boto:
+          handlers: stderr
+          level: WARNING
+          qualname: boto
+        logger_eventletwsgi:
+          handlers: stderr
+          level: WARNING
+          qualname: eventlet.wsgi.server
+        logger_keystone:
+          handlers:
+          - stdout
+          - fluent
+          level: INFO
+          qualname: keystone
+        logger_root:
+          handlers: stdout
+          level: WARNING
+        logger_sqlalchemy:
+          handlers: stderr
+          level: WARNING
+          qualname: sqlalchemy
+        loggers:
+          keys:
+          - root
+          - keystone
     labels:
       api:
         node_selector_key: ucp-control-plane
@@ -212,30 +200,31 @@ spec:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-
-
-  dependencies:
-    - ucp-keystone-htk
-...
+    pod:
+      replicas:
+        api: 2
+  wait:
+    labels:
+      release_group: airship-ucp-keystone
+    timeout: 600
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name:  ucp-keystone-htk
   layeringDefinition:
     abstract: false
     layer: global
+  name: ucp-keystone-htk
   substitutions:
-    - src:
-        kind: PeglegSoftwareVersions
-        name: software-versions
-        path: .charts.ucp.keystone-htk
-      dest:
-        path: .source
+  - dest:
+      path: .source
+    src:
+      kind: PeglegSoftwareVersions
+      name: software-versions
+      path: .charts.ucp.keystone-htk
 spec:
   chart_name: ucp-keystone-htk
-  release: ucp-keystone-htk
-  namespace: ucp-keystone-htk
-  values: {}
   dependencies: []
-...
+  namespace: ucp-keystone-htk
+  release: ucp-keystone-htk
+  values: {}

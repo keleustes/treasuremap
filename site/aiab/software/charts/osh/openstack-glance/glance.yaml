@@ -2,17 +2,15 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: glance-aiab
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .
     layer: site
     parentSelector:
       name: glance-type
-    actions:
-      - method: merge
-        path: .
-
+  name: glance-aiab
 spec:
   values:
     storage: pvc
-...

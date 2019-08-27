@@ -2,63 +2,61 @@
 apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
-  name: dp-global
   labels:
     hosttype: dp-global
   layeringDefinition:
     abstract: true
     layer: global
+  name: dp-global
   substitutions:
-    - dest:
-        path: .oob.credential
-      src:
-        kind: DeckhandPassphrase
-        name: ipmi_admin_password
-        path: .
+  - dest:
+      path: .oob.credential
+    src:
+      kind: DeckhandPassphrase
+      name: ipmi_admin_password
+      path: .
 spec:
+  metadata:
+    owner_data:
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      contrail-vrouter: kernel
+      fluentbit: enabled
+      node-exporter: enabled
+      openstack-libvirt: kernel
+      openstack-nova-compute: enabled
+      openvswitch: enabled
+      tenant-ceph-osd: enabled
   oob:
-    type: 'ipmi'
-    network: 'oob'
-    account: 'root'
+    account: root
+    network: oob
+    type: ipmi
+  platform:
+    image: xenial
+    kernel: hwe-16.04
+    kernel_params:
+      kernel_package: linux-image-4.15.0-46-generic
   storage:
     physical_devices:
       sda:
         labels:
           bootdrive: 'true'
         partitions:
-          - name: 'root'
-            size: '30g'
-            bootable: true
-            filesystem:
-              mountpoint: '/'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'boot'
-            size: '1g'
-            filesystem:
-              mountpoint: '/boot'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-          - name: 'var'
-            size: '>100g'
-            filesystem:
-              mountpoint: '/var'
-              fstype: 'ext4'
-              mount_options: 'defaults'
-  platform:
-    image: 'xenial'
-    kernel: 'hwe-16.04'
-    kernel_params:
-      kernel_package: 'linux-image-4.15.0-46-generic'
-
-  metadata:
-    owner_data:
-      openstack-nova-compute: enabled
-      tenant-ceph-osd: enabled
-      openvswitch: enabled
-      contrail-vrouter: kernel
-      openstack-libvirt: kernel
-      beta.kubernetes.io/fluentd-ds-ready: 'true'
-      node-exporter: enabled
-      fluentbit: enabled
-...
+        - bootable: true
+          filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /
+          name: root
+          size: 30g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /boot
+          name: boot
+          size: 1g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /var
+          name: var
+          size: '>100g'

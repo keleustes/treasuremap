@@ -2,24 +2,23 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  name: openstack-mariadb
-  replacement: true
   labels:
     name: openstack-mariadb-type
   layeringDefinition:
     abstract: false
+    actions:
+    - method: merge
+      path: .values.pod
+    - method: delete
+      path: .values.labels.prometheus_mysql_exporter
     layer: type
     parentSelector:
-      name: openstack-mariadb-global
       component: mariadb
-    actions:
-      - method: merge
-        path: .values.pod
-      - method: delete
-        path: .values.labels.prometheus_mysql_exporter
+      name: openstack-mariadb-global
+  name: openstack-mariadb
+  replacement: true
 spec:
   values:
     pod:
       replicas:
         server: 1
-...
