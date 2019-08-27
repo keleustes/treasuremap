@@ -1,11 +1,11 @@
 ---
-schema: 'deckhand/DataSchema/v1'
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandDataSchema
 metadata:
-  schema: metadata/Control/v1
-  name: drydock/Rack/v1
+  name: drydock/Rack
   labels:
     application: drydock
-data:
+spec:
   $schema: 'http://json-schema.org/schema#'
   type: 'object'
   properties:
