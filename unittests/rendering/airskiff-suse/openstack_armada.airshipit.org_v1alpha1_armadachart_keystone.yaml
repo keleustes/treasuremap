@@ -4,15 +4,6 @@ metadata:
   labels:
     component: keystone
     name: keystone
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: keystone
-      name: keystone-global
   name: keystone
   namespace: openstack
 spec:

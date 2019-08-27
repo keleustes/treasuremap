@@ -2,15 +2,6 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: keystone
-      name: keystone-global
   name: keystone
   namespace: openstack
 spec:

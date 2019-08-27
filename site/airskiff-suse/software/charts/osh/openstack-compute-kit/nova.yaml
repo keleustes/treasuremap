@@ -2,15 +2,6 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: nova
-      name: nova-type
   name: nova
   namespace: openstack
 spec:

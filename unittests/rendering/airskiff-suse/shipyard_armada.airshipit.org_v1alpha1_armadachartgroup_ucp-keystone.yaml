@@ -3,17 +3,8 @@ kind: ArmadaChartGroup
 metadata:
   labels:
     name: ucp-keystone-chart-group
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .chart_group
-    layer: site
-    parentSelector:
-      name: ucp-keystone-chart-group-global
   name: ucp-keystone
   namespace: shipyard
-  replacement: true
 spec:
   chart_group:
   - ucp-keystone-memcached

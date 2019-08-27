@@ -4,15 +4,6 @@ metadata:
   labels:
     component: nova
     name: nova
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: nova
-      name: nova-type
   name: nova
   namespace: openstack
 spec:

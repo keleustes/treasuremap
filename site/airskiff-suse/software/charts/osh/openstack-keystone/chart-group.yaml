@@ -2,18 +2,8 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChartGroup
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: replace
-      path: .chart_group
-    layer: site
-    parentSelector:
-      component: keystone
-      name: openstack-keystone-chart-group-global
   name: openstack-keystone
   namespace: shipyard
-  replacement: true
 spec:
   chart_group:
   - keystone

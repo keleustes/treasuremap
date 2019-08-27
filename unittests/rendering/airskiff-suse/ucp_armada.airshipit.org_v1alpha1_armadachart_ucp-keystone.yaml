@@ -4,15 +4,6 @@ metadata:
   labels:
     component: keystone
     name: ucp-keystone
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: keystone
-      name: ucp-keystone-type
   name: ucp-keystone
   namespace: ucp
 spec:

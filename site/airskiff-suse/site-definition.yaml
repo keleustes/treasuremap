@@ -2,9 +2,6 @@
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegSiteDefinition
 metadata:
-  layeringDefinition:
-    abstract: false
-    layer: site
   name: airskiff
   namespace: pegleg
 spec:

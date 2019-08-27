@@ -3,17 +3,8 @@ kind: PeglegSoftwareVersions
 metadata:
   labels:
     name: software-versions-airskiff
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      name: software-versions-global
   name: software-versions
   namespace: pegleg
-  replacement: true
 spec:
   charts:
     kubernetes:

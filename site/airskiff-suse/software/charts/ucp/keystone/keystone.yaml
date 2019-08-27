@@ -2,15 +2,6 @@
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: keystone
-      name: ucp-keystone-type
   name: ucp-keystone
   namespace: ucp
 spec:

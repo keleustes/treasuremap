@@ -4,15 +4,6 @@ metadata:
   labels:
     component: neutron
     name: neutron
-  layeringDefinition:
-    abstract: false
-    actions:
-    - method: merge
-      path: .
-    layer: site
-    parentSelector:
-      component: neutron
-      name: neutron-type
   name: neutron
   namespace: openstack
 spec:
