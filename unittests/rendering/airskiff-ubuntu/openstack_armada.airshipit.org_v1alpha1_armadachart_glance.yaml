@@ -293,7 +293,8 @@ spec:
       replicas:
         api: 1
         registry: 1
-    storage: pvc
+    storage:
+      todojeb: pvc
   wait:
     labels:
       release_group: airship-glance

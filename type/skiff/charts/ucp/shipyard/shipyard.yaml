@@ -21,10 +21,8 @@ spec:
           service_type: armada
     pod:
       replicas:
-        airflow:
-          scheduler: 1
-          worker: 1
-        shipyard:
-          api: 1
+        airflow_scheduler: 1
+        airflow_worker: 1
+        shipyard_api: 1
   wait:
     timeout: 1800
