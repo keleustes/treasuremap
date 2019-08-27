@@ -7,4 +7,5 @@ metadata:
 spec:
   target_state: uninitialized
   values:
-    storage: pvc
+    storage:
+      todojeb: pvc
