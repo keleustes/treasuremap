@@ -11,8 +11,6 @@ spec:
   values:
     pod:
       replicas:
-        airflow:
-          scheduler: 1
-          worker: 1
-        shipyard:
-          api: 1
+        airflow_scheduler: 1
+        airflow_worker: 1
+        shipyard_api: 1
