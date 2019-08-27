@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ingress-kube-system
+  replacement: true
+  labels:
+    name: ingress-kube-system-site
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ingress-kube-system-type
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  values:
+    endpoints:
+      ingress:
+        port:
+          server:
+            default: 8382
+...

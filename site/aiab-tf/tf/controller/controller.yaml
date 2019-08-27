@@ -1,0 +1,122 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: controller
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.tungstenfabric.controller
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.tungstenfabric.controller
+      dest:
+        path: .values.global.images.tags
+    # IP-s
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .tungstenfabric.ip
+      dest:
+        path: .values.global.contrail_env.CONTROLLER_NODES
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .tungstenfabric.fabric_subnets
+      dest:
+        path: .values.global.contrail_env.KUBERNETES_IP_FABRIC_SUBNETS
+
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.global.contrail_env.KUBERNETES_POD_SUBNETS
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_cidr
+      dest:
+        path: .values.global.contrail_env.KUBERNETES_SERVICE_SUBNETS
+data:
+  chart_name: controller
+  release: contrail-controller
+  namespace: tf
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+  values:
+    global:
+      contrail_env:
+        LOG_LEVEL: SYS_DEBUG
+        BGP_PORT: "1179"
+        CLOUD_ORCHESTRATOR: "kubernetes"
+        AAA_MODE: "no-auth"
+        KUBERNETES_IP_FABRIC_SNAT: "true"
+        DIST_SNAT_PROTO_PORT_LIST: "tcp:1024,udp:1024"
+        AUTH_MODE: "keystone"
+        KEYSTONE_AUTH_ADMIN_PASSWORD: "password123"
+        KEYSTONE_AUTH_ADMIN_TENANT: "admin"
+        KEYSTONE_AUTH_ADMIN_USER: "admin"
+        KEYSTONE_AUTH_HOST: "keystone.openstack.svc.cluster.local"
+        KEYSTONE_AUTH_ADMIN_PORT: "80"
+        KEYSTONE_AUTH_PUBLIC_PORT: "80"
+        KEYSTONE_AUTH_PROTO: "http"
+        KEYSTONE_AUTH_URL_VERSION: "/v3"
+        KEYSTONE_AUTH_USER_DOMAIN_NAME: "default"
+        KEYSTONE_AUTH_PROJECT_DOMAIN_NAME: "default"
+        KEYSTONE_AUTH_REGION_NAME: "RegionOne"
+    labels:
+      control:
+        node_selector_key: tungstenfabric-controller
+        node_selector_value: enabled
+      config:
+        node_selector_key: tungstenfabric-controller
+        node_selector_value: enabled
+      webui:
+        node_selector_key: tungstenfabric-controller
+        node_selector_value: enabled
+      kube_manager:
+        node_selector_key: tungstenfabric-controller
+        node_selector_value: enabled
+    manifests:
+      configmap_controller_keystone: false
+      daemonset_kube_manager: true
+      configmap_controller_rabbitmq: false
+  dependencies:
+    - tungstenfabric-controller-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tungstenfabric-controller-helm-toolkit
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.tungstenfabric.tf-htk
+      dest:
+        path: .source
+data:
+  chart_name: tungstenfabric-controller-helm-toolkit
+  release: tungstenfabric-controller-helm-toolkit
+  namespace: helm-toolkit
+  values: {}
+  dependencies: []
