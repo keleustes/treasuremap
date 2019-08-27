@@ -16,13 +16,12 @@ spec:
         libvirt:
           virt_type: qemu
     labels:
-      agent:
-        compute:
-          node_selector_key: openstack-compute-node
-          node_selector_value: enabled
-        compute_ironic:
-          node_selector_key: openstack-compute-node
-          node_selector_value: enabled
+      agent_compute:
+        node_selector_key: openstack-compute-node
+        node_selector_value: enabled
+      agent_compute_ironic:
+        node_selector_key: openstack-compute-node
+        node_selector_value: enabled
     pod:
       replicas:
         api_metadata: 1

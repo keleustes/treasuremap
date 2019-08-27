@@ -2,7 +2,7 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   name: tenant-ceph-config
-  namespace: openstack
+  namespace: tenant-ceph
 spec:
   chart_name: tenant-ceph-config
   dependencies:
@@ -58,8 +58,8 @@ spec:
     manifests:
       helm_tests: false
     network:
-      cluster: 172.24.1.0/24
-      public: 172.24.1.0/24
+      cluster: 10.22.73.0/24
+      public: 10.22.73.0/24
     storageclass:
       cephfs:
         provision_storage_class: false

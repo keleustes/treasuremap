@@ -329,7 +329,6 @@ spec:
         enabled: true
     pod:
       resources:
-        enabled: true
         fluentd:
           limits:
             cpu: 2000m

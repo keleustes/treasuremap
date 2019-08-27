@@ -223,7 +223,6 @@ spec:
       replicas:
         fluentd: 1
       resources:
-        enabled: true
         fluentbit:
           limits:
             cpu: 2000m

@@ -13,7 +13,6 @@ spec:
       ceph:
         enabled: false
     labels:
-      agent:
-        libvirt:
-          node_selector_key: openstack-compute-node
-          node_selector_value: enabled
+      agent_libvirt:
+        node_selector_key: openstack-compute-node
+        node_selector_value: enabled

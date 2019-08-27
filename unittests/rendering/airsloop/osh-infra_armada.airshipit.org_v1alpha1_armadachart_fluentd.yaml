@@ -332,7 +332,6 @@ spec:
       replicas:
         fluentd: 1
       resources:
-        enabled: true
         fluentd:
           limits:
             cpu: 2000m

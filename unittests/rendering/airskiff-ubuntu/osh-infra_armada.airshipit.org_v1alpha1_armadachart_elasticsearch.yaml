@@ -260,7 +260,6 @@ spec:
           requests:
             cpu: 1000m
             memory: 8Gi
-        enabled: true
         jobs:
           curator:
             limits:

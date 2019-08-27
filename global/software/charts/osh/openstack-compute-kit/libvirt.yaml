@@ -30,10 +30,9 @@ spec:
     images:
       tags: $(PeglegSoftwareVersions.software-versions.spec.images.osh.libvirt)
     labels:
-      agent:
-        libvirt:
-          node_selector_key: openstack-libvirt
-          node_selector_value: kernel
+      agent_libvirt:
+        node_selector_key: openstack-libvirt
+        node_selector_value: kernel
 ---
 apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart

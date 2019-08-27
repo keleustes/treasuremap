@@ -583,16 +583,15 @@ spec:
     images:
       tags: {}
     labels:
-      agent:
-        dhcp:
-          node_selector_key: openstack-control-plane
-          node_selector_value: enabled
-        l3:
-          node_selector_key: openstack-l3-agent
-          node_selector_value: enabled
-        metadata:
-          node_selector_key: openstack-control-plane
-          node_selector_value: enabled
+      agent_dhcp:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      agent_l3:
+        node_selector_key: openstack-l3-agent
+        node_selector_value: enabled
+      agent_metadata:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled

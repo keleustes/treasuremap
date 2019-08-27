@@ -177,8 +177,11 @@ spec:
         airflow:
           scheduler: 1
           worker: 1
+        airflow_scheduler: 1
+        airflow_worker: 2
         shipyard:
           api: 1
+        shipyard_api: 2
     prod_environment: true
   wait:
     labels:

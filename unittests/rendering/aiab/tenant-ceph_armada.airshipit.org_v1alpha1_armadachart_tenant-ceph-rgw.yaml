@@ -2,7 +2,7 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   name: tenant-ceph-rgw
-  namespace: openstack
+  namespace: tenant-ceph
 spec:
   chart_name: tenant-ceph-rgw
   dependencies:
@@ -56,14 +56,14 @@ spec:
             password: password123
             project_domain_name: default
             project_name: admin
-            region_name: seaworthy-virt
+            region_name: RegionOne
             user_domain_name: default
             username: admin
           swift:
             password: password123
             project_domain_name: default
             project_name: service
-            region_name: seaworthy-virt
+            region_name: RegionOne
             role: admin
             user_domain_name: default
             username: swift
@@ -107,8 +107,8 @@ spec:
         node_selector_key: tenant-ceph-rgw
         node_selector_value: enabled
     network:
-      cluster: 172.24.1.0/24
-      public: 172.24.1.0/24
+      cluster: 10.0.2.0/24
+      public: 10.0.2.0/24
     pod:
       replicas:
         rgw: 2

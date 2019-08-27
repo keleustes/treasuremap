@@ -1709,7 +1709,7 @@ spec:
       replicas:
         prometheus: 3
       resources:
-        enabled: true
+        # enabled: true
         prometheus:
           limits:
             cpu: 4000m

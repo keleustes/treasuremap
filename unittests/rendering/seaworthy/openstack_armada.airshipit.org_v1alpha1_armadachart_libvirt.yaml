@@ -33,7 +33,6 @@ spec:
     images:
       tags: {}
     labels:
-      agent:
-        libvirt:
-          node_selector_key: openstack-libvirt
-          node_selector_value: kernel
+      agent_libvirt:
+        node_selector_key: openstack-libvirt
+        node_selector_value: kernel

@@ -377,11 +377,9 @@ spec:
         node_selector_value: enabled
     pod:
       replicas:
-        airflow:
-          scheduler: 1
-          worker: 2
-        shipyard:
-          api: 2
+        airflow_scheduler: 1
+        airflow_worker: 2
+        shipyard_api: 2
     prod_environment: true
   wait:
     labels:

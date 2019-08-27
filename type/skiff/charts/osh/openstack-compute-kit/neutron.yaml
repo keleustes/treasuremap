@@ -29,10 +29,9 @@ spec:
           ovs:
             bridge_mappings: public:br-ex
     labels:
-      agent:
-        l3:
-          node_selector_key: openstack-control-plane
-          node_selector_value: enabled
+      agent_l3:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
     network:
       interface:
         tunnel: docker0

@@ -3,7 +3,7 @@ apiVersion: armada.airshipit.org/v1alpha1
 kind: ArmadaChart
 metadata:
   name: tenant-ceph-rgw
-  namespace: openstack
+  namespace: tenant-ceph
 spec:
   chart_name: tenant-ceph-rgw
   dependencies:
