@@ -1,14 +1,12 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: tungstenfabric-compute-kit
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-data:
-  description: "Deploy vrouter service"
-  sequenced: False
+  namespace: shipyard
+spec:
   chart_group:
-    - vrouter
+  - vrouter
+  description: Deploy vrouter service
+  sequenced: false
+  target_state: uninitialized

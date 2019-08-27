@@ -1,0 +1,29 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patchesStrategicMerge:
+- ./bootstrap.yaml
+- ./common-addresses.yaml
+- ./endpoints.yaml
+- ./full-site.yaml
+- ./genesis.yaml
+- ./ingress/ingress.yaml
+- ./openstack-compute-kit/chart-group.yaml
+- ./openstack-compute-kit/libvirt.yaml
+- ./openstack-compute-kit/neutron.yaml
+- ./openstack-compute-kit/nova.yaml
+- ./openstack-keystone/chart-group.yaml
+- ./openstack-keystone/keystone.yaml
+- ./versions.yaml
+
+resources:
+- ../aiab
+- ./tf/compute-kit/chart-group.yaml
+- ./tf/compute-kit/vrouter.yaml
+- ./tf/controller/analytics.yaml
+- ./tf/controller/chart-group.yaml
+- ./tf/controller/controller.yaml
+- ./tf/controller/thirdparty.yaml
+
+vars:

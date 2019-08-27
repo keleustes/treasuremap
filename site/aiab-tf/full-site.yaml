@@ -1,45 +1,37 @@
 ---
-schema: armada/Manifest/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaManifest
 metadata:
-  schema: metadata/Document/v1
-  name: full-site-aiab
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: full-site-global
-    actions:
-      - method: merge
-        path: .
-  storagePolicy: cleartext
-data:
-  release_prefix: airship
+  name: full-site
+  namespace: shipyard
+spec:
   chart_groups:
-    - podsecuritypolicy
-    - kubernetes-proxy
-    - tungstenfabric-controller
-    - tungstenfabric-compute-kit
-    - kubernetes-dns
-    - kubernetes-etcd
-    - kubernetes-haproxy
-    - kubernetes-core
-    - ingress-kube-system
-    - osh-infra-nfs-provisioner
-    - ucp-core
-    - ucp-keystone
-    - ucp-divingbell
-    - ucp-armada
-    - ucp-deckhand
-    - ucp-drydock
-    - ucp-promenade
-    - ucp-shipyard
-    - openstack-ingress-controller
-    - openstack-mariadb
-    - openstack-rabbitmq
-    - openstack-memcached
-    - openstack-keystone-aiab
-    - openstack-glance-aiab
-    - openstack-compute-kit-aiab
-    - openstack-heat-aiab
-    - openstack-horizon
-...
+  - podsecuritypolicy
+  - kubernetes-proxy
+  - tungstenfabric-controller
+  - tungstenfabric-compute-kit
+  - kubernetes-dns
+  - kubernetes-etcd
+  - kubernetes-haproxy
+  - kubernetes-core
+  - ingress-kube-system
+  - osh-infra-nfs-provisioner
+  - ucp-core
+  - ucp-keystone
+  - ucp-divingbell
+  - ucp-armada
+  - ucp-deckhand
+  - ucp-drydock
+  - ucp-promenade
+  - ucp-shipyard
+  - openstack-ingress-controller
+  - openstack-mariadb
+  - openstack-rabbitmq
+  - openstack-memcached
+  - openstack-keystone
+  - openstack-glance
+  - openstack-compute-kit
+  - openstack-heat
+  - openstack-horizon
+  release_prefix: airship
+  target_state: uninitialized

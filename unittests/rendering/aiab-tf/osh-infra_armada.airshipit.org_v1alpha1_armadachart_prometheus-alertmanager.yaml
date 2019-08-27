@@ -1,0 +1,63 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  name: prometheus-alertmanager
+  namespace: osh-infra
+spec:
+  chart_name: prometheus-alertmanager
+  dependencies:
+  - osh-infra-helm-toolkit
+  install:
+    no_hooks: false
+  release: prometheus-alertmanager
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: prometheus-alertmanager
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    post:
+      create: []
+    pre:
+      create: []
+      delete:
+      - labels:
+          release_group: airship-prometheus-alertmanager
+        type: job
+  values:
+    endpoints:
+      alerts:
+        host_fqdn_override: {}
+        hosts:
+          default: alerts-engine
+          discovery: alertmanager-discovery
+          public: alertmanager
+        name: alertmanager
+        namespace: osh-infra
+        path: {}
+        port:
+          api:
+            default: 9093
+            public: 80
+          mesh:
+            default: 6783
+        scheme:
+          default: http
+    images:
+      tags: {}
+    labels:
+      alertmanager:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    manifests:
+      ingress: false
+      service_ingress: false
+  wait:
+    labels:
+      release_group: airship-prometheus-alertmanager
+    timeout: 900

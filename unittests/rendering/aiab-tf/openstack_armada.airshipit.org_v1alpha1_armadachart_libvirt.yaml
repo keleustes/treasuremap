@@ -1,0 +1,63 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    component: libvirt
+    name: libvirt
+  name: libvirt
+  namespace: openstack
+spec:
+  chart_name: libvirt
+  dependencies:
+  - libvirt-htk
+  install:
+    no_hooks: false
+  release: libvirt
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: libvirt
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-libvirt
+        type: job
+  values:
+    ceph_client:
+      configmap: tenant-ceph-etc
+      user_secret_name: pvc-tceph-client-key
+    conf:
+      ceph:
+        enabled: false
+      qemu:
+        cgroup_device_acl:
+        - /dev/null
+        - /dev/full
+        - /dev/zero
+        - /dev/random
+        - /dev/urandom
+        - /dev/ptmx
+        - /dev/kvm
+        - /dev/kqemu
+        - /dev/rtc
+        - /dev/hpet
+        - /dev/net/tun
+    dependencies:
+      dynamic:
+        targeted:
+          tungstenfabric:
+            libvirt:
+              daemonset: []
+    images:
+      tags: {}
+    labels:
+      agent_libvirt:
+        node_selector_key: openstack-libvirt
+        node_selector_value: kernel
+    network:
+      backend:
+      - tungstenfabric

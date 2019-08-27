@@ -1,0 +1,16 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  name: tungstenfabric-controller-helm-toolkit
+  namespace: pegleg
+spec:
+  chart_name: tungstenfabric-controller-helm-toolkit
+  dependencies: []
+  release: tungstenfabric-controller-helm-toolkit
+  source:
+    location: https://github.com/juniper/contrail-helm-deployer
+    reference: master
+    subpath: helm-toolkit-contrail
+    type: git
+  target_state: uninitialized
+  values: {}

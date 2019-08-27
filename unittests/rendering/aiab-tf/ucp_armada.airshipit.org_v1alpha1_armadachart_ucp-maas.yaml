@@ -1,0 +1,201 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: ucp-maas
+  name: ucp-maas
+  namespace: ucp
+spec:
+  chart_name: maas
+  dependencies:
+  - maas-htk
+  install:
+    no_hooks: false
+  release: maas
+  source:
+    location: https://opendev.org/airship/maas
+    reference: 3f2b12a38e739087045443a14c658e6d786dd1f6
+    subpath: charts/maas
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-maas
+        type: job
+  values:
+    conf:
+      cache:
+        enabled: true
+      drydock:
+        bootaction_url: http://10.0.2.14:30000/api/v1.0
+      maas:
+        credentials:
+          secret:
+            namespace: ucp
+        dns:
+          dns_servers: 8.8.8.8,8.8.4.4
+          require_dnssec: "no"
+        images:
+          default_image: xenial
+          default_kernel: ga-16.04
+          default_os: ubuntu
+        ntp:
+          disable_ntpd_rack: true
+          disable_ntpd_region: true
+          ntp_servers: 0.ubuntu.pool.ntp.org,1.ubuntu.pool.ntp.org,2.ubuntu.pool.ntp.org,4.ubuntu.pool.ntp.org
+          use_external_only: "true"
+        proxy:
+          proxy_enabled: "true"
+        url:
+          maas_url: http://10.0.2.14:30001/MAAS
+    dependencies:
+      static:
+        bootstrap_admin_user:
+          jobs:
+          - maas-db-sync
+          services:
+          - endpoint: internal
+            service: maas_region
+          - endpoint: internal
+            service: maas_db
+        db_init:
+          services:
+          - endpoint: internal
+            service: maas_db
+        db_sync:
+          jobs:
+          - maas-db-init
+        export_api_key:
+          jobs:
+          - maas-bootstrap-admin-user
+          services:
+          - endpoint: internal
+            service: maas_region
+          - endpoint: internal
+            service: maas_db
+        import_resources:
+          jobs:
+          - maas-bootstrap-admin-user
+          services:
+          - endpoint: internal
+            service: maas_region
+          - endpoint: internal
+            service: maas_db
+        maas_ingress: {}
+        rack_controller:
+          jobs:
+          - maas-export-api-key
+          services:
+          - endpoint: internal
+            service: maas_region
+        region_controller:
+          jobs:
+          - maas-db-sync
+          services:
+          - endpoint: internal
+            service: maas_db
+    endpoints:
+      maas_db:
+        auth:
+          admin:
+            password: password123
+            username: postgres
+          user:
+            database: maasdb
+            password: password123
+            username: maas
+        host_fqdn_override: {}
+        hosts:
+          default: postgresql
+        name: postgresql
+        path: /maasdb
+        port:
+          postgresql:
+            default: 5432
+        scheme: postgresql+psycopg2
+      maas_ingress:
+        hosts:
+          default: maas-ingress
+          error_pages: maas-ingress-error
+      maas_region:
+        auth:
+          admin:
+            email: none@none
+            password: password123
+            username: admin
+        host_fqdn_override: {}
+        hosts:
+          default: maas-region
+          public: maas-region
+        name: maas-region
+        path:
+          default: /MAAS
+        port:
+          region_api:
+            default: 80
+            nodeport: 30001
+            podport: 80
+            public: 80
+          region_proxy:
+            default: 31800
+        scheme:
+          default: http
+      physicalprovisioner:
+        host_fqdn_override: {}
+        hosts:
+          default: drydock-api
+          public: drydock-api
+        name: drydock
+        path:
+          default: /api/v1.0
+        port:
+          api:
+            default: 9000
+            nodeport: 31900
+            public: 80
+        scheme:
+          default: http
+          public: http
+    images:
+      tags:
+        bootstrap: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        db_sync: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        export_api_key: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        maas_cache: quay.io/airshipit/sstream-cache:3f2b12a38e739087045443a14c658e6d786dd1f6
+        maas_rack: quay.io/airshipit/maas-rack-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        maas_region: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+    jobs:
+      import_boot_resources:
+        timeout: 1800
+    labels:
+      rack:
+        node_selector_key: maas-rack
+        node_selector_value: enabled
+      region:
+        node_selector_key: maas-region
+        node_selector_value: enabled
+    manifests:
+      maas_ingress: false
+    network:
+      region_api:
+        ingress:
+          public: false
+        node_port:
+          enabled: true
+      region_proxy:
+        node_port:
+          enabled: true
+    pod:
+      replicas:
+        rack: 1
+        region: 1
+    secrets:
+      maas_region:
+        value: e12330cfe038735aee32
+  wait:
+    labels:
+      release_group: airship-maas
+    timeout: 1800

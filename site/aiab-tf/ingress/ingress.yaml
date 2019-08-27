@@ -1,26 +1,16 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
-  name: ingress-kube-system
-  replacement: true
   labels:
     name: ingress-kube-system-site
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: ingress-kube-system-type
-    actions:
-      - method: merge
-        path: .
-  storagePolicy: cleartext
-
-data:
+  name: ingress-kube-system
+  namespace: kube-system
+spec:
+  target_state: uninitialized
   values:
     endpoints:
       ingress:
         port:
           server:
             default: 8382
-...

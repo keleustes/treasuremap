@@ -1,0 +1,26 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  name: nfs-provisioner
+  namespace: nfs
+spec:
+  chart_name: nfs-provisioner
+  dependencies:
+  - osh-infra-helm-toolkit
+  release: nfs-provisioner
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: nfs-provisioner
+    type: git
+  target_state: uninitialized
+  values:
+    images:
+      tags:
+        nfs_provisioner: quay.io/kubernetes_incubator/nfs-provisioner:v2.1.0-k8s1.11
+    storageclass:
+      name: general
+  wait:
+    labels:
+      release_group: airship-nfs-provisioner
+    timeout: 900

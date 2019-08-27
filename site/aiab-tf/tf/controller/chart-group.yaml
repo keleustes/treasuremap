@@ -1,16 +1,14 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: tungstenfabric-controller
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-data:
-  description: "TF Controller components"
-  sequenced: False
+  namespace: shipyard
+spec:
   chart_group:
-    - thirdparty
-    - controller
-    - analytics
+  - thirdparty
+  - controller
+  - analytics
+  description: TF Controller components
+  sequenced: false
+  target_state: uninitialized

@@ -163,6 +163,25 @@ deploy-aiab: install
 purge-aiab: 
 	$(SETKUBECONFIG) kubectl delete -f actual/aiab
 
+rendering-test-aiab-tf:
+	rm -fr actual/aiab-tf
+	mkdir -p actual/aiab-tf
+	kustomize build site/aiab-tf -o actual/aiab-tf
+	# cp actual/aiab-tf/* ./unittests/rendering/aiab-tf
+	diff -r actual/aiab-tf ./unittests/rendering/aiab-tf
+
+deploy-aiab-tf: install
+	rm -fr actual/aiab-tf
+	mkdir -p actual/aiab-tf
+	kustomize build site/aiab-tf -o actual/aiab-tf
+	rm actual/aiab-tf/pegleg*
+	rm actual/aiab-tf/shipyard*
+	rm actual/aiab-tf/drydock*
+	$(SETKUBECONFIG) kubectl apply -f actual/aiab-tf
+
+purge-aiab-tf: 
+	$(SETKUBECONFIG) kubectl delete -f actual/aiab-tf
+
 rendering-test-seaworthy:
 	rm -fr actual/seaworthy
 	mkdir -p actual/seaworthy
@@ -201,7 +220,7 @@ deploy-seaworthy-virt: install
 purge-seaworthy-virt: 
 	$(SETKUBECONFIG) kubectl delete -f actual/seaworthy-virt
 
-rendering-tests: rendering-test-airsloop rendering-test-airskiff-ubuntu rendering-test-aiab rendering-test-seaworthy rendering-test-seaworthy-virt rendering-test-airskiff-suse
+rendering-tests: rendering-test-airsloop rendering-test-airskiff-ubuntu rendering-test-aiab rendering-test-seaworthy rendering-test-seaworthy-virt rendering-test-airskiff-suse rendering-test-aiab-tf
 
 deploy-patch:
 	$(SETKUBECONFIG) kubectl patch act openstack-memcached -n openstack --type merge -p $'spec:\n  target_state: deployed'

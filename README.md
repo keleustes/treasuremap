@@ -138,6 +138,22 @@ make deploy-aiab
 make purge-aiab
 ```
 
+###  Site Airship Tugsten Fabric deployment
+
+```bash
+mkdir -p actual/aiab-tf
+rm -f actual/aiab-tf/*
+kustomize build site/aiab-tf -o actual/aiab-tf
+```
+
+or if kubectl is pointing at an active kubernetes cluster
+
+```bash
+make create-testcluster
+make deploy-aiab-tf
+make purge-aiab-tf
+```
+
 ### Deployment tests
 
 To install armada-operator (one per namespace):

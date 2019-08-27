@@ -1,35 +1,34 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: libvirt
-  replacement: true
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: libvirt-global
-      component: libvirt
-    actions:
-      - method: merge
-        path: .values
-      - method: delete
-        path: .values.ceph_client
-  storagePolicy: cleartext
-data:
+  namespace: openstack
+spec:
+  target_state: uninitialized
   values:
-    network:
-      backend:
-        - tungstenfabric
+    conf:
+      ceph:
+        enabled: false
+      qemu:
+        cgroup_device_acl:
+        - /dev/null
+        - /dev/full
+        - /dev/zero
+        - /dev/random
+        - /dev/urandom
+        - /dev/ptmx
+        - /dev/kvm
+        - /dev/kqemu
+        - /dev/rtc
+        - /dev/hpet
+        - /dev/net/tun
     dependencies:
       dynamic:
         targeted:
           tungstenfabric:
             libvirt:
               daemonset: []
-    conf:
-      ceph:
-        enabled: false
-      qemu:
-        cgroup_device_acl: ["/dev/null", "/dev/full", "/dev/zero", "/dev/random", "/dev/urandom", "/dev/ptmx", "/dev/kvm", "/dev/kqemu", "/dev/rtc", "/dev/hpet", "/dev/net/tun"]
-...
+    network:
+      backend:
+      - tungstenfabric

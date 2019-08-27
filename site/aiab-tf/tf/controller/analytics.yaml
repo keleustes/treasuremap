@@ -1,100 +1,58 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: analytics
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-  substitutions:
-    # Chart source
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.tungstenfabric.analytics
-      dest:
-        path: .source
-    # Images
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .images.tungstenfabric.analytics
-      dest:
-        path: .values.global.images.tags
-    # IP-s
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .tungstenfabric.ip
-      dest:
-        path: .values.global.contrail_env.CONTROLLER_NODES
-    # IP addresses
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .kubernetes.pod_cidr
-      dest:
-        path: .values.global.contrail_env.KUBERNETES_POD_SUBNETS
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .kubernetes.service_cidr
-      dest:
-        path: .values.global.contrail_env.KUBERNETES_SERVICE_SUBNETS
-data:
-  chart_name: analytics
-  release: contrail-analytics
   namespace: tf
+spec:
+  chart_name: analytics
+  dependencies:
+  - tungstenfabric-analytics-helm-toolkit
   install:
     no_hooks: false
+  release: contrail-analytics
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.analytics)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
   values:
     global:
       contrail_env:
+        AAA_MODE: no-auth
+        AUTH_MODE: noauth
+        CLOUD_ORCHESTRATOR: kubernetes
+        CONFIG_DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: '2'
+        CONTROLLER_NODES: $(PeglegCommonAddresses.common-addresses.spec.tungstenfabric.ip)
+        DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: '2'
+        JVM_EXTRA_OPTS: -Xms3g -Xmx4g
+        KUBERNETES_POD_SUBNETS: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
+        KUBERNETES_SERVICE_SUBNETS: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
         LOG_LEVEL: SYS_DEBUG
-        JVM_EXTRA_OPTS: "-Xms3g -Xmx4g"
-        CONFIG_DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: "2"
-        DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: "2"
-        CLOUD_ORCHESTRATOR: "kubernetes"
-        AAA_MODE: "no-auth"
-        AUTH_MODE: "noauth"
+      images:
+        tags: $(PeglegSoftwareVersions.software-versions.spec.images.tungstenfabric.analytics)
     labels:
       analytics:
-        node_selector_key: tungstenfabric-controller
-        node_selector_value: enabled
-      analytics_snmp:
         node_selector_key: tungstenfabric-controller
         node_selector_value: enabled
       analytics_alarm:
         node_selector_key: tungstenfabric-controller
         node_selector_value: enabled
+      analytics_snmp:
+        node_selector_key: tungstenfabric-controller
+        node_selector_value: enabled
     manifests:
       configmap_analytics_keystone: false
       configmap_analytics_rabbitmq: false
-  dependencies:
-    - tungstenfabric-analytics-helm-toolkit
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: tungstenfabric-analytics-helm-toolkit
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-  substitutions:
-    # Chart source
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.tungstenfabric.tf-htk
-      dest:
-        path: .source
-data:
+  namespace: pegleg
+spec:
   chart_name: tungstenfabric-analytics-helm-toolkit
-  release: tungstenfabric-analytics-helm-toolkit
-  namespace: helm-toolkit
-  values: {}
   dependencies: []
+  release: tungstenfabric-analytics-helm-toolkit
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.tf-htk)
+  target_state: uninitialized
+  values: {}

@@ -1,101 +1,49 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: vrouter
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-  substitutions:
-    # Chart source
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.tungstenfabric.vrouter
-      dest:
-        path: .source
-    # Images
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .images.tungstenfabric.vrouter
-      dest:
-        path: .values.global.images.tags
-    # IP-s
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .tungstenfabric.ip
-      dest:
-        path: .values.global.contrail_env.CONTROLLER_NODES
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: tungstenfabric.interface
-      dest:
-        path: .values.global.contrail_env.PHYSICAL_INTERFACE
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: tungstenfabric.interface_gw
-      dest:
-        path: .values.global.contrail_env.VROUTER_GATEWAY
-    # IP addresses
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .kubernetes.pod_cidr
-      dest:
-        path: .values.global.contrail_env.KUBERNETES_POD_SUBNETS
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .kubernetes.service_cidr
-      dest:
-        path: .values.global.contrail_env.KUBERNETES_SERVICE_SUBNETS
-data:
-  chart_name: vrouter
-  release: contrail-vrouter
   namespace: tf
+spec:
+  chart_name: vrouter
+  dependencies:
+  - tungstenfabric-vrouter-helm-toolkit
   install:
     no_hooks: false
+  release: contrail-vrouter
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.vrouter)
+  target_state: uninitialized
   upgrade:
     no_hooks: false
   values:
     global:
       contrail_env:
-        LOG_LEVEL: SYS_DEBUG
         CLOUD_ORCHESTRATOR: kubernetes
-        VROUTER_ENCRYPTION: FALSE
+        CONTROLLER_NODES: $(PeglegCommonAddresses.common-addresses.spec.tungstenfabric.ip)
+        KUBERNETES_POD_SUBNETS: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
+        KUBERNETES_SERVICE_SUBNETS: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
+        LOG_LEVEL: SYS_DEBUG
+        PHYSICAL_INTERFACE: $(PeglegCommonAddresses.common-addresses.spectungstenfabric.interface)
+        VROUTER_ENCRYPTION: false
+        VROUTER_GATEWAY: $(PeglegCommonAddresses.common-addresses.spectungstenfabric.interface_gw)
+      images:
+        tags: $(PeglegSoftwareVersions.software-versions.spec.images.tungstenfabric.vrouter)
     labels:
       vrouter_agent_kernel:
         node_selector_key: tungstenfabric-compute-kit
         node_selector_value: enabled
     manifests:
       job_kubernetes_cni_init: true
-  dependencies:
-    - tungstenfabric-vrouter-helm-toolkit
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: tungstenfabric-vrouter-helm-toolkit
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-  substitutions:
-    # Chart source
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.tungstenfabric.tf-htk
-      dest:
-        path: .source
-data:
+  namespace: pegleg
+spec:
   chart_name: tungstenfabric-vrouter-helm-toolkit
-  release: tungstenfabric-vrouter-helm-toolkit
-  namespace: helm-toolkit
-  values: {}
   dependencies: []
+  release: tungstenfabric-vrouter-helm-toolkit
+  source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.tf-htk)
+  target_state: uninitialized
+  values: {}

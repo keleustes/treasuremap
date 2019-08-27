@@ -1,22 +1,13 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
-  name: openstack-compute-kit-aiab
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: openstack-compute-kit-chart-group-global
-    actions:
-      - method: merge
-        path: .sequenced
-      - method: replace
-        path: .chart_group
-  storagePolicy: cleartext
-data:
-  sequenced: false
+  name: openstack-compute-kit
+  namespace: shipyard
+spec:
   chart_group:
-    - libvirt
-    - neutron-fixme
-    - nova
+  - libvirt
+  - neutron
+  - nova
+  sequenced: false
+  target_state: uninitialized

@@ -1,19 +1,11 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
-  name: openstack-keystone-aiab
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: openstack-keystone-chart-group-global
-      component: keystone
-    actions:
-      - method: replace
-        path: .chart_group
-  storagePolicy: cleartext
-data:
-  sequenced: true
+  name: openstack-keystone
+  namespace: shipyard
+spec:
   chart_group:
-    - keystone-aiab
+  - keystone
+  sequenced: true
+  target_state: uninitialized

@@ -1,0 +1,11 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
+metadata:
+  name: tungstenfabric-compute-kit
+  namespace: shipyard
+spec:
+  chart_group:
+  - vrouter
+  description: Deploy vrouter service
+  sequenced: false
+  target_state: uninitialized

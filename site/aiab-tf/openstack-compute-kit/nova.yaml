@@ -1,34 +1,13 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: nova
-  replacement: true
-  layeringDefinition:
-    abstract: false
-    layer: site
-    parentSelector:
-      name: nova-type
-    actions:
-      - method: replace
-        path: .values.dependencies.dynamic.targeted
-      - method: delete
-        path: .values.ceph_client
-      - method: merge
-        path: .
-  storagePolicy: cleartext
-data:
+  namespace: openstack
+spec:
+  target_state: uninitialized
   values:
-    images:
-      tags:
-        opencontrail_compute_init: opencontrailnightly/contrail-openstack-compute-init:ocata-master-latest
     conf:
-      ceph:
-        enabled: false
-      nova:
-        libvirt:
-          virt_type: qemu
-          cpu_mode: host-model
       agent:
         compute:
           node_selector_key: openstack-compute-node
@@ -39,6 +18,8 @@ data:
       api_metadata:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+      ceph:
+        enabled: false
       conductor:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
@@ -48,6 +29,10 @@ data:
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+      nova:
+        libvirt:
+          cpu_mode: host-model
+          virt_type: qemu
       novncproxy:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
@@ -66,13 +51,15 @@ data:
       test:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    network:
-      backend:
-        - tungstenfabric
     dependencies:
       dynamic:
         targeted:
           tungstenfabric:
             compute:
               daemonset: []
-...
+    images:
+      tags:
+        opencontrail_compute_init: opencontrailnightly/contrail-openstack-compute-init:ocata-master-latest
+    network:
+      backend:
+      - tungstenfabric
