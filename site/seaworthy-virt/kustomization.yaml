@@ -1,0 +1,46 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patchesStrategicMerge:
+- ./profiles/genesis.yaml
+- ./software/charts/kubernetes/container-networking/calico.yaml
+- ./software/charts/kubernetes/container-networking/etcd.yaml
+- ./software/charts/kubernetes/etcd/etcd.yaml
+- ./software/charts/kubernetes/ingress/ingress.yaml
+- ./software/charts/ucp/ceph/ceph-client-update.yaml
+- ./software/charts/ucp/ceph/ceph-client.yaml
+- ./software/charts/ucp/ceph/ceph-osd.yaml
+- ./software/charts/ucp/ceph/ceph-provisioners.yaml
+- ./software/charts/ucp/divingbell/divingbell.yaml
+- ./software/charts/ucp/drydock/drydock.yaml
+- ./software/charts/ucp/drydock/maas.yaml
+- ./software/charts/ucp/promenade/promenade.yaml
+
+- ./baremetal/bootactions/promjoin.yaml
+- ./profiles/host/gate-vm-cp.yaml
+- ./profiles/host/gate-vm-dp.yaml
+- ./software/manifests/bootstrap.yaml
+- ./software/manifests/full-site.yaml
+
+resources:
+- ../../global
+
+- ./baremetal/nodes.yaml
+- ./deployment/deployment-configuration.yaml
+- ./deployment/dev-configurables.yaml
+- ./networks/common-addresses.yaml
+- ./networks/physical/networks.yaml
+- ./networks/physical/unused_networks.yaml
+- ./pki/pki-catalog.yaml
+- ./profiles/hardware/generic_vm.yaml
+- ./profiles/host/gate-vm-cp-secondary.yaml
+- ./profiles/region.yaml
+- ./secrets/certificates/certificates.yaml
+- ./secrets/passphrases
+- ./site-definition.yaml
+- ./software/config/common-software-config.yaml
+- ./software/config/endpoints.yaml
+- ./software/config/service_accounts.yaml
+
+vars:

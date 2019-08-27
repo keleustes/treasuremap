@@ -1,0 +1,36 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../global
+- ./config/endpoints.yaml
+- ./config/service_accounts.yaml
+- ./secrets/certificates/certificates.yaml
+- ./secrets/certificates/ingress.yaml
+- ./secrets/passphrases
+- ./networks/common-addresses.yaml
+
+patchesStrategicMerge:
+- ./charts/osh/openstack-compute-kit/libvirt.yaml
+- ./charts/osh/openstack-compute-kit/neutron.yaml
+- ./charts/osh/openstack-compute-kit/nova.yaml
+- ./charts/osh/openstack-glance/glance.yaml
+- ./charts/osh/openstack-ingress-controller/ingress.yaml
+- ./charts/osh/openstack-keystone/keystone.yaml
+- ./charts/osh/openstack-mariadb/mariadb.yaml
+- ./charts/osh/openstack-rabbitmq/rabbitmq.yaml
+- ./charts/ucp/armada/armada.yaml
+- ./charts/ucp/armada/chart-group.yaml
+- ./charts/ucp/core/ingress.yaml
+- ./charts/ucp/core/mariadb.yaml
+- ./charts/ucp/core/postgresql.yaml
+- ./charts/ucp/core/rabbitmq.yaml
+- ./charts/ucp/deckhand/barbican.yaml
+- ./charts/ucp/deckhand/deckhand.yaml
+- ./charts/ucp/keystone/keystone.yaml
+- ./charts/ucp/shipyard/shipyard.yaml
+- ./manifests/bootstrap.yaml
+- ./manifests/full-site.yaml
+
+vars:

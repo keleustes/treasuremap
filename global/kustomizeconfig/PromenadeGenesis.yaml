@@ -1,0 +1,3 @@
+varReference:
+- kind: PromenadeGenesis
+  path: spec/apiserver/encryption/providers/secretbox/keys/secret
