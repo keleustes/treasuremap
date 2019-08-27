@@ -1,0 +1,15 @@
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeEncryptionPolicy
+metadata:
+  name: encryption-policy
+  namespace: drydock
+spec:
+  etcd:
+  - providers:
+    - secretbox:
+        keys:
+        - name: key1
+          secret: bL2mHd9Sf5hQvZPuDncZRugYYqYyR3cGcZKVJ9wjswg=
+    - identity: {}
+    resources:
+    - secrets

@@ -1,0 +1,33 @@
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandCertificateKey
+metadata:
+  name: kubernetes-etcd-n1-peer
+  namespace: pegleg
+spec: |
+  -----BEGIN RSA PRIVATE KEY-----
+  MIIEpAIBAAKCAQEAnlAxp+2rsTOjt5OL4oVuYkbBab611Mt/j8qDesftKbMhtJfr
+  dm9LlJnHoVN3US/V7GXlypvft3VZ0W7U0m1rxm2LYTolk++VOKgcCspdm3ng1hcS
+  YHVHG16my48ke+Ih/Md7EMX9MhSF7wIDXR3Jb8pbnBs0pid9aM4NrV3sT0/391VF
+  Fwefot/yMMwEuC8uosBkVMFF+UXy229HP6eCMRYO6C77NUYQOTB53HEUQTLsCPxw
+  Enim+/dQsk3KVmmxM1gVioTc1jrWuPaJZagrBVPjGvfPh2Z50XNHJ9I1jD4opvpO
+  lsOY6AXuyxUv3PpgbL3+G2v2VtMGRd+cvpJZvwIDAQABAoIBADpxnINECHg4eh4R
+  SDjtzVxWhpyFHRdbsNHijztKh1E3oh/LXc+xMpO/WaVC7O95212UGIr9lE9j8S6R
+  3dt5LappUmUoVCsS7WGnHgMVxgzZp5khl1UotoFyJd1MEMnzJ1zsP5BnpxtP3Enp
+  0lgT4QN2Du/IU11rgq6oMwBnhg+Y/2kR5Q6ZpZC8y+91l6kYGDLPQ5cCK2u26cnU
+  gwGLF0ix1fvy+IIEpXkhLd/qTgHiz9jUcnY0ejVdYJ7P5JQFKeDkykpLvrMK9dp8
+  QIjoAAqzkRDyIaGosvREWW13JczeW6r3WEpL9aWiCVKe/5Krq6qxycBZSIPIQhh8
+  KZS+B1ECgYEAy8K6+U9lFKEbhbCJdhlqFM+UqsK3nv1GqP3HJEoco6jkSC2UlcbJ
+  MgRIL8rHvF4rtZS6emKZQHst+3fqSOkYbLwlJQOEG0Et1k+Wf7NV961qqLdKCVOZ
+  ozIzZQ72JCdbViQ7e1Fx0k/zem7IBfV+Z4fCHTvafPo0S3HHzDwUesMCgYEAxual
+  9IBaW1MBYp2TIZW8eWJW2XAd/BQ+4uy4nPWFMGPTaBKFsdaNNe05Tx19Q1t/DrcV
+  wlyRab4ZEpCemNrFfeDVft/c6v0LuO5r1evgdug4gSEhx5ns/5/UCyH5eFkufi+s
+  O0QW4bp20Svbipkg3XbceAiyX0y9etjaD/HUnVUCgYEAleOvy0peXyiMqHHPDPNx
+  F9ID2QHYNbq3SgU1gzqJitLo6zesf+l1g7emqpGPEMBtguvfqbvyZH64uq3hyLS/
+  5O0anfnSKoJuB6MQYOw5pzMIrQf4DJhVArohGIxDASF6jQmmP/cPtdhekYgA2HFZ
+  BSvW3c5z0U/1PDJ8+X6QyiUCgYAETCd5yOwq3PhCsTTknN+dn8pQmGONdsKFFKhI
+  e+WMzhtbPEs3NHOInr+GPhTex7NPFhWaRXW+2ySfihBjLRbnSVxTiXK0gRMnw78A
+  uD/5Ubsmzxhzv5enTkS+mNVTDFo8z7rg7O+xoN3AVzo/HF/haRgKX+W6uWW+qcDM
+  Z2U4oQKBgQC8w0oCeJUgBn+jC+ebC7Jgw1Akho/OYX3PCM7braxltri4IIw/ZN0Q
+  dIW23BzmnqYSrYMpIzYtp0aWd2dq+gOw8r/s4zaGyITedtI3S6f4xixWNpQHKCnD
+  mc6qJGhywV2EWIPXNJOIZYvpcIFUXw7E95Iafrf6M9Bajsrw4JnOVQ==
+  -----END RSA PRIVATE KEY-----

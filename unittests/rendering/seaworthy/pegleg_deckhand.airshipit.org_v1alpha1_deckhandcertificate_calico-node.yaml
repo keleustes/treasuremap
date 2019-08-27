@@ -1,0 +1,26 @@
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandCertificate
+metadata:
+  name: calico-node
+  namespace: pegleg
+spec: |
+  -----BEGIN CERTIFICATE-----
+  MIIDTzCCAjegAwIBAgIUKHiqzwAH6lAI34ZsknKOfsiN678wDQYJKoZIhvcNAQEL
+  BQAwKzETMBEGA1UEChMKS3ViZXJuZXRlczEUMBIGA1UEAxMLY2FsaWNvLWV0Y2Qw
+  HhcNMTkwODIxMjE1NzAwWhcNMjAwODIwMjE1NzAwWjAXMRUwEwYDVQQDEwxjYWxj
+  aWNvLW5vZGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC1mjzogItf
+  G4x7uhoRO2zHe5osm8LQDAALEIEYwT9vKJLtfpoIbIiTvnd1es7qQqoEorUwivkL
+  tBQEiwmoX1w5Wf+Sd2zGDDdRYGBwzvWw1Fvru5zj9CEXPj1shbHJ+gbhdwX3nr1U
+  hDq29ayuWzqkP0uxXdBWGHGqPYchld3rYs96z3Ic41Spaoo7ndp2xTalYJoi9tFJ
+  DSYr18PpA+l4OO7r2T97SzXYgUhH1J9itqWrzvCSllROBsWCXfAKZ6XZvOvvhxXL
+  soW07irVRRLb0LeUrMHsrFxwLra+epMhtpP/jHg+uDqzNBbtY1Ygere0XxLOnwNK
+  Su/8gU18v6YvAgMBAAGjfzB9MA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggr
+  BgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUjuDDbb8U
+  th98EKbJIQHnlbeBVrAwHwYDVR0jBBgwFoAUCr6tj1HJEd2yW0A3635Ab9hlW2gw
+  DQYJKoZIhvcNAQELBQADggEBAFBkBLOZzUc4ixXehx2kIJ9UO4eyp9kZ++Jv+U2N
+  xirpiG/dzOt6XOs5A1FP3cv+f3Qr2iwQUk8UGMc5cKG/cUSCtrHdXsHv9eQfpoSn
+  mxQAORQTIV/5myfhDX8eiWfXIQQfDalktUqnPviz6fqao5jRK9KjbaSghcR1Jk/2
+  2GFzMlfzmthC2sHzUTuD87v5dqDt/JqObLKso5Bet1BiWeJJhGZPPFuKDg/CoZmc
+  7+qARv/JR1QhIqoyX1qpHvwBUIvbkiuAuBsnbuNmeYpzyaHdgRZ3PHtMPzialcSd
+  aspS77Fm5b7nTtmFQvPTJzfmCZLYLu9WnOMWGlF4laot3rE=
+  -----END CERTIFICATE-----

@@ -1,0 +1,36 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: ucp-tiller
+  name: ucp-tiller
+  namespace: kube-system
+spec:
+  chart_name: tiller
+  dependencies:
+  - tiller-htk
+  install:
+    no_hooks: false
+  release: ucp-tiller
+  source:
+    location: https://opendev.org/airship/armada
+    reference: 9886cb1a5e329217d4b49b0f91e8371cdfff6f64
+    subpath: charts/tiller
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-ucp-tiller
+        type: job
+  values:
+    images:
+      tags: {}
+  wait:
+    labels:
+      release_group: airship-ucp-tiller
+    native:
+      enabled: false
+    timeout: 100

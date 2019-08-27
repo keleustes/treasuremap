@@ -1,0 +1,15 @@
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
+metadata:
+  name: n1
+  namespace: drydock
+spec:
+  addressing:
+  - address: 172.24.1.11
+    network: gp
+  host_profile: cp-global
+  metadata:
+    boot_mac: 52:54:00:00:a3:31
+    rack: rack1
+    tags:
+    - masters

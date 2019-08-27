@@ -1,0 +1,149 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: kubernetes-controller-manager
+  name: kubernetes-controller-manager
+  namespace: kube-system
+spec:
+  chart_name: controller-manager
+  dependencies:
+  - kubernetes-controller-manager-htk
+  protected:
+    continue_processing: true
+  release: kubernetes-controller-manager
+  source:
+    location: https://opendev.org/airship/promenade
+    reference: b3533b8522ac67f581837a1a5033d3b9777e9e89
+    subpath: charts/controller_manager
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-kubernetes-controller-manager
+        type: job
+  values:
+    command_prefix:
+    - /controller-manager
+    - --cluster-cidr=10.97.0.0/16
+    - --service-cluster-ip-range=10.96.0.0/16
+    - --node-monitor-period=5s
+    - --node-monitor-grace-period=20s
+    - --pod-eviction-timeout=60s
+    images:
+      tags:
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+    network:
+      kubernetes_netloc: 127.0.0.1:6553
+      pod_cidr: 10.97.0.0/16
+      service_cidr: 10.96.0.0/16
+    secrets:
+      service_account:
+        private_key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEowIBAAKCAQEAzYLno3h6ZpjdFECNuc/L/I2Vyr1IF3OP4YOZCg/rhactiINJ
+          VD61zacxnm9GLgKBCrsMHuesRxRxuI9LJ1gUkkcvaP3jHpdB6XWK3QdVzCmW9BiQ
+          oWE1ocmF9EYrZz9bFFBwz7A2AcgT5q6SCANzxXjMvWp0ulsqEFrXUhYYie5Mizj4
+          PjrBVHt2v2zk/fXsQE6+m4zM1296q1yM2UjBmk3ShVIDYaN4qodCfURjuIIxUcQz
+          J/JkEp1C5p3Euq2UVjrkI9XwmdXal/x+3lCCNlLy7yEX1c8haBupgDzbgx0X2K+B
+          EOXeClxtrC1N6GY1voINwvD4g1IfjpM5md3ZnwIDAQABAoIBACRw8uwsv9+TeZhO
+          vhLVwwEchhQ2LiNibX/6mteK7SN8+nj7drRGjmxSGl1Ss+oSrZkeg86zG/xaprOo
+          TRZD6xnpH4IJiw1wmtJv8lixJUiXk1njRTooh58RofwnuSiMtnTKssZRI7J7LPQ5
+          vlFHc27vtbZcuygUZEgUI5w9qMpEMtBlnEQ4WZLwgEJan66EzPyH7gekbwKNdRa/
+          snnLsjao8YAcj0FV/C6NUgg6QsVax7dyVvf42tGEzF0sOWzyg2LrRstfYVfq1ysR
+          rdzj0XDrimgJyJz6pT6eVk4SfpelbjXbu0Td91vAvlRJxDh2AaVTfeh8FXcYDQcS
+          bSlOh0ECgYEA7TLvb2VjEjViLZEBFD9Gzh7R45wxaMNuCAXMhClwFHEx3Xni9Gr7
+          YlDtU77FDEREoigpJvBYAZT/LB286mgpzC5tQHQNvuVRLRNEAsuQYLIlttOJ9nAc
+          WvOCWhLhYkTx8kuf/oUZjBxonx1xP8DFfBC6NUhHJSSkHxcRoS6nDOECgYEA3cz8
+          7MCvYBjGV4woUUgL+y90vITG5ojhtjo4OJbck0pkRnDgXjRVLjIXktlHQW72n77U
+          VhLoEFuoOZdds1O6S+bkF+XWaL/QrR+4fHUNIyb416oXokAns19ZmpTWfcy9gtZ8
+          HEvBH9HMBUFM3QC90sjflnsEGhnwBTNLT4InNn8CgYEAwyDIubIFKyCBUIzd/2MC
+          g2P1NDH0r4M9jBoBIaPZEOgBpnmzi3BKtplucxsXjLzIXUF+gQrsyvhgZlFcbNUd
+          tVtoAsK14BlTiyozI72EWxeSUPF6qCGYIfX6gNDRWn7vLmyqBL5HwuxH4MVeuZyC
+          mUpFdLmt1U9sOCtJFHiFceECgYBzdtQwV7q0dxFB4CfY8H20PKczwJdeyeFeoP5F
+          j1uynaaH+RkEUZAKZW9aNhxfFunyjUAystL2ORDhMkhII403GDKjsjWlAD4c8gdz
+          WugE5bPjaZu2DlncigW2cEcc5Cm/4/JmNJWMAAaKsczWvB0Vjxa+Wrnu8JO/0U0i
+          Teol9wKBgEATKPVMWxl2pIFL3J5P4UkvgnDlq37jSWUprzno+lkklNp+pXCtBUjC
+          CDj5eHZmcaNrjDX50/8h2MHLTUbz7C9/uX3nvO29wnwAq9UECoq65KJ+iEvesxnj
+          vludCtRrExmMr015lv0cXcSc7EHkIqK1rg1MLhBxdWpzuD8O8aJU
+          -----END RSA PRIVATE KEY-----
+      tls:
+        ca: |
+          -----BEGIN CERTIFICATE-----
+          MIIDSDCCAjCgAwIBAgIUB4SofoPJ5jsvJKPmx0A/bkd6DjUwDQYJKoZIhvcNAQEL
+          BQAwKjETMBEGA1UEChMKS3ViZXJuZXRlczETMBEGA1UEAxMKa3ViZXJuZXRlczAe
+          Fw0xOTA4MjEyMTU3MDBaFw0yNDA4MTkyMTU3MDBaMCoxEzARBgNVBAoTCkt1YmVy
+          bmV0ZXMxEzARBgNVBAMTCmt1YmVybmV0ZXMwggEiMA0GCSqGSIb3DQEBAQUAA4IB
+          DwAwggEKAoIBAQDrpRX/8wmY9U16j58EviUgbo8vQ6Nn196p/tdaLc3C69rqUMJY
+          7jRw18pTWVIGnCmZDfqq9VlyAodzPNMcxZ3/MCXsPtqDqhFMSZ0h0KXeHvyl8doX
+          zqaCS1yRgce5RQa71ah6sX8GrmvA7rDuSuE/MxMfrBHGfjRWuY0vVK/2BwkNhhUd
+          mimyIdxGZXScaOKe/lbNGoiPeyh2Kz0TmP5GjtvSZZT1Pp+aYIvaVLtou2trhCuw
+          c31MVoExjEPcRUjtDQmAJCw4/DhdVZpSyZqUwajLVsaurP2rgtHQpW2P0CF85Df9
+          oq7l1SwW4s6vDdqY0VrcW4u/hfWIZkU103JvAgMBAAGjZjBkMA4GA1UdDwEB/wQE
+          AwIBBjASBgNVHRMBAf8ECDAGAQH/AgECMB0GA1UdDgQWBBT4FGVtU/iWsj+vnLiA
+          LnIWwFhF2TAfBgNVHSMEGDAWgBT4FGVtU/iWsj+vnLiALnIWwFhF2TANBgkqhkiG
+          9w0BAQsFAAOCAQEAWu8e4bXV3Ac0dtvqJpysC9GXOoOgvzD9HsmeLrKfHa/B6Bt2
+          AYRncn0mTlqjP14FqXIKKAYyFwYMzp4BZ+gss6OPR+c//yaE9Z7NX9O+JVu/C93p
+          Lau0lSSMPvC2xcskpJ3mnd6O9rEDxvcKlx2LOohVj88R5hJaDxQRq3Zfps46Z8cP
+          xr4K7bIqxSty/vdrmjDbJf8eElpSNpm7OgAAbwruj8ERWYRVxzKhRxqOOYjMbpnC
+          ZzfFF/3fp3rX7m7/WF1Wsfqz3uL3cmMidTOb2cVVrnlrDNNbmm8rnaXtJ1ND76QE
+          ToPqIVKZ4/0JMMPFB32miJqF/qXhBM70Naw21g==
+          -----END CERTIFICATE-----
+        cert: |
+          -----BEGIN CERTIFICATE-----
+          MIIDYDCCAkigAwIBAgIUGQB2kNuFPolkpGpbJfB15eppcRAwDQYJKoZIhvcNAQEL
+          BQAwKjETMBEGA1UEChMKS3ViZXJuZXRlczETMBEGA1UEAxMKa3ViZXJuZXRlczAe
+          Fw0xOTA4MjEyMTU3MDBaFw0yMDA4MjAyMTU3MDBaMCkxJzAlBgNVBAMTHnN5c3Rl
+          bTprdWJlLWNvbnRyb2xsZXItbWFuYWdlcjCCASIwDQYJKoZIhvcNAQEBBQADggEP
+          ADCCAQoCggEBAKuWPvWJMxehjNyAML0L3NrDTfEFTzNOPl4hffwFgdLI/dvlaCDY
+          4da64U728SNSOodFFffGuWWNl9kQkMb1IrfFspY1HxN9Ipj5r3lZcGQSF9quS2Kl
+          Wd2Dg2qT8voKFaMVDvJ1ShfkZsrk5U02egGKcSN8fKNcrqXzm9DreXxJ/FfYilS7
+          JK4MtjbkEa2nm2tVH3eJE3ys6PVK+h4rizyAdIcXBUdBGGcfsliKJFtW2i7SHoqv
+          N+BO2jM+sozoqwar65+BnGwCxdiWE0noJjtfs0+nJVOWpe522vH32KJb/f90mAuJ
+          v8dApR5bLi162ZkEoGKEmVMKWOjKaGOG53cCAwEAAaN/MH0wDgYDVR0PAQH/BAQD
+          AgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAA
+          MB0GA1UdDgQWBBTCeoVdRfEKUE0WCC0F3IxaUB2Q0jAfBgNVHSMEGDAWgBT4FGVt
+          U/iWsj+vnLiALnIWwFhF2TANBgkqhkiG9w0BAQsFAAOCAQEAsrwOnp56w0hxtwSn
+          zOqI3xi8ycYa8S5UaTPYRcnB1b4BqYTXkuQT417Cf8UWT4O/1HUso5PQdLeLaX1R
+          KkFzuN1W6DXGFHeSrM/CTQseyBbDgDf+l2/6M6jlJR+BvCf1o0c0/VJXdpPzbXil
+          qBQgOb07itMpLkxamutk42i2Zw79ljlK54DDwj58kddQMl/iEq9Tg9ubNH/HsBCC
+          Y3T58EQrXhb77ny55RIF7SzyjY6XWssG9s3cI6rEUA0fOZCguUq3Iaz5YnqqHmNp
+          wa0h05PrisEFkoeVklxVJH7ArroOaGnbKZXeZ4JzhxzJMirRBQTegwO6jXE9OVDU
+          DiWDYA==
+          -----END CERTIFICATE-----
+        key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEpAIBAAKCAQEAq5Y+9YkzF6GM3IAwvQvc2sNN8QVPM04+XiF9/AWB0sj92+Vo
+          INjh1rrhTvbxI1I6h0UV98a5ZY2X2RCQxvUit8WyljUfE30imPmveVlwZBIX2q5L
+          YqVZ3YODapPy+goVoxUO8nVKF+RmyuTlTTZ6AYpxI3x8o1yupfOb0Ot5fEn8V9iK
+          VLskrgy2NuQRraeba1Ufd4kTfKzo9Ur6HiuLPIB0hxcFR0EYZx+yWIokW1baLtIe
+          iq834E7aMz6yjOirBqvrn4GcbALF2JYTSegmO1+zT6clU5al7nba8ffYolv9/3SY
+          C4m/x0ClHlsuLXrZmQSgYoSZUwpY6MpoY4bndwIDAQABAoIBAGV88XIzG0gv4mwN
+          WkaGvLOb7v7O4CB9eAAfGTA2Zaox/YzRrHw5K6LhWCBniQsWOM4He83Y+ZFqZVUb
+          KjaziTxfL5kOhHn3er42eKZy0zotRXSvwKDxIi0V+2XPaligHFogO34HB7MIAhCh
+          wEqiHRnKM88Ec4gAasB3TUMN9AYhmJE/qIH5tGrXxjSMG6SCuwYyM89k7XVJBkpz
+          PLkJNy13XjZZkgSK0GtMPo/aifPZlDmFOmtz9hcIOCTuS5CVeetLU+V0tiaJLE/U
+          LKSiVzcXAqMZKQ2hdH4BQxPoD/fU7TO+4wTE8r9J3/WvDt4+11VB5O+CB+dbDNtd
+          bRQN4LECgYEA2LGWjT6cWac7RAXtKXNl1gSZ631K31Gv5yry30L+7j/6yWbOrIEl
+          fbNZj4iknq3Mkv4e6MMKvkebDEsW2KrMN7pT2eeSqtoylk76Dlpvvwdhl+AnfQlF
+          TplI2iPsPt0B+pnQLpKjlqewCm+ZvGOfAP5Q7esxwgpigU1N8vcZ7y8CgYEAyrYS
+          y94RmGAIk/GCSBxCDTJJGFJWr8jcAHdnmOjOSkU830FU5iS1QIpcbEOF2sBHirK1
+          Qf5BynjVuqeOhh2sqexiAeBY55Njtk22YVmKg1CCGep1KYldciZFfL0k5v60GEZz
+          KL8VHrT0hlFuWlrMGQjaPPleKhyQ6TETrEZwOjkCgYBM2R41VUEJon8oLpnfG2fA
+          ML2NgE+vRz8E0nxzpUTXpaUBDA67qslq/NIET0diZuyoLKs1jQYgWTCpeW/OwzPN
+          h6z5GGExalSKbdPMh1IeAzYfMIWQmFsV9tKZWigMW0C6aRYljiep5CpQaSeyYfof
+          1hFJbyGkWR56ELpWMj/mTQKBgQCL0Dzyo/4azNHdyIuFVQgxtec4gUINCErFf5XS
+          n2/5RfwQOC1odxUUqNnKSmA+WrR9c3kVRVr3XZR8oyjoU/tNUB7hEG4Be2UgzkTm
+          rC2fGJ5DZbTdq0Lqgn8W5BZZxH9O5vhyuCjG/yRQqEWmyE1RTwvHVm+eOAmy7QiW
+          oBaz8QKBgQDWcJt2WMH7jyZZQDSN2OUIYX9QavxVtYK3cLpP6ATwl0S4rCExF1g+
+          9fu23mwEvpQR/IavvH/75b9zrkaEcSIoVjA6LveoukWfGqdjDLFnCgPhHz6NGJfW
+          pkPNKEMKYmB6rU1BiwMGRchBTir1I68uMcw+HAwCGlz++idM5/6+bw==
+          -----END RSA PRIVATE KEY-----
+  wait:
+    labels:
+      release_group: airship-kubernetes-controller-manager
+    timeout: 600

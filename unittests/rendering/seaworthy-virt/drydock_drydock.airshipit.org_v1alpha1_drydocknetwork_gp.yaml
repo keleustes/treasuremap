@@ -1,0 +1,19 @@
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockNetwork
+metadata:
+  name: gp
+  namespace: drydock
+spec:
+  cidr: 172.24.1.0/24
+  dns:
+    domain: gate.local
+    servers: 172.24.1.9
+  mtu: 1500
+  ranges:
+  - end: 172.24.1.200
+    start: 172.24.1.100
+    type: dhcp
+  routes:
+  - gateway: 172.24.1.1
+    metric: 10
+    subnet: 0.0.0.0/0

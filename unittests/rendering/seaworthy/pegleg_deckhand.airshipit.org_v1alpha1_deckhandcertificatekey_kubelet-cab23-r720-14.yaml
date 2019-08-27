@@ -1,0 +1,33 @@
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandCertificateKey
+metadata:
+  name: kubelet-cab23-r720-14
+  namespace: pegleg
+spec: |
+  -----BEGIN RSA PRIVATE KEY-----
+  MIIEpQIBAAKCAQEA02hlqJ4MQ4jUzf9ueaSpN3QMrcNxvy31QN75riH2CjAqH2ZU
+  tGPwfoZxmyMrh3nXrzi8sjzCPrPL7aJQu4ShNJtiYjfuRKSws2OGM3YHluWz1TFN
+  Ik7+lJgQOs6SL96Nc+UV1VFBL0/rTJLqvv9yjWzRVeyn7I7O7bce2D+585ly6lU3
+  qE5+XYkRC6ajIW60BwoE5QwIfVeMQtmOTTPyZpyZnsHIRQRLrxWpI296tKv0uOF/
+  5e/ElRzgcitfyGyS1V6sZT5MSjcio/CbhiCl9maMS4phezYYqZoCrBCzTyXHY4Tr
+  x9aokeEtbqEn0MCFWvZlOyW/aRBH/1ui4QYvRQIDAQABAoIBAQCmJ0Lex3j0CzLV
+  xI/bYyLrxnXAi/92NnSvS5AI4AAz+a7hhtfD/1gg2SGowHeRvp1ZxcnofABer4jz
+  d8Lj3lWktwsYDsVhhd6q3um2wGkum9I/GMR61oMX3nvC/F/A57VdBQun4HjO6o0Q
+  XdfJzZMGvCO62IkSTxsrkeTYKR3I6b/MocM15lTq+cMC4r14iaaALxXA9FYE0DSj
+  faUd3jb8fFi+lFbnmZWhCtk970ZpSYXkctBle8ft8XmENutlL6BFEDlS7jhv2ODi
+  ZbzeTaAWfFQpMlQwv7Gnc2XJBnBCfpniUjsw9J5yvKxZdvBb9xyfbugmrJvjuRea
+  KfcVDbPxAoGBAOil9ZItW27TCRevuw9nAZAfVafz4hYMQ9bce5dgbCh8f3rXLol/
+  JSG8+XumpooeSCkztHr4N2ITF8i+XYfLjAtuvVgwHuBh1zoscyDTNi+GDab+a63s
+  BeEF1QQG+9pXKvv/roSoG+34v5IAvwoWQriBtpTsWTjHPp7+ARtb6VnHAoGBAOig
+  ppSaffN7tyb2JMqFsB9Di0zl+w3kDeBc6Zn8h259sHe62KkDnisvZiQt9N+vsqom
+  rkcHi0Tlu6g0Y20CxDta28kMgmOqvSS/bJ/V1VZ4eex9iUX7rSJFxQxXIRZk/VZZ
+  dZj88IxR3UhgzjTvMm4+uKEGO06CEKofTjyx606TAoGBAMeYaoEIzOLdx3U83P2v
+  39VoLLK1OAi2aRVTf+01WlW5yhz3tANew9qYKGp/ZW4l4L8IjxTZE5reyo79U30H
+  kpTUYznfvv2+s0pDjFpjGp/XIKtep79FOR3/ROv5meWO11/v0igZmiymNqTqYvwi
+  cQeesag+xaVCu2TogsaYKjFNAoGBAMN4gqEp9B3NXggaGq4mieirW/kA4uU4NUTL
+  Leubm72HVeo1kerrRFPrXzuVdkcjntCE8jpzJ158YCQl6UnnYjax0S7uGP5gsNCZ
+  HVBtYPdpAqJqlhe9NC0xTTNiX0YvFAUj5MHqAMMX4wX3ei5WtByZDZEY6Gq+tfwN
+  lDNCGYSLAoGANO1aHD2BuQ+QuQPx1Zctvwm/7XVKAVhv+zPztMDaskkBF06odfK+
+  AdFx8dGZASQ+JBdjvJIbbqBKisanSwIteHdKAwcV7x/DqKh+4bzTa72mcgMnQHH2
+  6AK1wRurdBE6WxzpPFYGchidOtOTe7KGE7Q8UZYnzQzp+eLH5Gw4D14=
+  -----END RSA PRIVATE KEY-----

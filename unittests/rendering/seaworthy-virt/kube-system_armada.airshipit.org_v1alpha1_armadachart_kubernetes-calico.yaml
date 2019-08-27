@@ -1,0 +1,163 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: kubernetes-calico
+  name: kubernetes-calico
+  namespace: kube-system
+spec:
+  chart_name: calico
+  dependencies:
+  - calico-htk
+  protected:
+    continue_processing: true
+  release: kubernetes-calico
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: calico
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-kubernetes-calico
+        type: job
+  values:
+    conf:
+      cni_network_config:
+        cniVersion: 0.3.0
+        name: k8s-pod-network
+        plugins:
+        - etcd_ca_cert_file: /etc/calico/pki/ca
+          etcd_cert_file: /etc/calico/pki/crt
+          etcd_endpoints: __ETCD_ENDPOINTS__
+          etcd_key_file: /etc/calico/pki/key
+          ipam:
+            type: calico-ipam
+          kubernetes:
+            kubeconfig: __KUBECONFIG_FILEPATH__
+          log_level: info
+          mtu: 1500
+          policy:
+            type: k8s
+          type: calico
+        - capabilities:
+            portMappings: true
+          snat: true
+          type: portmap
+      controllers:
+        K8S_API: https://10.96.0.1:443
+      node:
+        CALICO_STARTUP_LOGLEVEL: INFO
+        CLUSTER_TYPE: k8s,bgp
+        ETCD_CA_CERT_FILE: /etc/calico/pki/ca
+        ETCD_CERT_FILE: /etc/calico/pki/crt
+        ETCD_KEY_FILE: /etc/calico/pki/key
+        IP_AUTODETECTION_METHOD: interface=ens3
+        WAIT_FOR_STORAGE: "true"
+    endpoints:
+      etcd:
+        auth:
+          client:
+            tls:
+              ca: |
+                -----BEGIN CERTIFICATE-----
+                MIIDSjCCAjKgAwIBAgIUa3AsypIQhM0UgOLRlQKA9xCoNiUwDQYJKoZIhvcNAQEL
+                BQAwKzETMBEGA1UEChMKS3ViZXJuZXRlczEUMBIGA1UEAxMLY2FsaWNvLWV0Y2Qw
+                HhcNMTkwNTAyMjExNjAwWhcNMjQwNDMwMjExNjAwWjArMRMwEQYDVQQKEwpLdWJl
+                cm5ldGVzMRQwEgYDVQQDEwtjYWxpY28tZXRjZDCCASIwDQYJKoZIhvcNAQEBBQAD
+                ggEPADCCAQoCggEBALj2/iGDeHav8GVjBk0P+/qRPuZxo/qKMeNV5oBeLU3DPmJt
+                6vGsWGzCI3g2ZreNQsfIHDEiLda1YemTBwyiYk3Uv17loHXuxnA6/9qqqUeS+lY8
+                DcZg6eCVrvnVQiczHfYAk6rDN/V6vLHJAv53yhpqQ1lqt4xEp04LbXP5fNKkPmN+
+                l6gtdJ/eaH2q+pniWUuJ5qDY4TRk2foCL9mJLQ6HPF8RUxL2CQ6jphTDv6c6AmN8
+                /g7ol4rNkiYOx13RncqpBU3t8nbHnBa9zRUW45HhJLN+dbBAgdEmv+SJjAYO+rpA
+                KHZHsc1sW0+W2wnjkVEoPkK+4aB9QiGo3U/RWvkCAwEAAaNmMGQwDgYDVR0PAQH/
+                BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQIwHQYDVR0OBBYEFKGnqGJfvLi+vKm5
+                zxVBcToZ9HTVMB8GA1UdIwQYMBaAFKGnqGJfvLi+vKm5zxVBcToZ9HTVMA0GCSqG
+                SIb3DQEBCwUAA4IBAQAcD+nHhxybGLiJtUEbiP2ddPELjbxf2B4iBMkwYbzkxYjA
+                bJCLoZjcQAV+XgozCZSySrIsZpLoRKucuEG/SCEsA02wJZUW1rdaTlxUYSwXpv28
+                Vwgb8cZtiKprSZ/5q/1bso/2nhUnT9wyFKFeoYXsh0co3ZbxGQFEoMM9sAef1IJh
+                ypt+xYe2ka2gtKWlHwCYCLvcghuXtygv/WpE16gxkxtfGiUwBP7MH9mCWY0hLISm
+                S2THS7Kk1yfwyS5ID4ohK6UeL4Ewwr131O+JC/Tqv3SFlzKPiQC6cDIY7t/K7LxO
+                GoUBf0NOCse8nVyFVJufyDQjXjCNYUOgbLje1Rup
+                -----END CERTIFICATE-----
+              crt: |
+                -----BEGIN CERTIFICATE-----
+                MIIDTzCCAjegAwIBAgIUS4xv983JzzKNYmFStCikUemFhqowDQYJKoZIhvcNAQEL
+                BQAwKzETMBEGA1UEChMKS3ViZXJuZXRlczEUMBIGA1UEAxMLY2FsaWNvLWV0Y2Qw
+                HhcNMTkwNTAyMjExNjAwWhcNMjAwNTAxMjExNjAwWjAXMRUwEwYDVQQDEwxjYWxj
+                aWNvLW5vZGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCl54T5x5Tb
+                9M8qgrej/nKq382vIuLfIV0vImEEZN2WT/FPpLoBB1zL6+0zKWdgcL2A7ZQXWVeS
+                NTtgXjs6VlVJdyrOOce+Ku8zkcfRCTW5PgTW1SfbcvhvmUiu5oCDGESsBEVZhQjf
+                d8LIcpEAPrd4GwAPEvKv78vXgDpZsJH0vgtPPJSb6vDVyTTaQqhHtw+t+U31Hfu8
+                1fPVO+RT+LzusuaBr6KIf8PBZUzSNsKP7Xc7b8DUZggoenr4QcM8oum5CethLaMI
+                SazOK+l/d6DiNiL0RzxF47DSwyZPUkFiBrvZsqYrP+BERSP2jMl3oybnP8bx4V7A
+                dLOYynBNk1mPAgMBAAGjfzB9MA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggr
+                BgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUPAvLOhPj
+                0fJuD8jtaZQI/aANk0QwHwYDVR0jBBgwFoAUoaeoYl+8uL68qbnPFUFxOhn0dNUw
+                DQYJKoZIhvcNAQELBQADggEBAKmrjWAC697jUTMn8LOTTx4a6QaJX6SwYFTFKhXq
+                8wln+Ertu3ubU0T8dFzMI/ICc2mUuUM8+utZQ2wt4PXIpNeuMNs3WkELSA17GbNk
+                pDzysWvawjiBriAMc22xzZGFgNpkYSnyDM+/qbPwHWcZUkjfpTW4m4TgNiOBHC9z
+                55r983xjNJswpjODA++9muVdBDnYI2UzLr2umWzyp/lxoVd2e4FO9EIDpeZKGEMl
+                oqipWgANDSanRLiR1P1YwvnJ1hcFDCen6/cZvVD0dJN0WDS3PRY42+s4Ez+J98PH
+                GgRtbQD5W8vyCTgwSLgeuPQSM0KVJWs/1kZ1LZJ0BXejLUw=
+                -----END CERTIFICATE-----
+              key: |
+                -----BEGIN RSA PRIVATE KEY-----
+                MIIEogIBAAKCAQEApeeE+ceU2/TPKoK3o/5yqt/NryLi3yFdLyJhBGTdlk/xT6S6
+                AQdcy+vtMylnYHC9gO2UF1lXkjU7YF47OlZVSXcqzjnHvirvM5HH0Qk1uT4E1tUn
+                23L4b5lIruaAgxhErARFWYUI33fCyHKRAD63eBsADxLyr+/L14A6WbCR9L4LTzyU
+                m+rw1ck02kKoR7cPrflN9R37vNXz1TvkU/i87rLmga+iiH/DwWVM0jbCj+13O2/A
+                1GYIKHp6+EHDPKLpuQnrYS2jCEmszivpf3eg4jYi9Ec8ReOw0sMmT1JBYga72bKm
+                Kz/gREUj9ozJd6Mm5z/G8eFewHSzmMpwTZNZjwIDAQABAoIBAD/XRoljrrmxi+K8
+                6HPX30I32wtw7kKUsSoJHbI2KjrESoSuS9FHhwMFp4JPhXNMDvBE+/68J4GgsFeW
+                C06YmDsr+zHedCmOlfuPNogO9jhxUCVnYu4EYOt43cpH8t3/gbV78z/OfKqZiD/g
+                LkIc4Db8lNo4HWFsclFcC5gl5RR7SlOHXgSUifzIwtnCSqYeGCMZAd/hYtbq+sIP
+                /x8+5eRGPZp2rex8W1hyRKw3b+yH7A0TjRgcgeeF3gyEQ4u9W9Rkfz1zB22WtEou
+                UieZ5o2bkACIMl1fIXOZ6eFt56glzBfktJDsH702dN3/pByqBNQnXd3nHwnu169Q
+                GLBYz9ECgYEA152fN3Hc7kO0VJFzdM+VfAlXFojVVeJYfWAjEzfyWHM693oqhTpV
+                0EK5+y33IxpxiWwYBjtVm12UFQMg5RuWbFF3mmetr0+bazaPn+Y6pY9ufH3MfBdO
+                QLB7nM79R+Ebrk4H5boZNaQsyTdWD8YNCt/ODwPs01+Rx+Nf0Rm8TjcCgYEAxPpU
+                eUC6AQ4J9Q7yYWtFuN16bK/TjtuzLORivC+GZWyyhE3QNU0A+RRzx/pZTb46cD26
+                wtV3lH49yxGJv3ujUaVTz0j1r3rHMEFe84dFLqb2KpvK9y9Uc99J7YljjPpXOwFX
+                H1u8RC/8EqEKJAXrkP+I16i3AlvSfXIywq+oY2kCgYBs8c2zHCs/kKIbYOrviLvF
+                UorYbgctQBLqNptCaLBhFMgkp2u4qYMWmcCTM+R9rizT/PQeofhdamkaPNxwJwJY
+                dMl0ERLnU9f50jW7236ijNiMupuJz9TQRtwOnV/I4+sypWbEIsX+Hpgqi3VGvxFz
+                /yWE3LzbCJ0GXNLbOp+0/QKBgC1j+h9O2Q3xLD46SYRFcfWdo95zze53lhxcLJxs
+                3y10FNcED1yY+AZtvhhxCi8uDM1cjDLlef7P8HFhAzsKxKHF1UBI8cSUKF5oUfcQ
+                TtLnSoabC/RWBcIFzEVeiYAtF/jS4D6rpwCXhiDM10dhzdzF5cS8bh+vBRw/Oo8+
+                ZzExAoGAeBb5IwsKVRQfq68CtZaT6HUq+v7SearRmQDNPJInkEdGSHhxjJsGY/Zp
+                j+zhwmLSZttE7M4wvbRpXqGPmFKnddKAfV5gQCgmsMlcV0fd9zj5SVF3qrPyMKYF
+                XgoRl4uZtb9uBZBd/EPLGkLF1O9qw/O6jG4D5fQMur5zJpVypYo=
+                -----END RSA PRIVATE KEY-----
+        host_fqdn_override:
+          default: 10.96.232.136
+        hosts:
+          default: calico-etcd
+        scheme:
+          default: https
+    images:
+      tags: {}
+    manifests:
+      daemonset_calico_etcd: false
+      job_image_repo_sync: false
+      pod_calicoctl: false
+      service_calico_etcd: false
+    networking:
+      mtu: 1500
+      podSubnet: 10.97.0.0/16
+      settings:
+        ippool:
+          disabled: "false"
+          ipip:
+            enabled: "true"
+            mode: Always
+          nat_outgoing: "true"
+        mesh: "on"
+  wait:
+    labels:
+      release_group: airship-kubernetes-calico
+    timeout: 1800

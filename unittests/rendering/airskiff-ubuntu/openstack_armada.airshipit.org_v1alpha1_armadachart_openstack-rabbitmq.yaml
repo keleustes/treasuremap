@@ -1,0 +1,85 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: openstack-rabbitmq
+  name: openstack-rabbitmq
+  namespace: openstack
+spec:
+  chart_name: openstack-rabbitmq
+  dependencies:
+  - openstack-rabbitmq-htk
+  install:
+    no_hooks: false
+  release: openstack-rabbitmq
+  source:
+    location: https://opendev.org/openstack/openstack-helm-infra
+    reference: f0306ce33de4821689b38893d03aabf30f5f6092
+    subpath: rabbitmq
+    type: git
+  target_state: uninitialized
+  test:
+    enabled: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-openstack-rabbitmq
+        type: job
+  values:
+    endpoints:
+      oslo_messaging:
+        auth:
+          erlang_cookie: password123
+          user:
+            password: password123
+            username: admin
+        host_fqdn_override:
+          default: ""
+        hosts:
+          default: openstack-rabbitmq
+        namespace: openstack
+        path: /VHOST_NAME
+        port:
+          amqp:
+            default: 5672
+          http:
+            default: 15672
+        scheme: rabbit
+        statefulset:
+          name: airship-openstack-rabbitmq-rabbitmq
+      prometheus_rabbitmq_exporter:
+        host_fqdn_override:
+          default: ""
+        hosts:
+          default: openstack-rabbitmq-exporter
+        namespace: openstack
+        path:
+          default: /metrics
+        port:
+          metrics:
+            default: 9095
+        scheme:
+          default: http
+    images:
+      tags: {}
+    labels:
+      prometheus_rabbitmq_exporter:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: false
+    pod:
+      replicas:
+        server: 1
+  wait:
+    labels:
+      release_group: airship-openstack-rabbitmq
+    resources:
+    - type: statefulset
+    timeout: 900

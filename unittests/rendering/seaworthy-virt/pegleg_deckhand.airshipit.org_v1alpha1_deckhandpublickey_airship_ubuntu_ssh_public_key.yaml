@@ -1,0 +1,7 @@
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandPublicKey
+metadata:
+  name: airship_ubuntu_ssh_public_key
+  namespace: pegleg
+spec: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDqBU04FXvM/bJ5kXg/6lx6LpWtFblDLSnMU2XhfHokbIzwtQ/IfXWk9OiRDsbglGjDOf22yrbVvXSBK0UvLKw6iBcmUoId5HQG7Ux9BjPGyHJGAIx1Nz0f7iGEuds99rNX7BSqBXTayawjLTHbwMKIdQZeeV50CxE9cVxPZ366M9igTu4zpYOtGEbAwEz2zqJnZphzAOM3xKCWJp4sR3rGuT8AeOy8QdApUKp7bg/GLBdu72rw8xtQ4d9386sr6Kv67OHTplXLCJ88Hpu0/cHEFE0tVxLAaBSc9BaD/6r6+Lq6uWlvrqXFDrnyDOW3MVYfI6X+tBIw/X+sfczU2GJv
+  ubuntu@multinode

@@ -1,0 +1,15 @@
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockNetworkLink
+metadata:
+  name: gp
+  namespace: drydock
+spec:
+  allowed_networks:
+  - gp
+  bonding:
+    mode: disabled
+  linkspeed: auto
+  mtu: 1500
+  trunking:
+    default_network: gp
+    mode: disabled

@@ -1,0 +1,93 @@
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
+metadata:
+  name: cp-secondary
+  namespace: drydock
+spec:
+  hardware_profile: GenericVM
+  interfaces:
+    ens3:
+      device_link: gp
+      networks:
+      - gp
+      slaves:
+      - ens3
+  metadata:
+    owner_data:
+      IAM: enabled
+      beta.kubernetes.io/fluentd-ds-ready: "true"
+      calico-node: enabled
+      calico-policy: enabled
+      ceph-mds: enabled
+      ceph-mgr: enabled
+      ceph-osd: enabled
+      ceph-rgw: enabled
+      control-plane: enabled
+      elasticsearch-client: enabled
+      elasticsearch-data: enabled
+      elasticsearch-master: enabled
+      fluentd: enabled
+      influxdb: enabled
+      kibana: enabled
+      kube-dns: enabled
+      kube-ingress: enabled
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      kubernetes-scheduler: enabled
+      node-exporter: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-control-plane: enabled
+      openstack-dns-helper: enabled
+      openstack-glance: enabled
+      openstack-heat: enabled
+      openstack-horizon: enabled
+      openstack-keystone: enabled
+      openstack-mariadb: enabled
+      openstack-memcached: enabled
+      openstack-mistral: enabled
+      openstack-neutron: enabled
+      openstack-nova-control: enabled
+      openstack-rabbitmq: enabled
+      openvswitch: enabled
+      postgresql: enabled
+      prometheus-client: enabled
+      prometheus-server: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-mgr: enabled
+      tenant-ceph-rgw: enabled
+      tiller-helm: enabled
+      ucp-armada: enabled
+      ucp-barbican: enabled
+      ucp-control-plane: enabled
+      ucp-deckhand: enabled
+      ucp-drydock: enabled
+      ucp-maas: enabled
+      ucp-promenade: enabled
+      ucp-shipyard: enabled
+  oob:
+    libvirt_uri: qemu+ssh://virtmgr@172.24.1.1/system
+    type: libvirt
+  platform:
+    kernel_params:
+      kernel_package: linux-image-4.15.0-34-generic
+  primary_network: gp
+  storage:
+    physical_devices:
+      vda:
+        labels:
+          bootdrive: "true"
+        partitions:
+        - bootable: true
+          filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /
+          name: root
+          size: 20g
+        - filesystem:
+            fstype: ext4
+            mount_options: defaults
+            mountpoint: /boot
+          name: boot
+          size: 1g

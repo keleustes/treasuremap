@@ -1,0 +1,33 @@
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandCertificateKey
+metadata:
+  name: calico-etcd-n2-peer
+  namespace: pegleg
+spec: |
+  -----BEGIN RSA PRIVATE KEY-----
+  MIIEowIBAAKCAQEAr8SiKtz+oMeRSplK+zvOeZcC+53JrzIIP0UUdTbl4pP9uQZr
+  Yv+ncLrUFcedvI90L+AqXGEr6KRziafLCEr0Chtdd8L9WiAis+7R5348Wcby2lJW
+  fAm85IyqyhIlgB1zQU7vzKtasy+1K12vWm9GCZ+Tt0oFI7TgnGg2/uidfQOb4UGS
+  7jY1HabogXd8lcresu9htngACuikK4kd/rYaTwWn4QChSJ1zOLtGjI/pfU3ANL6R
+  3uB2+ZaTZHOOk3KBdoUFJ11D2f/ReqSrSOzPGDUnTSwQd1NrVrNRjJIH5OKRhyBE
+  Gl0dkKggX3XC7YUosntvnRNLxD4M/X7OshDWdQIDAQABAoIBAClgnNyCUd7/nBB3
+  rdMe7ShqiGU7a/M2UAK0/G/rkIqaVCxuenE/xecf1DWcXGG7U5rBprdAmNmXfSt2
+  uLEnE/QdJQ/Ac2v4DLNXEUrxyLtJvnnu0DU7BaC4DKytQO68ABnrvz/rRtrP7FJd
+  J56ee1pgmqGXZ0ZUmlu3nNq9X/XBs9sB5QwhkTvImkO9zde/A05FdzIBXSvwjWvm
+  3+JpC1FlPbmbGj274gjLA3O3GbyOFnZoq5eVJ949OENIFjf2iffoWbgQIbngN1/f
+  HTb23N6TnHZ4URuO2+udNPQXUpL8wJhPLPS6FoZBm+R5K52fqST2OGpOfj+65Qlv
+  x7EzFTECgYEA1rseBAc3TjVjbVCNiyTjv52kuURZyoyh6/rQrFGwSzYQNwumNqY1
+  w+R7C4Qe5ziMGh+9NENA6DPMrf862AQ9WH7Z1b0Jlq9LiqMpGaYQ289lOSJwF20G
+  waHHJvmFK6lBreVsoCR4WRcQei9oxum36nkypV/Q5NqnTe0/YLwQwvMCgYEA0YyF
+  6/1i5zd7d0T1EUY1/PI75h1qwB/dj/X5wiovullDxnk2xuD1mAVh8aVN8J5+097+
+  A4kowmuz4plzfps1ZLqRNNnebq06MkPDCM6p+W7m+kdT+T3OKjrYHL9Q+x/UVcZ5
+  4AeQjYM214jXBZexQRFFpcq3zmrMOujgCHXryvcCgYEAyt+Spj+jEvMB8x+t+w5p
+  Vno8TQW0x9dCjE81o/ix1P1JKJiK+wrhtShC0EiNYetdArmF6sC3rCp0cNe44qpu
+  wxNl/7hQPNt1RZCNnjv1pZc2jVpqCNfrEDomjD4mgW+yK/ecP1j1k0ZlPOtZ1MSw
+  DIlhPjlehTnH46oIvP4x390CgYBWWJ4ykPW5Ku6QRfTpylGiyjoOZ16+jiLhGE1z
+  SajjE7dOyFHe/4GTw9wJE8Ga/eRq738h+9m0y2aTYAHsUI5e1FXTPldeqbjKT4vF
+  TEtUAfPhe5TJpkMWuaqlpdv7rrDzK1a7DsLs3P2zMKrRniEnG7PkTjURNIa1W5I9
+  SkIAHwKBgFSHaJytPaZ4wQrWO4/xjBmYbm1sL2ayXuDt20cojDVd4hdcN6ExGpaf
+  fL6JqTMlKUklVPPuEKm26DToV8SkqJ4OILlEp1eRIvKNAmJwBhhFYTC0NSAp6H6B
+  pL3XkRzFMTTnhCyNM41iLkdWogmvu76lEF1Lz8jZSOZ/x344EzJf
+  -----END RSA PRIVATE KEY-----

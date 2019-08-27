@@ -1,0 +1,87 @@
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeGenesis
+metadata:
+  labels:
+    name: genesis
+  name: genesis
+  namespace: drydock
+spec:
+  apiserver:
+    arguments:
+    - --authorization-mode=Node,RBAC
+    - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit
+    - --service-cluster-ip-range=10.96.0.0/16
+    - --service-node-port-range=30000-32767
+    - --endpoint-reconciler-type=lease
+    - --feature-gates=PodShareProcessNamespace=true
+    - --v=3
+    - --admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml
+    - --experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
+    - --requestheader-allowed-names='aggregator'
+    encryption:
+    - providers:
+      - secretbox:
+          keys:
+          - name: key1
+            secret: /Y8HgBo/rZywuyF3yE3c1mi4bOWanR6FeC+7f6fS8IE=
+      - identity: {}
+      resources:
+      - secrets
+  armada:
+    target_manifest: cluster-bootstrap
+  files:
+  - content: |-
+      # placeholder for triggering calico etcd bootstrapping
+      # this file will be deleted
+    mode: 420
+    path: /var/lib/anchor/calico-etcd-bootstrap
+  - content: |
+      kind: AdmissionConfiguration
+      apiVersion: apiserver.k8s.io/v1alpha1
+      plugins:
+        - name: EventRateLimit
+          path: eventconfig.yaml
+    mode: 292
+    path: /etc/genesis/apiserver/acconfig.yaml
+  - content: |
+      kind: Configuration
+      apiVersion: eventratelimit.admission.k8s.io/v1alpha1
+      limits:
+        - type: Server
+          qps: 1000
+          burst: 10000
+    mode: 292
+    path: /etc/genesis/apiserver/eventconfig.yaml
+  hostname: aiab
+  images:
+    armada: quay.io/airshipit/armada:9886cb1a5e329217d4b49b0f91e8371cdfff6f64-ubuntu_xenial
+    helm:
+      tiller: gcr.io/kubernetes-helm/tiller:v2.14.1
+    kubernetes:
+      apiserver: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+      controller-manager: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+      etcd: quay.io/coreos/etcd:v3.2.18
+      scheduler: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+  ip: 10.0.2.14
+  labels:
+    dynamic:
+    - beta.kubernetes.io/fluentd-ds-ready=true
+    - calico-etcd=enabled
+    - kube-dns=enabled
+    - kube-ingress=enabled
+    - kubernetes-apiserver=enabled
+    - kubernetes-controller-manager=enabled
+    - kubernetes-etcd=enabled
+    - kubernetes-scheduler=enabled
+    - promenade-genesis=enabled
+    - ucp-control-plane=enabled
+    - maas-rack=enabled
+    - maas-region=enabled
+    - openstack-control-plane=enabled
+    - openvswitch=enabled
+    - openstack-l3-agent=enabled
+    - node-exporter=enabled
+    - fluentd=enabled
+    - openstack-control-plane=enabled
+    - openstack-nova-compute=enabled
+    - openstack-libvirt=kernel

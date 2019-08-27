@@ -1,0 +1,181 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: ucp-maas
+  name: ucp-maas
+  namespace: ucp
+spec:
+  chart_name: maas
+  dependencies:
+  - maas-htk
+  install:
+    no_hooks: false
+  release: maas
+  source:
+    location: https://opendev.org/airship/maas
+    reference: 3f2b12a38e739087045443a14c658e6d786dd1f6
+    subpath: charts/maas
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-maas
+        type: job
+  values:
+    conf:
+      cache:
+        enabled: true
+      maas:
+        credentials:
+          secret:
+            namespace: ucp
+        dns:
+          dns_servers: 172.24.1.9
+          require_dnssec: "no"
+        images:
+          default_image: xenial
+          default_kernel: hwe-16.04
+          default_os: ubuntu
+        ntp:
+          disable_ntpd_rack: true
+          disable_ntpd_region: true
+          ntp_servers: 0.ubuntu.pool.ntp.org,1.ubuntu.pool.ntp.org,2.ubuntu.pool.ntp.org,4.ubuntu.pool.ntp.org
+          use_external_only: "true"
+        proxy:
+          proxy_enabled: "true"
+      ssh:
+        private_key: |-
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEpAIBAAKCAQEA6gVNOBV7zP2yeZF4P+pcei6VrRW5Qy0pzFNl4Xx6JGyM8LUP
+          yH11pPTokQ7G4JRowzn9tsq21b10gStFLyysOogXJlKCHeR0Bu1MfQYzxshyRgCM
+          dTc9H+4hhLnbPfazV+wUqgV02smsIy0x28DCiHUGXnledAsRPXFcT2d+ujPYoE7u
+          M6WDrRhGwMBM9s6iZ2aYcwDjN8SgliaeLEd6xrk/AHjsvEHQKVCqe24PxiwXbu9q
+          8PMbUOHfd/OrK+ir+uzh06ZVywifPB6btP3BxBRNLVcSwGgUnPQWg/+q+vi6urlp
+          b66lxQ658gzltzFWHyOl/rQSMP1/rH3M1NhibwIDAQABAoIBAA1VW/70Cme1lLOk
+          fCt4GOjFOrXv5OxU6GrB3a4pP3RP0v/r8QhFTaymX5HUO7SUABwPc8s0ZZJsBvVN
+          F9YGP5HeKyN90/gMCihS4ObGsbCDvy8J3PbYvNzS3ooHZNx07+b0hoDharUEhJBE
+          hPC2XN8Ve9VqKN2Hu+W6Tb4gcXH+YlHEeULaeerZRmAflKxnspvYIkVzP5vV540h
+          qiP5LH5dTuHaJBiQcrCP9dbFzjPCqueFohHKOQI6wSbI9QbcuQvD7pxHoxPaf8B/
+          V68fYaZoTGuVzhUuRsKTmseaFac4/bgmCQI8j2fDnWWA7EUANhH2ldIwEwBoPiF+
+          nldqQbECgYEA/mcP2XQ98KIOLRRyWYMxPW/MjKRe1aefcll1Iitilt67mBwPUSvN
+          KB/JTLoN838Vdv/oPQiZrtTYiEsbcj3YHa+kjI62veSFXTeghMKgn4HqQ1FdHOIW
+          Ku+lXj6hSVUdyqC1r8vDDvoludFep+s+M0w/7tcSjlqlZHkpFgEL0uMCgYEA6316
+          G8luptWeYOD2AOPjqqecXoSfPO6EG8rNO3IQUyQP8LgwtQUbK1PNZ/0u9IsKGnTA
+          CvtjhAmyLPlq87KSjOOw7br6VSih/9uxfx/zf+y+NOwkFBqgn2/9lwFvkoJvPELk
+          hRr39Ej9NuX42W5m7XkINCddJgPrVaGF0FQ87AUCgYEAuM03Fzi4se+Wqqqasml5
+          wG5RQa05cqzUR6WyUAMCGCRuU322prlRy57jhMf20HX1qr8U/hkcQoM9VCxzIJbK
+          Qi5QMwaMuv6g3mlFQot7UMN34DTfldaqUcBJ+V83nGSnQoVh1fUHmf6enw/3WbWq
+          NmtiWeaEBULVuFnHPcO+yg8CgYEAqYha+VgpxgfyDlLGJ9voUjp6k30s2oPoLc3x
+          tIMoh4Jly2n+/sMfTTD2po+aV0kly+gTPZS/jxYf5MrnGWyMnsto260JfXdUMUur
+          XBbXiVgZkyYRzztgOYg5a5YICdTHWf3aYI0Kxx4o1XX4kiguB3Zj1pAkOjMGIE65
+          dELA3TUCgYAoRt2+LINxTn2dqU9sHv+oAqN9WY3AGLc8MgAG2sEyD6u6a4ji6LJA
+          5W48boUeUAieiyHdLqpnxZbgsndFXGoOGy3w7k511mGVT8R37uzqoW8en+l/B3aC
+          m6GnweW01V+kv0FiSLsMfNZmYQeCQRNYn/LdSBAjsrmg8c88z0Af6g==
+          -----END RSA PRIVATE KEY-----
+    endpoints:
+      maas_db:
+        auth:
+          admin:
+            password: password123
+            username: postgres
+          user:
+            database: maasdb
+            password: password123
+            username: maas
+        host_fqdn_override:
+          default: ""
+        hosts:
+          default: postgresql
+        name: postgresql
+        path: /maasdb
+        port:
+          postgresql:
+            default: 5432
+        scheme: postgresql+psycopg2
+      maas_ingress:
+        port:
+          ingress_default_server:
+            default: 8182
+      maas_region:
+        auth:
+          admin:
+            email: none@none
+            password: password123
+            username: admin
+        host_fqdn_override:
+          default: ""
+          public:
+            host: maas.gate.local
+        hosts:
+          default: maas-region
+          public: maas-region
+        name: maas-region
+        path:
+          default: /MAAS
+        port:
+          region_api:
+            default: 80
+            nodeport: 31900
+            podport: 80
+            public: 80
+          region_proxy:
+            default: 8000
+        scheme:
+          default: http
+      physicalprovisioner:
+        host_fqdn_override:
+          default: ""
+          public:
+            host: drydock.gate.local
+        hosts:
+          default: drydock-api
+          public: drydock-api
+        name: drydock
+        path:
+          default: /api/v1.0
+        port:
+          api:
+            default: 9000
+            nodeport: 31900
+            public: 80
+        scheme:
+          default: http
+          public: http
+    images:
+      tags:
+        bootstrap: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        db_sync: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        export_api_key: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        maas_cache: quay.io/airshipit/sstream-cache:3f2b12a38e739087045443a14c658e6d786dd1f6
+        maas_rack: quay.io/airshipit/maas-rack-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+        maas_region: quay.io/airshipit/maas-region-controller:3f2b12a38e739087045443a14c658e6d786dd1f6
+    jobs:
+      import_boot_resources:
+        timeout: 1800
+    labels:
+      rack:
+        node_selector_key: maas-rack
+        node_selector_value: enabled
+      region:
+        node_selector_key: maas-region
+        node_selector_value: enabled
+    manifests:
+      secret_ssh_key: true
+    network:
+      maas_ingress:
+        addr: 172.24.1.5/32
+    pod:
+      replicas:
+        rack: 1
+        region: 1
+    secrets:
+      maas_region:
+        value: 9026f6048d6a017dc913
+  wait:
+    labels:
+      release_group: airship-maas
+    timeout: 1800

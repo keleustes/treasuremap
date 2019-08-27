@@ -1,0 +1,6 @@
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandPassphrase
+metadata:
+  name: apiserver-encryption-key-key1
+  namespace: pegleg
+spec: n9VBwseT/JjV7r9vbUR/MvCobe01Bdh9XtWgsNF5zLY=

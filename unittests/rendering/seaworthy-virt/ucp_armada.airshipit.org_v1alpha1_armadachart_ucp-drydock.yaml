@@ -1,0 +1,183 @@
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
+metadata:
+  labels:
+    name: ucp-drydock
+  name: ucp-drydock
+  namespace: ucp
+spec:
+  chart_name: drydock
+  dependencies:
+  - drydock-htk
+  install:
+    no_hooks: false
+  release: drydock
+  source:
+    location: https://opendev.org/airship/drydock
+    reference: 2cf960f4fc334760c696c886c94c79bc115226fd
+    subpath: charts/drydock
+    type: git
+  target_state: uninitialized
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+      - labels:
+          release_group: airship-drydock
+        type: job
+  values:
+    conf:
+      drydock:
+        database:
+          pool_size: 200
+        plugins:
+          ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
+          oob_driver:
+          - drydock_provisioner.drivers.oob.pyghmi_driver.driver.PyghmiDriver
+          - drydock_provisioner.drivers.oob.libvirt_driver.driver.LibvirtDriver
+      ssh:
+        private_key: |-
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEpAIBAAKCAQEA6gVNOBV7zP2yeZF4P+pcei6VrRW5Qy0pzFNl4Xx6JGyM8LUP
+          yH11pPTokQ7G4JRowzn9tsq21b10gStFLyysOogXJlKCHeR0Bu1MfQYzxshyRgCM
+          dTc9H+4hhLnbPfazV+wUqgV02smsIy0x28DCiHUGXnledAsRPXFcT2d+ujPYoE7u
+          M6WDrRhGwMBM9s6iZ2aYcwDjN8SgliaeLEd6xrk/AHjsvEHQKVCqe24PxiwXbu9q
+          8PMbUOHfd/OrK+ir+uzh06ZVywifPB6btP3BxBRNLVcSwGgUnPQWg/+q+vi6urlp
+          b66lxQ658gzltzFWHyOl/rQSMP1/rH3M1NhibwIDAQABAoIBAA1VW/70Cme1lLOk
+          fCt4GOjFOrXv5OxU6GrB3a4pP3RP0v/r8QhFTaymX5HUO7SUABwPc8s0ZZJsBvVN
+          F9YGP5HeKyN90/gMCihS4ObGsbCDvy8J3PbYvNzS3ooHZNx07+b0hoDharUEhJBE
+          hPC2XN8Ve9VqKN2Hu+W6Tb4gcXH+YlHEeULaeerZRmAflKxnspvYIkVzP5vV540h
+          qiP5LH5dTuHaJBiQcrCP9dbFzjPCqueFohHKOQI6wSbI9QbcuQvD7pxHoxPaf8B/
+          V68fYaZoTGuVzhUuRsKTmseaFac4/bgmCQI8j2fDnWWA7EUANhH2ldIwEwBoPiF+
+          nldqQbECgYEA/mcP2XQ98KIOLRRyWYMxPW/MjKRe1aefcll1Iitilt67mBwPUSvN
+          KB/JTLoN838Vdv/oPQiZrtTYiEsbcj3YHa+kjI62veSFXTeghMKgn4HqQ1FdHOIW
+          Ku+lXj6hSVUdyqC1r8vDDvoludFep+s+M0w/7tcSjlqlZHkpFgEL0uMCgYEA6316
+          G8luptWeYOD2AOPjqqecXoSfPO6EG8rNO3IQUyQP8LgwtQUbK1PNZ/0u9IsKGnTA
+          CvtjhAmyLPlq87KSjOOw7br6VSih/9uxfx/zf+y+NOwkFBqgn2/9lwFvkoJvPELk
+          hRr39Ej9NuX42W5m7XkINCddJgPrVaGF0FQ87AUCgYEAuM03Fzi4se+Wqqqasml5
+          wG5RQa05cqzUR6WyUAMCGCRuU322prlRy57jhMf20HX1qr8U/hkcQoM9VCxzIJbK
+          Qi5QMwaMuv6g3mlFQot7UMN34DTfldaqUcBJ+V83nGSnQoVh1fUHmf6enw/3WbWq
+          NmtiWeaEBULVuFnHPcO+yg8CgYEAqYha+VgpxgfyDlLGJ9voUjp6k30s2oPoLc3x
+          tIMoh4Jly2n+/sMfTTD2po+aV0kly+gTPZS/jxYf5MrnGWyMnsto260JfXdUMUur
+          XBbXiVgZkyYRzztgOYg5a5YICdTHWf3aYI0Kxx4o1XX4kiguB3Zj1pAkOjMGIE65
+          dELA3TUCgYAoRt2+LINxTn2dqU9sHv+oAqN9WY3AGLc8MgAG2sEyD6u6a4ji6LJA
+          5W48boUeUAieiyHdLqpnxZbgsndFXGoOGy3w7k511mGVT8R37uzqoW8en+l/B3aC
+          m6GnweW01V+kv0FiSLsMfNZmYQeCQRNYn/LdSBAjsrmg8c88z0Af6g==
+          -----END RSA PRIVATE KEY-----
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password123
+            project_domain_name: default
+            project_name: admin
+            region_name: seaworthy-virt
+            user_domain_name: default
+            username: admin
+          drydock:
+            password: password123
+            project_domain_name: default
+            project_name: service
+            region_name: seaworthy-virt
+            role: admin
+            user_domain_name: default
+            username: drydock
+        host_fqdn_override:
+          default: ""
+          public:
+            host: keystone.gate.local
+        name: keystone
+        namespace: ucp
+        path:
+          default: /v3
+        port:
+          api:
+            default: 80
+            internal: 5000
+        scheme:
+          default: http
+          internal: http
+      maas_region:
+        host_fqdn_override:
+          default: ""
+          public:
+            host: maas.gate.local
+        hosts:
+          default: maas-region
+          public: maas-region
+        name: maas-region
+        path:
+          default: /MAAS
+        port:
+          region_api:
+            default: 80
+            nodeport: 31900
+            podport: 80
+            public: 80
+          region_proxy:
+            default: 8000
+        scheme:
+          default: http
+      physicalprovisioner:
+        host_fqdn_override:
+          default: ""
+          public:
+            host: drydock.gate.local
+        hosts:
+          default: drydock-api
+          public: drydock-api
+        name: drydock
+        path:
+          default: /api/v1.0
+        port:
+          api:
+            default: 9000
+            nodeport: 30000
+            public: 80
+        scheme:
+          default: http
+          public: http
+      postgresql:
+        auth:
+          admin:
+            password: password123
+            username: postgres
+          user:
+            database: drydock
+            password: password123
+            username: drydock
+        host_fqdn_override:
+          default: ""
+        hosts:
+          default: postgresql
+        name: postgresql
+        path: /drydock
+        port:
+          postgresql:
+            default: 5432
+        scheme: postgresql+psycopg2
+    images:
+      tags:
+        drydock: quay.io/airshipit/drydock:2cf960f4fc334760c696c886c94c79bc115226fd
+        drydock_db_sync: quay.io/airshipit/drydock:2cf960f4fc334760c696c886c94c79bc115226fd
+    labels:
+      node_selector_key: ucp-control-plane
+      node_selector_value: enabled
+    manifests:
+      secret_ssh_key: true
+    network:
+      api:
+        nodeport:
+          enabled: false
+      drydock:
+        node_port:
+          port: 30000
+    pod:
+      security_context:
+        drydock:
+          pod:
+            runAsUser: 0
+  wait:
+    labels:
+      release_group: airship-drydock
+    timeout: 600

@@ -1,0 +1,79 @@
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegCommonAddresses
+metadata:
+  name: common-addresses
+  namespace: pegleg
+spec:
+  bootstrap:
+    ip: 172.24.1.10
+  calico:
+    bgp:
+      ipv4:
+        ingress_vip: 172.24.1.6/32
+        maas_vip: 172.24.1.5/32
+        peers:
+        - Nonsense
+        - Nonsense
+        public_service_cidr: Nonsense
+    etcd:
+      service_ip: 10.96.232.136
+    ip_autodetection_method: interface=ens3
+    ip_rule:
+      gateway: Nonsense
+  dns:
+    cluster_domain: cluster.local
+    ingress_domain: gate.local
+    node_domain: gate.local
+    service_ip: 10.96.0.10
+    upstream_servers:
+    - 172.24.1.9
+    - 172.24.1.9
+    - 172.24.1.9
+    upstream_servers_joined: 172.24.1.9
+  etcd:
+    container_port: 2379
+    haproxy_port: 2378
+  genesis:
+    hostname: n0
+    ip: 172.24.1.10
+  kubernetes:
+    api_service_ip: 10.96.0.1
+    apiserver_port: 6443
+    etcd_service_ip: 10.96.0.2
+    haproxy_port: 6553
+    pod_cidr: 10.97.0.0/16
+    service_cidr: 10.96.0.0/16
+    service_node_port_range: 30000-32767
+  ldap:
+    auth_path: DC=test,DC=test,DC=com?sAMAccountName?sub?memberof=CN=test,OU=Application,OU=Groups,DC=test,DC=test,DC=com
+    base_url: ldap.example.com
+    common_name: test
+    domain: example
+    subdomain: test
+    url: ldap://ldap.example.com
+  masters:
+  - hostname: n1
+  - hostname: n2
+  - hostname: n3
+  neutron:
+    external_iface: ens3
+    tunnel_device: ens3
+  node_ports:
+    drydock_api: 30000
+    maas_api: 30001
+    maas_proxy: 31800
+  ntp:
+    servers_joined: 0.ubuntu.pool.ntp.org,1.ubuntu.pool.ntp.org,2.ubuntu.pool.ntp.org,4.ubuntu.pool.ntp.org
+  openvswitch:
+    external_iface: ens3
+  proxy:
+    http: ""
+    https: ""
+    no_proxy: []
+  storage:
+    ceph:
+      cluster_cidr: 172.24.1.0/24
+      public_cidr: 172.24.1.0/24
+  vip:
+    ingress_vip: 172.24.1.6/32
+    maas_vip: 172.24.1.5/32
