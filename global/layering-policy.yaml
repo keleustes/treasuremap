@@ -3,6 +3,7 @@ apiVersion: deckhand.airshipit.org/v1alpha1
 kind: DeckhandLayeringPolicy
 metadata:
   name: layering-policy
+  namespace: pegleg
 spec:
   layerOrder:
   - global

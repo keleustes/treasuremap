@@ -1,6 +1,5 @@
 ---
 apiVersion: drydock.airshipit.org/v1alpha1
-apiVersion: drydock.airshipit.org/v1alpha1
 kind: DrydockHostProfile
 metadata:
   name: cp-secondary
