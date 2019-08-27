@@ -58,7 +58,7 @@ make deploy-airsloop
 make purge-airsloop
 ```
 
-###  Site Airskiff deployment
+###  Site Airskiff-Ubuntu deployment
 
 ```bash
 mkdir -p actual/airskiff-ubuntu
@@ -72,6 +72,22 @@ or if kubectl is pointing at an active kubernetes cluster
 make create-testcluster
 make deploy-airskiff-ubuntu
 make purge-airskiff-ubuntu
+```
+
+###  Site Airskiff-Suse deployment
+
+```bash
+mkdir -p actual/airskiff-suse
+rm -f actual/airskiff-suse/*
+kustomize build site/airskiff-suse -o actual/airskiff-suse
+```
+
+or if kubectl is pointing at an active kubernetes cluster
+
+```bash
+make create-testcluster
+make deploy-airskiff-suse
+make purge-airskiff-suse
 ```
 
 ###  Site Airship-Seaworthy deployment
