@@ -8,6 +8,8 @@ metadata:
   namespace: ucp
 spec:
   target_state: uninitialized
+  test:
+    timeout: 600
   values:
     pod:
       replicas:
