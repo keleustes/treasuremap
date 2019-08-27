@@ -3,9 +3,9 @@
 # proper services are installed and proper configuration applied. This should
 # not need to be changed for a new site.
 # #GLOBAL-CANDIDATE#
-schema: promenade/Genesis/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeGenesis
 metadata:
-  schema: metadata/Document/v1
   name: genesis-site
   layeringDefinition:
     abstract: false
@@ -15,8 +15,7 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data:
+spec:
   labels:
     dynamic:
       - beta.kubernetes.io/fluentd-ds-ready=true

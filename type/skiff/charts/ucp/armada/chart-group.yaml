@@ -1,7 +1,7 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: ucp-armada
   replacement: true
   labels:
@@ -14,8 +14,7 @@ metadata:
     actions:
       - method: replace
         path: .chart_group
-  storagePolicy: cleartext
-data:
+spec:
   chart_group:
     - ucp-armada
 ...

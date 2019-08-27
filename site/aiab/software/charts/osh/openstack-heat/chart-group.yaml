@@ -1,7 +1,7 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: openstack-heat-aiab
   layeringDefinition:
     abstract: false
@@ -12,8 +12,7 @@ metadata:
     actions:
       - method: replace
         path: .chart_group
-  storagePolicy: cleartext
-data:
+spec:
   sequenced: true
   chart_group:
     - heat-aiab

@@ -1,19 +1,18 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: haproxy
   labels:
     name: haproxy-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
 
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.haproxy
       dest:
@@ -21,7 +20,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.haproxy
       dest:
@@ -29,14 +28,14 @@ metadata:
 
     # Kubernetes configuration
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.api_service_ip
       dest:
         path: .values.conf.anchor.kubernetes_url
         pattern: KUBERNETES_IP
 
-data:
+spec:
   chart_name: haproxy
   release: haproxy
   namespace: kube-system
@@ -87,22 +86,21 @@ data:
   dependencies:
     - haproxy-htk
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: haproxy-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.haproxy-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: haproxy-htk
   release: haproxy-htk
   namespace: haproxy-htk

@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: cinder
   labels:
     name: cinder-global
@@ -9,11 +9,10 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.cinder
       dest:
@@ -21,7 +20,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh.cinder
       dest:
@@ -29,104 +28,104 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.identity
       dest:
         path: .values.endpoints.identity
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.image
       dest:
         path: .values.endpoints.image
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.image_registry
       dest:
         path: .values.endpoints.image_registry
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.volume
       dest:
         path: .values.endpoints.volume
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.volumev2
       dest:
         path: .values.endpoints.volumev2
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.volumev3
       dest:
         path: .values.endpoints.volumev3
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_db
       dest:
         path: .values.endpoints.oslo_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.fluentd
       dest:
         path: .values.endpoints.fluentd
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.cinder.cinder
       dest:
         path: .values.endpoints.identity.auth.cinder
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.cinder.oslo_messaging.cinder
       dest:
         path: .values.endpoints.oslo_messaging.auth.cinder
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.cinder.oslo_db
       dest:
         path: .values.endpoints.oslo_db.auth.cinder
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.cinder.oslo_db.database
       dest:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.volume.name
       dest:
@@ -137,46 +136,46 @@ metadata:
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.cinder.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_cinder_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.cinder.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.cinder.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_cinder_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_cache.auth.memcache_secret_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_cache_secret_key
         path: .
-data:
+spec:
   chart_name: cinder
   release: cinder
   namespace: openstack
@@ -296,22 +295,21 @@ data:
     - cinder-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: cinder-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.cinder-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: cinder-htk
   release: cinder-htk
   namespace: cinder-htk

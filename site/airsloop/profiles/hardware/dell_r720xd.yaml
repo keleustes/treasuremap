@@ -1,13 +1,13 @@
 ---
-schema: 'drydock/HardwareProfile/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHardwareProfile
 metadata:
   schema: 'metadata/Document/v1'
   name: dell_r720xd
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # Vendor of the server chassis
   vendor: DELL
   # Generation of the chassis model

@@ -1,13 +1,13 @@
 ---
-schema: 'drydock/HostProfile/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
   name: gate-vm-dp
   schema: 'metadata/Document/v1'
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   hardware_profile: 'GenericVM'
   primary_network: 'gp'
   oob:

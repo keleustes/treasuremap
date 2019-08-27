@@ -1,17 +1,16 @@
 ---
 # These parameters are environment specific, they are
 # overridden with scripts during the installation.
-schema: dev/Configurables/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegDevConfigurables
 metadata:
-  schema: metadata/Document/v1
   name: dev-configurables
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
 
 # This is just an example of configuration parameters.
-data:
+spec:
   # Hostname of the node.
   hostname: aiab
   # IP address for external network.

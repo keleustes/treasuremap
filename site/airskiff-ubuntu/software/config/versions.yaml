@@ -1,7 +1,7 @@
 ---
-schema: pegleg/SoftwareVersions/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegSoftwareVersions
 metadata:
-  schema: metadata/Document/v1
   replacement: true
   name: software-versions
   labels:
@@ -14,8 +14,7 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data:
+spec:
   images:
     ucp:
       armada:

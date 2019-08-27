@@ -4,9 +4,9 @@
 # so it can replace type, but really wants the content
 # from global. Refactor after the gate emulates fabric
 # BGP peering
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-calico
   replacement: true
   layeringDefinition:
@@ -17,37 +17,36 @@ metadata:
     actions:
       - method: replace
         path: .
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.calico.calico
       dest:
         path: .source
     # Image versions
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.calico.calico
       dest:
         path: .values.images.tags
     # IP addresses
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .calico.etcd.service_ip
       dest:
         path: .values.endpoints.etcd.host_fqdn_override.default
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.pod_cidr
       dest:
         path: .values.networking.podSubnet
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.api_service_ip
       dest:
@@ -56,7 +55,7 @@ metadata:
 
     # Other site-specific configuration
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .calico.ip_autodetection_method
       dest:
@@ -64,24 +63,24 @@ metadata:
 
     # Certificates
     - src:
-        schema: deckhand/CertificateAuthority/v1
+        kind: DeckhandCertificateAuthority
         name: calico-etcd
         path: .
       dest:
         path: .values.endpoints.etcd.auth.client.tls.ca
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-node
         path: .
       dest:
         path: .values.endpoints.etcd.auth.client.tls.crt
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-node
         path: .
       dest:
         path: .values.endpoints.etcd.auth.client.tls.key
-data:
+spec:
   chart_name: calico
   release: kubernetes-calico
   namespace: kube-system

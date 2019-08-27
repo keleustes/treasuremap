@@ -1,13 +1,12 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-container-networking
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   description: Container networking via Calico
   sequenced: true
   chart_group:

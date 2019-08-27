@@ -4,84 +4,83 @@
 # NOTE: When deploying a new site, this file should not be configured until
 # baremetal/nodes.yaml is complete.
 #
-schema: promenade/PKICatalog/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadePKICatalog
 metadata:
-  schema: metadata/Document/v1
   name: cluster-certificates
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .certificate_authorities.kubernetes.certificates[1].hosts[0]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .certificate_authorities.kubernetes.certificates[1].hosts[1]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .certificate_authorities.kubernetes.certificates[1].common_name
         pattern: HOSTNAME
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .certificate_authorities.kubernetes-etcd.certificates[2].hosts[0]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .certificate_authorities.kubernetes-etcd.certificates[2].hosts[1]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .certificate_authorities.kubernetes-etcd-peer.certificates[0].hosts[0]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .certificate_authorities.kubernetes-etcd-peer.certificates[0].hosts[1]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .certificate_authorities.calico-etcd.certificates[1].hosts[0]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .certificate_authorities.calico-etcd.certificates[1].hosts[1]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .certificate_authorities.calico-etcd-peer.certificates[0].hosts[0]
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .certificate_authorities.calico-etcd-peer.certificates[0].hosts[1]
 
-data:
+spec:
   certificate_authorities:
     kubernetes:
       description: CA for Kubernetes components

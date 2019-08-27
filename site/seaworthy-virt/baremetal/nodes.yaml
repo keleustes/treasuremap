@@ -1,13 +1,13 @@
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   name: n1
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   host_profile: cp-global
   addressing:
     - network: gp
@@ -18,15 +18,15 @@ data:
     tags:
       - 'masters'
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   name: n2
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   host_profile: cp-global
   addressing:
     - network: gp
@@ -37,15 +37,15 @@ data:
     tags:
       - 'masters'
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   name: n3
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   host_profile: cp-secondary
   addressing:
     - network: gp

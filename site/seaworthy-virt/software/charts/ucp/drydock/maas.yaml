@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-maas-global
   replacement: true
   layeringDefinition:
@@ -12,21 +12,20 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: airship_drydock_kvm_ssh_key
         path: .
       dest:
         path: .values.conf.ssh.private_key
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .vip.maas_vip
       dest:
         path: .values.network.maas_ingress.addr
-data:
+spec:
   values:
     endpoints:
       maas_ingress:

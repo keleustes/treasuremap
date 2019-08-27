@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-ceph-client
   layeringDefinition:
     abstract: false
@@ -11,8 +11,7 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data:
+spec:
   values:
     conf:
       pool:

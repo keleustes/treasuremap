@@ -1,15 +1,14 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: ucp-armada
   labels:
     name: ucp-armada-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   description: Armada
   sequenced: true
   chart_group:

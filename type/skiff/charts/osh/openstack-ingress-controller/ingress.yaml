@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: openstack-ingress-controller
   replacement: true
   labels:
@@ -15,8 +15,7 @@ metadata:
     actions:
       - method: replace
         path: .values.pod
-  storagePolicy: cleartext
-data:
+spec:
   values:
     pod:
       replicas:

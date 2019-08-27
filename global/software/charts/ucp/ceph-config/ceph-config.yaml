@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-ceph-config
   labels:
     name: ucp-ceph-config-global
@@ -9,11 +9,10 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.ceph-provisioners
       dest:
@@ -21,7 +20,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ceph.ceph-provisioners
       dest:
@@ -29,13 +28,13 @@ metadata:
 
     # IP addresses
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .storage.ceph.public_cidr
       dest:
         path: .values.network.public
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .storage.ceph.cluster_cidr
       dest:
@@ -43,14 +42,14 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ceph.ceph_mon
       dest:
         path: .values.endpoints.ceph_mon
 
 
-data:
+spec:
   chart_name: ucp-ceph-config
   release: ucp-ceph-config
   namespace: ucp

@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: nova-global
   labels:
     name: nova-global
@@ -9,11 +9,10 @@ metadata:
   layeringDefinition:
     abstract: true
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.nova
       dest:
@@ -21,7 +20,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh.nova
       dest:
@@ -29,85 +28,85 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.identity
       dest:
         path: .values.endpoints.identity
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_db
       dest:
         path: .values.endpoints.oslo_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_db
       dest:
         path: .values.endpoints.oslo_db_api
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_db
       dest:
         path: .values.endpoints.oslo_db_cell0
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.image
       dest:
         path: .values.endpoints.image
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.compute
       dest:
         path: .values.endpoints.compute
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.compute_metadata
       dest:
         path: .values.endpoints.compute_metadata
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.compute_novnc_proxy
       dest:
         path: .values.endpoints.compute_novnc_proxy
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.compute_spice_proxy
       dest:
         path: .values.endpoints.compute_spice_proxy
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.placement
       dest:
         path: .values.endpoints.placement
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.network
       dest:
         path: .values.endpoints.network
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.fluentd
       dest:
@@ -115,82 +114,82 @@ metadata:
 
     # Service Accounts
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.nova
       dest:
         path: .values.endpoints.identity.auth.nova
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.neutron.neutron
       dest:
         path: .values.endpoints.identity.auth.neutron
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.placement
       dest:
         path: .values.endpoints.identity.auth.placement
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_messaging.nova
       dest:
         path: .values.endpoints.oslo_messaging.auth.nova
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_db.username
       dest:
         path: .values.endpoints.oslo_db.auth.nova.username
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_db.database
       dest:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_db_api
       dest:
         path: .values.endpoints.oslo_db_api.auth.nova
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_db_api.database
       dest:
         path: .values.endpoints.oslo_db_api.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_db_cell0
       dest:
         path: .values.endpoints.oslo_db_cell0.auth.nova
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.nova.oslo_db_cell0.database
       dest:
         path: .values.endpoints.oslo_db_cell0.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.compute.name
       dest:
@@ -201,88 +200,88 @@ metadata:
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.nova.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_nova_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.neutron.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_neutron_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.placement.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_placement_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.nova.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.nova.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_nova_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db_api.auth.nova.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_nova_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db_cell0.auth.nova.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_nova_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db_api.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db_cell0.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_cache.auth.memcache_secret_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_cache_secret_key
         path: .
     - dest:
         path: .values.conf.nova.neutron.metadata_proxy_shared_secret
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_nova_metadata_proxy_shared_secret
         path: .
-data:
+spec:
   chart_name: nova
   release: nova
   namespace: openstack
@@ -429,22 +428,21 @@ data:
     - nova-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: nova-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.nova-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: nova-htk
   release: nova-htk
   namespace: nova-htk

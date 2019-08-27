@@ -1,20 +1,19 @@
 ---
-schema: promenade/EncryptionPolicy/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeEncryptionPolicy
 metadata:
-  schema: metadata/Document/v1
   name: encryption-policy
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: apiserver-encryption-key-key1
         path: .
       dest:
         path: .etcd[0].providers[0].secretbox.keys[0].secret
-data:
+spec:
   etcd:
     - resources:
         - 'secrets'

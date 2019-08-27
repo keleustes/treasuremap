@@ -2,15 +2,14 @@
 # The purpose of this file is to define the site's endpoint catalog. This should
 # not need to be modified for a new site.
 # #GLOBAL-CANDIDATE#
-schema: pegleg/EndpointCatalogue/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
 metadata:
-  schema: metadata/Document/v1
   name: ucp_endpoints
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   ucp:
     identity:
       namespace: ucp
@@ -99,7 +98,7 @@ data:
       host_fqdn_override:
         default: null
       path:
-        default: /v1
+        default: 
       scheme:
         default: "http"
       port:
@@ -254,7 +253,7 @@ data:
       host_fqdn_override:
         default: null
       path:
-        default: /swift/v1
+        default: /swift
       scheme:
         default: "http"
         public: "http"
@@ -325,15 +324,14 @@ data:
         default: http
 ...
 ---
-schema: pegleg/EndpointCatalogue/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
 metadata:
-  schema: metadata/Document/v1
   name: osh_endpoints
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   osh:
     object_store:
       name: swift
@@ -549,7 +547,7 @@ data:
       host_fqdn_override:
         default: null
       path:
-        default: /v1
+        default: 
       scheme:
         default: "http"
         public: "http"
@@ -685,23 +683,22 @@ data:
           public: 80
 ...
 ---
-schema: pegleg/EndpointCatalogue/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
 metadata:
-  schema: metadata/Document/v1
   name: osh_infra_endpoints
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.auth_path
       dest:
         path: .osh_infra.ldap.path.default
         pattern: AUTH_PATH
-data:
+spec:
   osh_infra:
     ceph_object_store:
       name: radosgw

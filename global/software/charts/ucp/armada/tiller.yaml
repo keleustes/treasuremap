@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-tiller
   labels:
     name: ucp-tiller-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.tiller
       dest:
@@ -20,13 +19,13 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.tiller
       dest:
         path: .values.images.tags
 
-data:
+spec:
   chart_name: tiller
   release: ucp-tiller
   namespace: kube-system
@@ -53,22 +52,21 @@ data:
     - tiller-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: tiller-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.tiller-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: tiller-htk
   release: tiller-htk
   namespace: tiller-htk

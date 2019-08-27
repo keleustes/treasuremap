@@ -1,13 +1,13 @@
 ---
-schema: 'pegleg/AppArmorProfile/v1'
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegAppArmorProfile
 metadata:
   schema: 'metadata/Document/v1'
   name: airship-default
-  storagePolicy: 'cleartext'
   layeringDefinition:
     abstract: false
     layer: global
-data:
+spec:
   savePath: /etc/apparmor.d/profile_airship_default
   content: |
     #include <tunables/global>

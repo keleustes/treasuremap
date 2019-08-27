@@ -6,9 +6,9 @@
 # 1. logical network interface names
 # 2. physical device mappigns
 # TODO: Should move to global layer and become tied to the hardware profile
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: neutron-fixme
   layeringDefinition:
     abstract: false
@@ -18,6 +18,5 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data: {}
+spec: {}
 ...

@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-keystone
   labels:
     name: ucp-keystone-global
@@ -9,11 +9,10 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.keystone
       dest:
@@ -21,7 +20,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.keystone
       dest:
@@ -29,55 +28,55 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.identity
       dest:
         path: .values.endpoints.identity
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.oslo_db
       dest:
         path: .values.endpoints.oslo_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.fluentd
       dest:
         path: .values.endpoints.fluentd
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.keystone.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging.auth
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.keystone.oslo_db
       dest:
         path: .values.endpoints.oslo_db.auth.keystone
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.keystone.oslo_db.database
       dest:
@@ -88,34 +87,34 @@ metadata:
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.keystone.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.keystone.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_keystone_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_oslo_db_admin_password
         path: .
-data:
+spec:
   chart_name: ucp-keystone
   release: ucp-keystone
   namespace: ucp
@@ -219,22 +218,21 @@ data:
     - ucp-keystone-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name:  ucp-keystone-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.keystone-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: ucp-keystone-htk
   release: ucp-keystone-htk
   namespace: ucp-keystone-htk

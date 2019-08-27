@@ -1,30 +1,29 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-ingress
   labels:
     name: ucp-ingress-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.ingress
       dest:
         path: .source
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.ingress
       dest:
         path: .values.images.tags
-data:
+spec:
   chart_name: ingress
   release: ingress
   namespace: ucp
@@ -64,22 +63,21 @@ data:
   dependencies:
     - ucp-ingress-htk
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-ingress-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.ingress-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: ucp-ingress-htk
   release: ucp-ingress-htk
   namespace: ucp-ingress-htk

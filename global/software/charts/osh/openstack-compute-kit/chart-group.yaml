@@ -1,15 +1,14 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: openstack-compute-kit
   labels:
     name: openstack-compute-kit-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   description: Deploy Nova, Neutron, Openvswitch, and Libvirt
   chart_group:
     - libvirt

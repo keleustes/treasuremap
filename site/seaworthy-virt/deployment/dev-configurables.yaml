@@ -1,12 +1,11 @@
 ---
-schema: dev/Configurables/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegDevConfigurables
 metadata:
-  schema: metadata/Document/v1
   name: dev-configurables
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   hostcidr: 172.24.1.0/24
 ...

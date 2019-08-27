@@ -1,16 +1,15 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: prometheus-openstack-exporter
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh_infra.prometheus_openstack_exporter
       dest:
@@ -18,7 +17,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh_infra.prometheus_openstack_exporter
       dest:
@@ -26,13 +25,13 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.prometheus_openstack_exporter
       dest:
         path: .values.endpoints.prometheus_openstack_exporter
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.identity
       dest:
@@ -40,13 +39,13 @@ metadata:
 
     # Accounts
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.prometheus_openstack_exporter.user
       dest:
@@ -56,16 +55,16 @@ metadata:
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.user.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_openstack_exporter_password
         path: .
-data:
+spec:
   chart_name: prometheus-openstack-exporter
   release: prometheus-openstack-exporter
   namespace: openstack

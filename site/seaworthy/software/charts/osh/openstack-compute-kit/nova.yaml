@@ -8,9 +8,9 @@
 # 2. pci alias / passthrough_whitelist could change if the NIC type or NIC
 #    slotting changes.
 # TODO: Should move to global layer and become tied to the hardware profile
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: nova
   layeringDefinition:
     abstract: false
@@ -20,6 +20,5 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data: {}
+spec: {}
 ...

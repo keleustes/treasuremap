@@ -1,9 +1,8 @@
 ---
-schema: drydock/HostProfile/v1
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
-  schema: metadata/Document/v1
   name: cp-global
-  storagePolicy: cleartext
   labels:
     hosttype: cp-global
   layeringDefinition:
@@ -13,10 +12,10 @@ metadata:
     - dest:
         path: .oob.credential
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ipmi_admin_password
         path: .
-data:
+spec:
   oob:
     type: 'ipmi'
     network: 'oob'

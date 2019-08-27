@@ -4,15 +4,14 @@
 # NOTE: When deploying a new site, this file should not be configured until
 # baremetal/nodes.yaml is complete.
 #
-schema: promenade/PKICatalog/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadePKICatalog
 metadata:
-  schema: metadata/Document/v1
   name: cluster-certificates
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   certificate_authorities:
     kubernetes:
       description: CA for Kubernetes components

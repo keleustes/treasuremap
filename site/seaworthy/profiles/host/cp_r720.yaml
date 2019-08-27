@@ -3,11 +3,10 @@
 # should not need to be altered if you are using matching HW. The active
 # participants in the Ceph cluster run on this profile. Other control plane
 # services are not affected by primary vs secondary designation.
-schema: drydock/HostProfile/v1
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
-  schema: metadata/Document/v1
   name: cp_r720-primary
-  storagePolicy: cleartext
   layeringDefinition:
     abstract: false
     layer: site
@@ -20,7 +19,7 @@ metadata:
         path: .storage
       - method: merge
         path: .
-data:
+spec:
   hardware_profile: dell_r720
 
   primary_network: oam
@@ -86,11 +85,10 @@ data:
       openstack-l3-agent: enabled
 ...
 ---
-schema: drydock/HostProfile/v1
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
-  schema: metadata/Document/v1
   name: cp_r740-secondary
-  storagePolicy: cleartext
   layeringDefinition:
     abstract: false
     layer: site
@@ -105,7 +103,7 @@ metadata:
         path: .metadata.owner_data
       - method: merge
         path: .
-data:
+spec:
   hardware_profile: dell_r720
 
   primary_network: oam

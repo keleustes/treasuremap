@@ -1,13 +1,13 @@
 ---
-schema: 'drydock/NetworkLink/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockNetworkLink
 metadata:
   schema: 'metadata/Document/v1'
   name: gp
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   bonding:
     mode: disabled
   mtu: 1500
@@ -19,15 +19,15 @@ data:
     - gp
 ...
 ---
-schema: 'drydock/Network/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockNetwork
 metadata:
   schema: 'metadata/Document/v1'
   name: gp
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   mtu: 1500
   cidr: 172.24.1.0/24
   ranges:

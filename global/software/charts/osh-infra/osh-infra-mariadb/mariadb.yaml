@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: osh-infra-mariadb
   labels:
     name: osh-infra-mariadb-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.mariadb
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh.mariadb
       dest:
@@ -28,13 +27,13 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.oslo_db
       dest:
         path: .values.endpoints.oslo_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.prometheus_mysql_exporter
       dest:
@@ -42,13 +41,13 @@ metadata:
 
     # Accounts
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.oslo_db.admin
       dest:
         path: .values.endpoints.oslo_db.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.prometheus_mysql_exporter.user
       dest:
@@ -58,16 +57,16 @@ metadata:
     - dest:
         path: .values.endpoints.oslo_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.exporter.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_oslo_db_exporter_password
         path: .
-data:
+spec:
   chart_name: osh-infra-mariadb
   release: osh-infra-mariadb
   namespace: osh-infra

@@ -1,7 +1,7 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: ucp-ceph-config
   labels:
     name: ucp-ceph-config-chart-group-global
@@ -9,8 +9,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   description: Ceph config for Airship namespace(s)
   chart_group:
     # NOTE: This will probably expand into one config per Airship namespace

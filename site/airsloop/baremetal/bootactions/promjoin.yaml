@@ -3,17 +3,17 @@
 # promjoin script from the promenade API. This is the script responsible for
 # installing kubernetes on the node and joining the kubernetes cluster.
 # #GLOBAL-CANDIDATE#
-schema: 'drydock/BootAction/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBootAction
 metadata:
   schema: 'metadata/Document/v1'
   name: promjoin
-  storagePolicy: 'cleartext'
   layeringDefinition:
     abstract: false
     layer: site
   labels:
     application: 'drydock'
-data:
+spec:
   signaling: false
   # TODO(alanmeadows) move what is global about this document
   assets:

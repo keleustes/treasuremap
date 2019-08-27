@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: nova
   labels:
     name: nova-type
@@ -20,8 +20,7 @@ metadata:
         path: .values.conf
       - method: replace
         path: .values.pod
-  storagePolicy: cleartext
-data:
+spec:
   values:
     labels:
       agent:

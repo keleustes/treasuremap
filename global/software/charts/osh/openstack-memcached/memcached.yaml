@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: openstack-memcached
   labels:
     name: openstack-memcached-global
@@ -9,11 +9,10 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.memcached
       dest:
@@ -21,19 +20,19 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh.memcached
       dest:
         path: .values.images.tags
 
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
-data:
+spec:
   chart_name: openstack-memcached
   release: openstack-memcached
   namespace: openstack
@@ -59,22 +58,21 @@ data:
     - memcached-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: memcached-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.memcached-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: memcached-htk
   release: memcached-htk
   namespace: memcached-htk

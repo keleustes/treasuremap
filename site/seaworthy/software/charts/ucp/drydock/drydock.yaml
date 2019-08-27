@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-drydock
   layeringDefinition:
     abstract: false
@@ -13,9 +13,8 @@ metadata:
         path: .
   labels:
     name: ucp-drydock-site
-  storagePolicy: cleartext
   replacement: true
-data:
+spec:
   values:
     network:
       api:

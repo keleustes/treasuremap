@@ -1,7 +1,7 @@
 ---
-schema: armada/Manifest/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaManifest
 metadata:
-  schema: metadata/Document/v1
   replacement: true
   name: cluster-bootstrap
   labels:
@@ -14,8 +14,7 @@ metadata:
     actions:
       - method: replace
         path: .chart_groups
-  storagePolicy: cleartext
-data:
+spec:
   release_prefix: airship
   chart_groups:
     - osh-infra-nfs-provisioner

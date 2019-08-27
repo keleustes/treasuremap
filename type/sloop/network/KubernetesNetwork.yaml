@@ -1,30 +1,29 @@
 ---
-schema: promenade/KubernetesNetwork/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeKubernetesNetwork
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-network
   labels:
     name: kubernetes-network-type
   layeringDefinition:
     abstract: false
     layer: type
-  storagePolicy: cleartext
   substitutions:
     # DNS
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.cluster_domain
       dest:
         path: .dns.cluster_domain
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.service_ip
       dest:
         path: .dns.service_ip
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.upstream_servers
       dest:
@@ -32,31 +31,31 @@ metadata:
 
     # Kubernetes IPs
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.api_service_ip
       dest:
         path: .kubernetes.service_ip
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.pod_cidr
       dest:
         path: .kubernetes.pod_cidr
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.service_cidr
       dest:
         path: .kubernetes.service_cidr
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.apiserver_port
       dest:
         path: .kubernetes.apiserver_port
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.haproxy_port
       dest:
@@ -64,13 +63,13 @@ metadata:
 
     # etcd IPs
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .etcd.container_port
       dest:
         path: .etcd.container_port
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .etcd.haproxy_port
       dest:
@@ -78,19 +77,19 @@ metadata:
 
     # proxy
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .proxy.http
       dest:
         path: .proxy.url
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .proxy.no_proxy
       dest:
         path: .proxy.additional_no_proxy
 
-data:
+spec:
   dns:
     bootstrap_validation_checks:
       - calico-etcd.kube-system.svc.cluster.local

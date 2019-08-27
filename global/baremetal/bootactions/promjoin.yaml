@@ -1,16 +1,16 @@
 ---
-schema: 'drydock/BootAction/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBootAction
 metadata:
   schema: 'metadata/Document/v1'
   name: promjoin-systemd-unit
-  storagePolicy: 'cleartext'
   layeringDefinition:
     abstract: false
     layer: global
   labels:
     name: promjoin-systemd-unit
     application: 'drydock'
-data:
+spec:
   signaling: false
   assets:
     - path: /etc/systemd/system/promjoin.service

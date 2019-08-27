@@ -29,7 +29,8 @@
 #
 # TODO: Include the hostname naming convention
 #
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: Replace with the hostname of the first node in the rack,
@@ -38,8 +39,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # NEWSITE-CHANGEME: The IPv4 address assigned to each logical network on this
   # node. In the reference Airship deployment, this is all logical Networks defined
   # in networks/physical/networks.yaml. IP addresses are manually assigned, by-hand.
@@ -115,7 +115,8 @@ data:
     rack: cab23
 ...
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: The next node's hostname
@@ -123,8 +124,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # NEWSITE-CHANGEME: The next node's IPv4 addressing
   addressing:
     - network: oob
@@ -149,7 +149,8 @@ data:
       - 'masters'
 ...
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: The next node's hostname
@@ -157,8 +158,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # NEWSITE-CHANGEME: The next node's IPv4 addressing
   addressing:
     - network: oob
@@ -184,7 +184,8 @@ data:
       - 'workers'
 ...
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: The next node's hostname
@@ -192,8 +193,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # NEWSITE-CHANGEME: The next node's IPv4 addressing
   addressing:
     - network: oob
@@ -219,7 +219,8 @@ data:
       - 'workers'
 ...
 ---
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: The next node's hostname
@@ -227,8 +228,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # NEWSITE-CHANGEME: The next node's IPv4 addressing
   addressing:
     - network: oob

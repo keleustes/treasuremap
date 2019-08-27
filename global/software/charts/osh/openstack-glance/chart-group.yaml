@@ -1,7 +1,7 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: openstack-glance
   labels:
     name: openstack-glance-chart-group-global
@@ -9,8 +9,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   description: Deploy Glance
   chart_group:
     - glance

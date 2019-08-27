@@ -1,16 +1,15 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: prometheus-process-exporter
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh_infra.prometheus_process_exporter
       dest:
@@ -18,7 +17,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh_infra.prometheus_process_exporter
       dest:
@@ -26,13 +25,13 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.process_exporter_metrics
       dest:
         path: .values.endpoints.process_exporter_metrics
 
-data:
+spec:
   chart_name: prometheus-process-exporter
   release: prometheus-process-exporter
   namespace: kube-system

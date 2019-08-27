@@ -1,5 +1,6 @@
 ---
-schema: 'drydock/BootAction/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBootAction
 metadata:
   schema: 'metadata/Document/v1'
   name: nested-virt
@@ -9,8 +10,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: 'cleartext'
-data:
+spec:
   signaling: false
   assets:
     - path: /etc/modprobe.d/nested-virt.conf

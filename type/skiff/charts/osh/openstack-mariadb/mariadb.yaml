@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: openstack-mariadb
   replacement: true
   labels:
@@ -17,8 +17,7 @@ metadata:
         path: .values.pod
       - method: delete
         path: .values.labels.prometheus_mysql_exporter
-  storagePolicy: cleartext
-data:
+spec:
   values:
     pod:
       replicas:

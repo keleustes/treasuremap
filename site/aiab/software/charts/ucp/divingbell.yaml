@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-divingbell
   layeringDefinition:
     abstract: false
@@ -13,8 +13,7 @@ metadata:
         path: .
   labels:
     name: ucp-divingbell-site
-  storagePolicy: cleartext
-data:
+spec:
   values:
     manifests:
       daemonset_ethtool: false

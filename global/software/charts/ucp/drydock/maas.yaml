@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-maas-global
   labels:
     name: ucp-maas-global
   layeringDefinition:
     abstract: true
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.maas
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.maas
       dest:
@@ -28,19 +27,19 @@ metadata:
 
     # MaaS Config
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.upstream_servers_joined
       dest:
         path: .values.conf.maas.dns.dns_servers
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ntp.servers_joined
       dest:
         path: .values.conf.maas.ntp.ntp_servers
     - src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: maas-region-key
         path: .
       dest:
@@ -48,51 +47,51 @@ metadata:
 
     # Endpoint substitutions
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.postgresql
       dest:
         path: .values.endpoints.maas_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.maas_region
       dest:
         path: .values.endpoints.maas_region
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.maas_ingress
       dest:
         path: .values.endpoints.maas_ingress
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.physicalprovisioner
       dest:
         path: .values.endpoints.physicalprovisioner
     # Account and credential substitutions
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.postgres.admin
       dest:
         path: .values.endpoints.maas_db.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.maas.postgres
       dest:
         path: .values.endpoints.maas_db.auth.user
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.maas.postgres.database
       dest:
         path: .values.endpoints.maas_db.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.maas.admin
       dest:
@@ -102,22 +101,22 @@ metadata:
     - dest:
         path: .values.endpoints.maas_region.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_maas_admin_password
         path: .
     - dest:
         path: .values.endpoints.maas_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_postgres_admin_password
         path: .
     - dest:
         path: .values.endpoints.maas_db.auth.user.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_maas_postgres_password
         path: .
-data:
+spec:
   chart_name: maas
   release: maas
   namespace: ucp
@@ -176,22 +175,21 @@ data:
     - maas-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: maas-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.maas-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: maas-htk
   release: maas-htk
   namespace: maas-htk

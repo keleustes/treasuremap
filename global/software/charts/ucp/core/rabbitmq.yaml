@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-rabbitmq
   labels:
     name: ucp-rabbitmq-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.rabbitmq
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.rabbitmq
       dest:
@@ -28,7 +27,7 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.oslo_messaging
       dest:
@@ -36,7 +35,7 @@ metadata:
 
     # Credentials
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: ucp_service_accounts
         path: .ucp.oslo_messaging.admin
       dest:
@@ -45,18 +44,18 @@ metadata:
     # Secrets
 
     - src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_rabbitmq_erlang_cookie
         path: .
       dest:
         path: .values.endpoints.oslo_messaging.auth.erlang_cookie
     - src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ucp_oslo_messaging_password
         path: .
       dest:
         path: .values.endpoints.oslo_messaging.auth.user.password
-data:
+spec:
   chart_name: ucp-rabbitmq
   release: ucp-rabbitmq
   namespace: ucp
@@ -90,22 +89,21 @@ data:
     - ucp-rabbitmq-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-rabbitmq-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.rabbitmq-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: ucp-rabbitmq-htk
   release: ucp-rabbitmq-htk
   namespace: ucp-rabbitmq-htk

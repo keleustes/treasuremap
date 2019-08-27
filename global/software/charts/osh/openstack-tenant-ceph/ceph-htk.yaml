@@ -1,20 +1,19 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: tenant-ceph-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.tenant-ceph-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: tenant-ceph-htk
   release: tenant-ceph-htk
   namespace: tenant-ceph-htk

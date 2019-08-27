@@ -1,13 +1,13 @@
 ---
-schema: 'drydock/HardwareProfile/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHardwareProfile
 metadata:
   schema: 'metadata/Document/v1'
   name: GenericVM
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   vendor: 'Dell'
   generation: '1'
   hw_version: '2'

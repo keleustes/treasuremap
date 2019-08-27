@@ -1,9 +1,9 @@
 ---
 # The purpose of this file is to build the list of calico etcd nodes and the
 # calico etcd certs for those nodes in the environment.
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-calico-etcd
   layeringDefinition:
     abstract: false
@@ -13,26 +13,25 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
   substitutions:
     # Generate a list of control plane nodes (i.e. genesis node + master node
     # list) on which calico etcd will run and will need certs. It is assumed
     # that Airship sites will have 4 control plane nodes, so this should not need to
     # change for a new site.
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .genesis.hostname
       dest:
         path: .values.nodes[0].name
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .masters[0].hostname
       dest:
         path: .values.nodes[1].name
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .masters[1].hostname
       dest:
@@ -47,25 +46,25 @@ metadata:
 
     # Genesis hostname - airsloop-control-1
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-etcd-airsloop-control-1
         path: .
       dest:
         path: .values.nodes[0].tls.client.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-etcd-airsloop-control-1
         path: .
       dest:
         path: .values.nodes[0].tls.client.key
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-etcd-airsloop-control-1-peer
         path: .
       dest:
         path: .values.nodes[0].tls.peer.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-etcd-airsloop-control-1-peer
         path: .
       dest:
@@ -73,25 +72,25 @@ metadata:
 
     # master node 1 hostname - airsloop-control-2
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-etcd-airsloop-control-2
         path: .
       dest:
         path: .values.nodes[1].tls.client.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-etcd-airsloop-control-2
         path: .
       dest:
         path: .values.nodes[1].tls.client.key
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-etcd-airsloop-control-2-peer
         path: .
       dest:
         path: .values.nodes[1].tls.peer.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-etcd-airsloop-control-2-peer
         path: .
       dest:
@@ -99,29 +98,29 @@ metadata:
 
     # master node 2 hostname - airsloop-control-3
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-etcd-airsloop-control-3
         path: .
       dest:
         path: .values.nodes[2].tls.client.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-etcd-airsloop-control-3
         path: .
       dest:
         path: .values.nodes[2].tls.client.key
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: calico-etcd-airsloop-control-3-peer
         path: .
       dest:
         path: .values.nodes[2].tls.peer.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: calico-etcd-airsloop-control-3-peer
         path: .
       dest:
         path: .values.nodes[2].tls.peer.key
 
-data: {}
+spec: {}
 ...

@@ -1,15 +1,14 @@
 ---
-schema: promenade/Docker/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeDocker
 metadata:
-  schema: metadata/Document/v1
   name: docker-global
   labels:
     promenade: enabled
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   config:
     live-restore: true
     storage-driver: overlay2

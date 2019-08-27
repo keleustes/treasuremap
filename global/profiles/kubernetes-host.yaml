@@ -1,15 +1,14 @@
 ---
-schema: promenade/HostSystem/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeHostSystem
 metadata:
-  schema: metadata/Document/v1
   name: host-system
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.hyperkube
       dest:
@@ -17,7 +16,7 @@ metadata:
 
     # Initial CoreDNS image (used during node Genesis and node join)
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.coredns.coredns
       dest:
@@ -25,7 +24,7 @@ metadata:
 
     # Initial CoreDNS image (used during node Genesis and node join)
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.haproxy.haproxy
       dest:
@@ -33,13 +32,13 @@ metadata:
 
     # Operational tools
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.armada.helm
       dest:
         path: .images.helm.helm
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.promenade.monitoring_image
       dest:
@@ -47,20 +46,20 @@ metadata:
 
     # System packages
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .packages.named.docker
       dest:
         path: .packages.common.required.docker
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .packages.named.socat
       dest:
         path: .packages.common.required.socat
 
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .packages.unnamed
       dest:
@@ -68,14 +67,14 @@ metadata:
 
     # Docker authorization
     - src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         path: .
         name: private_docker_key
       dest:
         path: .files[4].content
         pattern: DH_SUB_PRIVATE_DOCKER_KEY
 
-data:
+spec:
   files:
     - path: /opt/kubernetes/bin/hyperkube
       file_path: /hyperkube

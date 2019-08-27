@@ -4,15 +4,14 @@
 #
 # TODO: Include bare metal host FQDN naming standards
 # TODO: Include ingress FQDN naming standards
-schema: pegleg/CommonAddresses/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegCommonAddresses
 metadata:
-  schema: metadata/Document/v1
   name: common-addresses
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   calico:
     ip_autodetection_method: 'interface=ens3'
     bgp:

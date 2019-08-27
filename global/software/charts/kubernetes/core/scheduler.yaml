@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-scheduler
   labels:
     name: kubernetes-scheduler-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.scheduler
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.scheduler
       dest:
@@ -28,7 +27,7 @@ metadata:
 
     # CA
     - src:
-        schema: deckhand/CertificateAuthority/v1
+        kind: DeckhandCertificateAuthority
         name: kubernetes
         path: .
       dest:
@@ -36,19 +35,19 @@ metadata:
 
     # Certificates
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: scheduler
         path: .
       dest:
         path: .values.secrets.tls.cert
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: scheduler
         path: .
       dest:
         path: .values.secrets.tls.key
 
-data:
+spec:
   chart_name: scheduler
   release: kubernetes-scheduler
   namespace: kube-system
@@ -71,22 +70,21 @@ data:
   dependencies:
     - kubernetes-scheduler-htk
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-scheduler-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.scheduler-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: kubernetes-scheduler-htk
   release: kubernetes-scheduler-htk
   namespace: kubernetes-scheduler-htk

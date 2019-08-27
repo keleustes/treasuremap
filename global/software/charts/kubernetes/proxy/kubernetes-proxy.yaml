@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-proxy
   labels:
     name: kubernetes-proxy-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.proxy
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.proxy
       dest:
@@ -28,7 +27,7 @@ metadata:
 
     # IP Addresses
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .kubernetes.pod_cidr
       dest:
@@ -37,12 +36,12 @@ metadata:
 
     # Secrets
     - src:
-        schema: deckhand/CertificateAuthority/v1
+        kind: DeckhandCertificateAuthority
         name: kubernetes
         path: .
       dest:
         path: .values.secrets.tls.ca
-data:
+spec:
   chart_name: proxy
   release: kubernetes-proxy
   namespace: kube-system
@@ -71,22 +70,21 @@ data:
   dependencies:
     - kubernetes-proxy-htk
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: kubernetes-proxy-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.proxy-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: kubernetes-proxy-htk
   release: kubernetes-proxy-htk
   namespace: kubernetes-proxy-htk

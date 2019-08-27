@@ -1,7 +1,7 @@
 ---
-schema: armada/Manifest/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaManifest
 metadata:
-  schema: metadata/Document/v1
   name: cluster-bootstrap
   replacement: true
   layeringDefinition:
@@ -14,8 +14,7 @@ metadata:
         path: .
       - method: replace
         path: .chart_groups
-  storagePolicy: cleartext
-data:
+spec:
   chart_groups:
     - podsecuritypolicy
     - kubernetes-proxy

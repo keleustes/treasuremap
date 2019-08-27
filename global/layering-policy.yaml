@@ -1,9 +1,9 @@
 ---
-schema: deckhand/LayeringPolicy/v1
+apiVersion: deckhand.airshipit.org/v1alpha1
+kind: DeckhandLayeringPolicy
 metadata:
-  schema: metadata/Control/v1
   name: layering-policy
-data:
+spec:
   layerOrder:
     - global
     - type

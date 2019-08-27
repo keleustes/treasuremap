@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-ceph-osd
   labels:
     name: ucp-ceph-osd-type
@@ -13,6 +13,5 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data: {}
+spec: {}
 ...

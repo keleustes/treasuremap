@@ -1,13 +1,12 @@
 ---
-schema: pegleg/CommonAddresses/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegCommonAddresses
 metadata:
-  schema: metadata/Document/v1
   name: common-addresses
   layeringDefinition:
     abstract: false
     layer: type
-  storagePolicy: cleartext
-data:
+spec:
   calico:
     # NEWSITE-CHANGEME: The interface that calico will use. Update if your
     # logical bond interface name or calico VLAN have changed from the reference

@@ -1,15 +1,14 @@
 ---
-schema: armada/ChartGroup/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChartGroup
 metadata:
-  schema: metadata/Document/v1
   name: ucp-shipyard
   labels:
     name: ucp-shipyard-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
-data:
+spec:
   description: Shipyard
   chart_group:
     - ucp-shipyard

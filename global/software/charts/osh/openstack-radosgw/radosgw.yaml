@@ -1,16 +1,15 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: tenant-ceph-rgw
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.tenant-ceph-rgw
       dest:
@@ -18,7 +17,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ceph.tenant-ceph-rgw
       dest:
@@ -26,13 +25,13 @@ metadata:
 
     # IP addresses
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .storage.ceph.public_cidr
       dest:
         path: .values.network.public
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .storage.ceph.cluster_cidr
       dest:
@@ -40,19 +39,19 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.identity
       dest:
         path: .values.endpoints.identity
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.object_store
       dest:
         path: .values.endpoints.object_store
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ceph.tenant_ceph_mon
       dest:
@@ -60,13 +59,13 @@ metadata:
 
     # Credentials
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.swift.keystone
       dest:
@@ -76,17 +75,17 @@ metadata:
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.swift.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ceph_swift_keystone_password
         path: .
 
-data:
+spec:
   chart_name: tenant-ceph-rgw
   release: tenant-ceph-rgw
   namespace: openstack

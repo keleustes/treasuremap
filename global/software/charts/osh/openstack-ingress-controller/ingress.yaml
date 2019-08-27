@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: openstack-ingress-controller
   labels:
     name: openstack-ingress-controller-global
@@ -9,23 +9,22 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.ingress
       dest:
         path: .source
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh.ingress
       dest:
         path: .values.images.tags
-data:
+spec:
   chart_name: openstack-ingress-controller
   release: openstack-ingress-controller
   namespace: openstack
@@ -58,22 +57,21 @@ data:
     - ingress-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ingress-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.ingress-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: ingress-htk
   release: ingress-htk
   namespace: ingress-htk

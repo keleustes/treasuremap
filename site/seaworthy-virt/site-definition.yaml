@@ -1,12 +1,11 @@
 ---
-schema: pegleg/SiteDefinition/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegSiteDefinition
 metadata:
-  schema: metadata/Document/v1
   layeringDefinition:
     abstract: false
     layer: site
   name: seaworthy-virt
-  storagePolicy: cleartext
-data:
+spec:
   site_type: foundry
 ...

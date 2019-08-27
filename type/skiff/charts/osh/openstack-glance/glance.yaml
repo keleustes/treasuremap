@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: glance
   replacement: true
   labels:
@@ -19,8 +19,7 @@ metadata:
         path: .values.pod
       - method: delete
         path: .values.ceph_client
-  storagePolicy: cleartext
-data:
+spec:
   test:
     enabled: false
   values:

@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   replacement: true
   name: tenant-ceph-ingress
   labels:
@@ -14,8 +14,7 @@ metadata:
     actions:
       - method: merge
         path: .
-  storagePolicy: cleartext
-data:
+spec:
   values:
     pod:
       replicas:

@@ -1,7 +1,8 @@
 ---
 # The purpose of this file is to define the drydock Region, which in turn drives
 # the MaaS region.
-schema: 'drydock/Region/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockRegion
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: Replace with the site name
@@ -9,7 +10,6 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     # NEWSITE-CHANGEME: Substitutions from deckhand SSH public keys into the
     # list of authorized keys which MaaS will register for the build-in "ubuntu"
@@ -21,7 +21,7 @@ metadata:
         # Add/replace the first item in the list
         path: .authorized_keys[0]
       src:
-        schema: deckhand/PublicKey/v1
+        kind: DeckhandPublicKey
         # This should match the "name" metadata of the SSH key which will be
         # substituted, located in site/seaworthy/secrets folder.
         name: airship_ssh_public_key
@@ -29,7 +29,7 @@ metadata:
     - dest:
         path: .repositories.main_archive
       src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .packages.repositories.main_archive
     # Second key example
@@ -37,11 +37,11 @@ metadata:
     #    # Increment the list index
     #    path: .authorized_keys[1]
     #  src:
-    #    schema: deckhand/PublicKey/v1
+    #    kind: DeckhandPublicKey
     #    # your ssh key
     #    name: MY_USER_ssh_public_key
     #    path: .
-data:
+spec:
   tag_definitions: []
   # This is the list of SSH keys which MaaS will register for the built-in
   # "ubuntu" account during the PXE process. This list is populated by

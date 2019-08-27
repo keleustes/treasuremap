@@ -1,7 +1,7 @@
 ---
-schema: drydock/HostProfile/v1
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
-  schema: metadata/Document/v1
   name: cp-global
   replacement: true
   layeringDefinition:
@@ -18,8 +18,7 @@ metadata:
         path: .platform.kernel_params
       - method: merge
         path: .
-  storagePolicy: cleartext
-data:
+spec:
   hardware_profile: 'GenericVM'
   primary_network: 'gp'
   oob:
@@ -56,9 +55,9 @@ data:
       kernel_package: 'linux-image-4.15.0-34-generic'
 ...
 ---
-schema: drydock/HostProfile/v1
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
-  schema: metadata/Document/v1
   name: cp-secondary
   layeringDefinition:
     abstract: false
@@ -74,8 +73,7 @@ metadata:
         path: .platform.kernel_params
       - method: merge
         path: .
-  storagePolicy: cleartext
-data:
+spec:
   hardware_profile: 'GenericVM'
   primary_network: 'gp'
   oob:

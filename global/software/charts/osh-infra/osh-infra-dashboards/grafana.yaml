@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: grafana
   layeringDefinition:
     abstract: false
     layer: global
   labels:
     name: grafana-global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh_infra.grafana
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh_infra.grafana
       dest:
@@ -28,70 +27,70 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.oslo_db
       dest:
         path: .values.endpoints.oslo_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.oslo_db
       dest:
         path: .values.endpoints.oslo_db_session
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.grafana
       dest:
         path: .values.endpoints.grafana
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.monitoring
       dest:
         path: .values.endpoints.monitoring
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.ldap
       dest:
         path: .values.endpoints.ldap
     # Accounts
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.grafana.admin
       dest:
         path: .values.endpoints.grafana.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.grafana.oslo_db
       dest:
         path: .values.endpoints.oslo_db.auth.user
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.grafana.oslo_db.database
       dest:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.grafana.oslo_db_session
       dest:
         path: .values.endpoints.oslo_db_session.auth.user
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.grafana.oslo_db_session.database
       dest:
         path: .values.endpoints.oslo_db_session.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.prometheus.admin
       dest:
@@ -101,43 +100,43 @@ metadata:
     - dest:
         path: .values.endpoints.grafana.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_grafana_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.user.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_grafana_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db_session.auth.user.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_grafana_oslo_db_session_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db_session.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.monitoring.auth.user.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_prometheus_admin_password
         path: .
 
     # LDAP Configuration Details
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.ldap.admin.bind
       dest:
@@ -145,59 +144,59 @@ metadata:
     - dest:
         path: .values.endpoints.ldap.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_ldap_password
         path: .
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.subdomain
       dest:
         path:  .values.conf.ldap.config.base_dns.search
         pattern: SUBDOMAIN
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.domain
       dest:
         path:  .values.conf.ldap.config.base_dns.search
         pattern: DOMAIN
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.subdomain
       dest:
         path:  .values.conf.ldap.config.base_dns.group_search
         pattern: SUBDOMAIN
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.domain
       dest:
         path:  .values.conf.ldap.config.base_dns.group_search
         pattern: DOMAIN
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.common_name
       dest:
         path:  .values.conf.ldap.config.filters.group_search
         pattern: COMMON_NAME
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.subdomain
       dest:
         path:  .values.conf.ldap.config.filters.group_search
         pattern: SUBDOMAIN
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.domain
       dest:
         path:  .values.conf.ldap.config.filters.group_search
         pattern: DOMAIN
-data:
+spec:
   chart_name: grafana
   release: grafana
   namespace: osh-infra

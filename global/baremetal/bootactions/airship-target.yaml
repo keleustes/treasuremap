@@ -1,13 +1,13 @@
 ---
-schema: 'drydock/BootAction/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBootAction
 metadata:
   schema: 'metadata/Document/v1'
   name: airship-target
-  storagePolicy: 'cleartext'
   layeringDefinition:
     abstract: false
     layer: global
-data:
+spec:
   signaling: false
   assets:
     - path: /etc/systemd/system/airship.target

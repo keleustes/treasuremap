@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: glance
   labels:
     name: glance-global
@@ -9,11 +9,10 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.glance
       dest:
@@ -21,7 +20,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh.glance
       dest:
@@ -29,104 +28,104 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.identity
       dest:
         path: .values.endpoints.identity
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.image
       dest:
         path: .values.endpoints.image
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.image_registry
       dest:
         path: .values.endpoints.image_registry
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_db
       dest:
         path: .values.endpoints.oslo_db
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.ceph_object_store
       dest:
         path: .values.endpoints.ceph_object_store
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.object_store
       dest:
         path: .values.endpoints.object_store
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.fluentd
       dest:
         path: .values.endpoints.fluentd
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.glance.glance
       dest:
         path: .values.endpoints.identity.auth.glance
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.glance.oslo_messaging.glance
       dest:
         path: .values.endpoints.oslo_messaging.auth.glance
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.glance.oslo_db
       dest:
         path: .values.endpoints.oslo_db.auth.glance
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.glance.oslo_db.database
       dest:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_service_accounts
         path: .osh.glance.ceph_object_store
       dest:
         path: .values.endpoints.ceph_object_store.auth.glance
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_endpoints
         path: .osh.image.name
       dest:
@@ -137,64 +136,64 @@ metadata:
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.glance.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_glance_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.glance.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.glance.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_glance_oslo_db_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_db_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_cache.auth.memcache_secret_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_oslo_cache_secret_key
         path: .
     - dest:
         path: .values.endpoints.object_store.auth.glance.tmpurlkey
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ceph_swift_keystone_password
         path: .
     - dest:
         path: .values.endpoints.ceph_object_store.auth.glance.tmpurlkey
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: ceph_swift_keystone_password
         path: .
     - dest:
         path: .values.endpoints.ceph_object_store.auth.glance.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_glance_password
         path: .
-data:
+spec:
   chart_name: glance
   release: glance
   namespace: openstack
@@ -303,22 +302,21 @@ data:
     - glance-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: glance-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh.glance-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: glance-htk
   release: glance-htk
   namespace: glance-htk

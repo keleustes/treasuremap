@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: elasticsearch-global
   labels:
     hosttype: elasticsearch-global
   layeringDefinition:
     abstract: true
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.osh_infra.elasticsearch
       dest:
@@ -20,7 +19,7 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.osh_infra.elasticsearch
       dest:
@@ -28,20 +27,20 @@ metadata:
 
     # Endpoints
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.elasticsearch
       dest:
         path: .values.endpoints.elasticsearch
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.prometheus_elasticsearch_exporter
       dest:
         path: .values.endpoints.prometheus_elasticsearch_exporter
 
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: osh_infra_endpoints
         path: .osh_infra.ldap
       dest:
@@ -49,19 +48,19 @@ metadata:
 
     # Accounts
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.elasticsearch.admin
       dest:
         path: .values.endpoints.elasticsearch.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.ceph_object_store.admin
       dest:
         path: .values.endpoints.ceph_object_store.auth.admin
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.ceph_object_store.elasticsearch
       dest:
@@ -71,37 +70,37 @@ metadata:
     - dest:
         path: .values.endpoints.elasticsearch.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_elasticsearch_admin_password
         path: .
     - dest:
         path: .values.endpoints.ceph_object_store.auth.admin.access_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_rgw_s3_admin_access_key
         path: .
     - dest:
         path: .values.endpoints.ceph_object_store.auth.admin.secret_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_rgw_s3_admin_secret_key
         path: .
     - dest:
         path: .values.endpoints.ceph_object_store.auth.elasticsearch.access_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_rgw_s3_elasticsearch_access_key
         path: .
     - dest:
         path: .values.endpoints.ceph_object_store.auth.elasticsearch.secret_key
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_infra_rgw_s3_elasticsearch_secret_key
         path: .
 
     # LDAP Details
     - src:
-        schema: pegleg/AccountCatalogue/v1
+        kind: PeglegAccountCatalogue
         name: osh_infra_service_accounts
         path: .osh_infra.ldap.admin
       dest:
@@ -109,10 +108,10 @@ metadata:
     - dest:
         path: .values.endpoints.ldap.auth.admin.password
       src:
-        schema: deckhand/Passphrase/v1
+        kind: DeckhandPassphrase
         name: osh_keystone_ldap_password
         path: .
-data:
+spec:
   chart_name: elasticsearch
   release: elasticsearch
   namespace: osh-infra

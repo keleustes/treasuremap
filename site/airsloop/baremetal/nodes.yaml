@@ -29,7 +29,8 @@
 #
 # TODO: Include the hostname naming convention
 #
-schema: 'drydock/BaremetalNode/v1'
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockBaremetalNode
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: The next node's hostname
@@ -37,8 +38,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
-data:
+spec:
   # NEWSITE-CHANGEME: The next node's IPv4 addressing
   addressing:
     - network: oob

@@ -2,17 +2,16 @@
 # The purpose of this file is to define the site's endpoint catalog. This should
 # not need to be modified for a new site.
 # #GLOBAL-CANDIDATE#
-schema: pegleg/EndpointCatalogue/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
 metadata:
-  schema: metadata/Document/v1
   name: ucp_endpoints
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.ingress_domain
       dest:
@@ -31,7 +30,7 @@ metadata:
         - path: .ceph.ceph_object_store.host_fqdn_override.public.host
           pattern: DOMAIN
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: ingress-crt
         path: .
       dest:
@@ -41,7 +40,7 @@ metadata:
         - path: .ceph.object_store.host_fqdn_override.public.tls.crt
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
     - src:
-        schema: deckhand/CertificateAuthority/v1
+        kind: DeckhandCertificateAuthority
         name: ingress-ca
         path: .
       dest:
@@ -51,7 +50,7 @@ metadata:
         - path: .ceph.object_store.host_fqdn_override.public.tls.ca
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: ingress-key
         path: .
       dest:
@@ -60,7 +59,7 @@ metadata:
         - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
         - path: .ceph.object_store.host_fqdn_override.public.tls.key
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
-data:
+spec:
   ucp:
     identity:
       namespace: ucp
@@ -154,7 +153,7 @@ data:
       host_fqdn_override:
         default: null
       path:
-        default: /v1
+        default: 
       scheme:
         default: "http"
       port:
@@ -310,7 +309,7 @@ data:
         public:
           host: object-store-sw.DOMAIN
       path:
-        default: /swift/v1
+        default: /swift
       scheme:
         default: "http"
         public: "https"
@@ -383,17 +382,16 @@ data:
         default: http
 ...
 ---
-schema: pegleg/EndpointCatalogue/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
 metadata:
-  schema: metadata/Document/v1
   name: osh_endpoints
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.ingress_domain
       dest:
@@ -428,7 +426,7 @@ metadata:
         - path: .osh.volumev3.host_fqdn_override.public.host
           pattern: DOMAIN
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: ingress-crt
         path: .
       dest:
@@ -447,7 +445,7 @@ metadata:
         - path: .osh.placement.host_fqdn_override.public.tls.crt
         - path: .osh.network.host_fqdn_override.public.tls.crt
     - src:
-        schema: deckhand/CertificateAuthority/v1
+        kind: DeckhandCertificateAuthority
         name: ingress-ca
         path: .
       dest:
@@ -466,7 +464,7 @@ metadata:
         - path: .osh.placement.host_fqdn_override.public.tls.ca
         - path: .osh.network.host_fqdn_override.public.tls.ca
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: ingress-key
         path: .
       dest:
@@ -484,7 +482,7 @@ metadata:
         - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
         - path: .osh.placement.host_fqdn_override.public.tls.key
         - path: .osh.network.host_fqdn_override.public.tls.key
-data:
+spec:
   osh:
     object_store:
       name: swift
@@ -723,7 +721,7 @@ data:
         public:
           host: cloudformation-sw.DOMAIN
       path:
-        default: /v1
+        default: 
       scheme:
         default: "http"
         public: "https"
@@ -869,17 +867,16 @@ data:
           public: 443
 ...
 ---
-schema: pegleg/EndpointCatalogue/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegEndpointCatalogue
 metadata:
-  schema: metadata/Document/v1
   name: osh_infra_endpoints
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .dns.ingress_domain
       dest:
@@ -890,7 +887,7 @@ metadata:
         - path: .osh_infra.nagios.host_fqdn_override.public.host
           pattern: DOMAIN
     - src:
-        schema: deckhand/Certificate/v1
+        kind: DeckhandCertificate
         name: ingress-crt
         path: .
       dest:
@@ -898,7 +895,7 @@ metadata:
         - path: .osh_infra.grafana.host_fqdn_override.public.tls.crt
         - path: .osh_infra.nagios.host_fqdn_override.public.tls.crt
     - src:
-        schema: deckhand/CertificateAuthority/v1
+        kind: DeckhandCertificateAuthority
         name: ingress-ca
         path: .
       dest:
@@ -906,7 +903,7 @@ metadata:
         - path: .osh_infra.grafana.host_fqdn_override.public.tls.ca
         - path: .osh_infra.nagios.host_fqdn_override.public.tls.ca
     - src:
-        schema: deckhand/CertificateKey/v1
+        kind: DeckhandCertificateKey
         name: ingress-key
         path: .
       dest:
@@ -914,20 +911,20 @@ metadata:
         - path: .osh_infra.grafana.host_fqdn_override.public.tls.key
         - path: .osh_infra.nagios.host_fqdn_override.public.tls.key
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.base_url
       dest:
         path: .osh_infra.ldap.host_fqdn_override.public.host
         pattern: DOMAIN
     - src:
-        schema: pegleg/CommonAddresses/v1
+        kind: PeglegCommonAddresses
         name: common-addresses
         path: .ldap.auth_path
       dest:
         path: .osh_infra.ldap.path.default
         pattern: AUTH_PATH
-data:
+spec:
   osh_infra:
     ceph_object_store:
       name: radosgw

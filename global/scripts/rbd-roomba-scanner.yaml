@@ -1,13 +1,12 @@
 ---
-schema: pegleg/Script/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegScript
 metadata:
-  schema: metadata/Document/v1
   name: rbd-roomba-scanner
-  storagePolicy: cleartext
   layeringDefinition:
     abstract: false
     layer: global
-data: |-
+spec: |-
   #!/bin/bash
   set -ex
 

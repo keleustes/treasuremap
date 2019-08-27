@@ -1,27 +1,26 @@
 ---
-schema: promenade/Kubelet/v1
+apiVersion: promenade.airshipit.org/v1alpha1
+kind: PromenadeKubelet
 metadata:
-  schema: metadata/Document/v1
   name: kubelet
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.pause
       dest:
         path: .images.pause
     - src:
-        schema: pegleg/SeccompProfile/v1
+        kind: PeglegSeccompProfile
         name: seccomp-default
         path: .seccompDirPath
       dest:
         path: .arguments[9]
         pattern: SECCOMP_PROFILE_ROOT
-data:
+spec:
   arguments:
     - --cni-bin-dir=/opt/cni/bin
     - --cni-conf-dir=/etc/cni/net.d

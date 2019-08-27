@@ -2,11 +2,10 @@
 # The data plane host profile for Airship for DELL R720s, and should
 # not need to be altered if you are using matching HW. The host profile is setup
 # for cpu isolation (for nova pinning), hugepages, and sr-iov.
-schema: drydock/HostProfile/v1
+apiVersion: drydock.airshipit.org/v1alpha1
+kind: DrydockHostProfile
 metadata:
-  schema: metadata/Document/v1
   name: dp_r720
-  storagePolicy: cleartext
   layeringDefinition:
     abstract: false
     layer: site
@@ -19,7 +18,7 @@ metadata:
         path: .storage
       - method: merge
         path: .
-data:
+spec:
   hardware_profile: dell_r720
 
   primary_network: oam

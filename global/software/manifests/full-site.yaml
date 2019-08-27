@@ -1,15 +1,14 @@
 ---
-schema: armada/Manifest/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaManifest
 metadata:
-  schema: metadata/Document/v1
   name: full-site
   layeringDefinition:
     abstract: false
     layer: global
   labels:
     name: full-site-global
-  storagePolicy: cleartext
-data:
+spec:
   release_prefix: airship
   chart_groups:
     - podsecuritypolicy

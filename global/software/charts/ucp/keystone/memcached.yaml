@@ -1,18 +1,17 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-keystone-memcached
   labels:
     name: ucp-keystone-memcached-global
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.memcached
       dest:
@@ -20,19 +19,19 @@ metadata:
 
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.ucp.memcached
       dest:
         path: .values.images.tags
 
     - src:
-        schema: pegleg/EndpointCatalogue/v1
+        kind: PeglegEndpointCatalogue
         name: ucp_endpoints
         path: .ucp.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
-data:
+spec:
   chart_name: ucp-keystone-memcached
   release: ucp-keystone-memcached
   namespace: ucp
@@ -58,22 +57,21 @@ data:
     - ucp-memcached-htk
 ...
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ucp-memcached-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.ucp.memcached-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: ucp-memcached-htk
   release: ucp-memcached-htk
   namespace: ucp-memcached-htk

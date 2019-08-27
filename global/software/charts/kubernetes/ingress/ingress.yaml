@@ -1,7 +1,7 @@
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: global-ingress-kube-system
   labels:
     ingress: kube-system
@@ -9,23 +9,22 @@ metadata:
   layeringDefinition:
     abstract: true
     layer: global
-  storagePolicy: cleartext
   substitutions:
     # Chart source
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.ingress
       dest:
         path: .source
     # Images
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .images.kubernetes.ingress
       dest:
         path: .values.images.tags
-data:
+spec:
   chart_name: ingress-kube-system
   release: ingress-kube-system
   namespace: kube-system
@@ -65,22 +64,21 @@ data:
   dependencies:
     - ingress-kube-system-htk
 ---
-schema: armada/Chart/v1
+apiVersion: armada.airshipit.org/v1alpha1
+kind: ArmadaChart
 metadata:
-  schema: metadata/Document/v1
   name: ingress-kube-system-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: pegleg/SoftwareVersions/v1
+        kind: PeglegSoftwareVersions
         name: software-versions
         path: .charts.kubernetes.ingress-htk
       dest:
         path: .source
-data:
+spec:
   chart_name: ingress-kube-system-htk
   release: ingress-kube-system-htk
   namespace: ingress-kube-system-htk

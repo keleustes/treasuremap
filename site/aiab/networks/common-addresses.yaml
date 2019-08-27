@@ -1,54 +1,53 @@
 ---
 # The purpose of this file is to define network related paramters that are
 # referenced elsewhere in the manifests for this site.
-schema: pegleg/CommonAddresses/v1
+apiVersion: pegleg.airshipit.org/v1alpha1
+kind: PeglegCommonAddresses
 metadata:
-  schema: metadata/Document/v1
   name: common-addresses
   layeringDefinition:
     abstract: false
     layer: site
-  storagePolicy: cleartext
   substitutions:
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .interface
       dest:
         path: .calico.ip_autodetection_method
         pattern: REPLACEME
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostname
       dest:
         path: .genesis.hostname
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .genesis.ip
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostip
       dest:
         path: .bootstrap.ip
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostcidr
       dest:
         path: .storage.ceph.public_cidr
     - src:
-        schema: dev/Configurables/v1
+        kind: PeglegDevConfigurables
         name: dev-configurables
         path: .hostcidr
       dest:
         path: .storage.ceph.cluster_cidr
 
-data:
+spec:
   calico:
     ip_autodetection_method: 'interface=REPLACEME'
     etcd:
