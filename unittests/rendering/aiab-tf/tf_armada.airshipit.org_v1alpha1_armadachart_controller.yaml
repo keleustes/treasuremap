@@ -39,7 +39,7 @@ spec:
         KEYSTONE_AUTH_URL_VERSION: /v3
         KEYSTONE_AUTH_USER_DOMAIN_NAME: default
         KUBERNETES_IP_FABRIC_SNAT: "true"
-        KUBERNETES_IP_FABRIC_SUBNETS: $(PeglegDevConfigurables.dev-configurables.spec.subnets)
+        KUBERNETES_IP_FABRIC_SUBNETS: 10.10.10.0/16
         KUBERNETES_POD_SUBNETS: 10.97.0.0/16
         KUBERNETES_SERVICE_SUBNETS: 10.96.0.0/16
         LOG_LEVEL: SYS_DEBUG

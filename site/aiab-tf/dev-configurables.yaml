@@ -1,3 +1,4 @@
+---
 apiVersion: pegleg.airshipit.org/v1alpha1
 kind: PeglegDevConfigurables
 metadata:
@@ -8,6 +9,6 @@ spec:
   hostip: 10.0.2.14
   hostname: aiab
   interface: ens3
-  interface_gw: 127.0.0.1
   maas-ingress: 192.169.1.5/32
+  interface_gw: 127.0.0.1
   subnets: 10.10.10.0/16

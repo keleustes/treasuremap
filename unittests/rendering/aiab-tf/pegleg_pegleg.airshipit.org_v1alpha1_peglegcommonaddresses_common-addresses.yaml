@@ -63,7 +63,7 @@ spec:
       cluster_cidr: 10.0.2.0/24
       public_cidr: 10.0.2.0/24
   tungstenfabric:
-    fabric_subnets: $(PeglegDevConfigurables.dev-configurables.spec.subnets)
+    fabric_subnets: 10.10.10.0/16
     interface: ens3
-    interface_gw: $(PeglegDevConfigurables.dev-configurables.spec.interface_gw)
+    interface_gw: 127.0.0.1
     ip: 10.0.2.14

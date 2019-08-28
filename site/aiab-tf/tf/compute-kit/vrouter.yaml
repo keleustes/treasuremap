@@ -23,9 +23,9 @@ spec:
         KUBERNETES_POD_SUBNETS: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.pod_cidr)
         KUBERNETES_SERVICE_SUBNETS: $(PeglegCommonAddresses.common-addresses.spec.kubernetes.service_cidr)
         LOG_LEVEL: SYS_DEBUG
-        PHYSICAL_INTERFACE: $(PeglegCommonAddresses.common-addresses.spectungstenfabric.interface)
+        PHYSICAL_INTERFACE: $(PeglegCommonAddresses.common-addresses.spec.tungstenfabric.interface)
         VROUTER_ENCRYPTION: false
-        VROUTER_GATEWAY: $(PeglegCommonAddresses.common-addresses.spectungstenfabric.interface_gw)
+        VROUTER_GATEWAY: $(PeglegCommonAddresses.common-addresses.spec.tungstenfabric.interface_gw)
       images:
         tags: $(PeglegSoftwareVersions.software-versions.spec.images.tungstenfabric.vrouter)
     labels:

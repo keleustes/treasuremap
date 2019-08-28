@@ -16,6 +16,7 @@ patchesStrategicMerge:
 - ./openstack-keystone/chart-group.yaml
 - ./openstack-keystone/keystone.yaml
 - ./versions.yaml
+- ./dev-configurables.yaml
 
 resources:
 - ../aiab
