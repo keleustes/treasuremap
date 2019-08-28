@@ -102,7 +102,7 @@ deploy-airsloop: install
 	rm actual/airsloop/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/airsloop
 
-purge-airsloop: 
+purge-airsloop:
 	$(SETKUBECONFIG) kubectl delete -f actual/airsloop
 
 rendering-test-airskiff-ubuntu:
@@ -121,7 +121,7 @@ deploy-airskiff-ubuntu: install
 	rm actual/airskiff-ubuntu/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-ubuntu
 
-purge-airskiff-ubuntu: 
+purge-airskiff-ubuntu:
 	$(SETKUBECONFIG) kubectl delete -f actual/airskiff-ubuntu
 
 rendering-test-airskiff-suse:
@@ -140,7 +140,7 @@ deploy-airskiff-suse: install
 	rm actual/airskiff-suse/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-suse
 
-purge-airskiff-suse: 
+purge-airskiff-suse:
 	$(SETKUBECONFIG) kubectl delete -f actual/airskiff-suse
 
 
@@ -160,7 +160,7 @@ deploy-aiab: install
 	rm actual/aiab/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/aiab
 
-purge-aiab: 
+purge-aiab:
 	$(SETKUBECONFIG) kubectl delete -f actual/aiab
 
 rendering-test-aiab-tf:
@@ -179,7 +179,7 @@ deploy-aiab-tf: install
 	rm actual/aiab-tf/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/aiab-tf
 
-purge-aiab-tf: 
+purge-aiab-tf:
 	$(SETKUBECONFIG) kubectl delete -f actual/aiab-tf
 
 rendering-test-seaworthy:
@@ -198,7 +198,7 @@ deploy-seaworthy: install
 	rm actual/seaworthy/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/seaworthy
 
-purge-seaworthy: 
+purge-seaworthy:
 	$(SETKUBECONFIG) kubectl delete -f actual/seaworthy
 
 rendering-test-seaworthy-virt:
@@ -217,7 +217,7 @@ deploy-seaworthy-virt: install
 	rm actual/seaworthy-virt/drydock*
 	$(SETKUBECONFIG) kubectl apply -f actual/seaworthy-virt
 
-purge-seaworthy-virt: 
+purge-seaworthy-virt:
 	$(SETKUBECONFIG) kubectl delete -f actual/seaworthy-virt
 
 rendering-tests: rendering-test-airsloop rendering-test-airskiff-ubuntu rendering-test-aiab rendering-test-seaworthy rendering-test-seaworthy-virt rendering-test-airskiff-suse rendering-test-aiab-tf
@@ -226,11 +226,52 @@ deploy-patch:
 	$(SETKUBECONFIG) kubectl patch act openstack-memcached -n openstack --type merge -p $'spec:\n  target_state: deployed'
 	# $(SETKUBECONFIG) kubectl patch act nova -n openstack --type merge -p $'spec:\n  target_state: deployed'
 
-
-.PHONY: kubeval-strict
-kubeval-strict:
-	kubeval actual/airsloop/ucp_armada.airshipit.org_v1alpha1_armadachart_ucp-shipyard.yaml --openshift --schema-location file:///$(HOME)/src/github.com/keleustes/armada-crd/kubeval --strict
-
 .PHONY: kubeval-remote
 kubeval-remote:
-	kubeval actual/airsloop/ucp_armada.airshipit.org_v1alpha1_armadachart_ucp-shipyard.yaml --openshift --schema-location https://raw.githubusercontent.com/keleustes/armada-crd/master/kubeval 
+	kubeval actual/airsloop/ucp_armada.airshipit.org_v1alpha1_armadachart_ucp-shipyard.yaml --schema-location https://raw.githubusercontent.com/keleustes/armada-crd/master/kubeval
+
+.PHONY: kubeval-airsloop
+kubeval-airsloop: rendering-test-airsloop
+	@for f in $(shell ls ./actual/airsloop/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-airskiff-ubuntu
+kubeval-airskiff-ubuntu: rendering-test-airskiff-ubuntu
+	@for f in $(shell ls ./actual/airskiff-ubuntu/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-airskiff-suse
+kubeval-airskiff-suse: rendering-test-airskiff-suse
+	@for f in $(shell ls ./actual/airskiff-suse/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-aiab
+kubeval-aiab: rendering-test-aiab
+	@for f in $(shell ls ./actual/aiab/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-aiab-tf
+kubeval-aiab-tf: rendering-test-aiab-tf
+	@for f in $(shell ls ./actual/aiab-tf/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-seaworthy
+kubeval-seaworthy: rendering-test-seaworthy
+	@for f in $(shell ls ./actual/seaworthy/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-seaworthy-virt
+kubeval-seaworthy-virt: rendering-test-seaworthy-virt
+	@for f in $(shell ls ./actual/seaworthy-virt/*armadachart*); do \
+		kubeval $${f} --schema-location file://$${HOME}/src/github.com/keleustes/armada-crd/kubeval --strict; \
+	done || true
+
+.PHONY: kubeval-checks
+kubeval-checks: kubeval-airsloop kubeval-airskiff-ubuntu kubeval-aiab kubeval-seaworthy kubeval-seaworthy-virt kubeval-airskiff-suse kubeval-aiab-tf
+
