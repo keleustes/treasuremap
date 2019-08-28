@@ -27,9 +27,6 @@ spec:
           release_group: airship-libvirt
         type: job
   values:
-    ceph_client:
-      configmap: tenant-ceph-etc
-      user_secret_name: pvc-tceph-client-key
     conf:
       ceph:
         enabled: false

@@ -18,6 +18,15 @@ patchesStrategicMerge:
 - ./versions.yaml
 - ./dev-configurables.yaml
 
+patchesJson6902:
+- path: ./libvirt_path.yaml
+  target:
+    name: libvirt
+    namespace: openstack
+    group: armada.airshipit.org
+    version: v1alpha1
+    kind: ArmadaChart
+
 resources:
 - ../aiab
 - ./tf/compute-kit/chart-group.yaml
