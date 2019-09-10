@@ -8,8 +8,6 @@ spec:
   chart_name: kibana
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: kibana
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.kibana)
   target_state: uninitialized

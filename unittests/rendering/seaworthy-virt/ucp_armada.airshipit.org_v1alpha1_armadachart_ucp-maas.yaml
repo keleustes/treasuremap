@@ -9,8 +9,6 @@ spec:
   chart_name: maas
   dependencies:
   - maas-htk
-  install:
-    no_hooks: false
   release: maas
   source:
     location: https://opendev.org/airship/maas

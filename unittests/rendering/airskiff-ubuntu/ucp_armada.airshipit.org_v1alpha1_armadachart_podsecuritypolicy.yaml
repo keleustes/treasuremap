@@ -9,8 +9,6 @@ spec:
   chart_name: podsecuritypolicy
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: true
   release: podsecuritypolicy
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

@@ -10,8 +10,6 @@ spec:
   chart_name: openstack-memcached
   dependencies:
   - memcached-htk
-  install:
-    no_hooks: false
   release: openstack-memcached
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

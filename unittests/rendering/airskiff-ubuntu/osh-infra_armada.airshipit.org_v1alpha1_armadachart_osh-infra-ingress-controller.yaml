@@ -9,8 +9,6 @@ spec:
   chart_name: osh-infra-ingress-controller
   dependencies:
   - osh-helm-toolkit
-  install:
-    no_hooks: false
   release: osh-infra-ingress-controller
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

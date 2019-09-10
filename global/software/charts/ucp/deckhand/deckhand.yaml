@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-deckhand
   dependencies:
   - deckhand-htk
-  install:
-    no_hooks: false
   release: ucp-deckhand
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.deckhand)
   target_state: uninitialized

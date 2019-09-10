@@ -8,8 +8,6 @@ spec:
   chart_name: controller
   dependencies:
   - tungstenfabric-controller-helm-toolkit
-  install:
-    no_hooks: false
   release: contrail-controller
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.controller)
   target_state: uninitialized

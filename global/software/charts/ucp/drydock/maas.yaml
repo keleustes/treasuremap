@@ -10,8 +10,6 @@ spec:
   chart_name: maas
   dependencies:
   - maas-htk
-  install:
-    no_hooks: false
   release: maas
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.maas)
   target_state: uninitialized

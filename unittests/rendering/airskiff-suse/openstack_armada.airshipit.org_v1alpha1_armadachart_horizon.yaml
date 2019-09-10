@@ -10,8 +10,6 @@ spec:
   chart_name: horizon
   dependencies:
   - horizon-htk
-  install:
-    no_hooks: false
   release: horizon
   source:
     location: https://opendev.org/openstack/openstack-helm
@@ -65,7 +63,8 @@ spec:
           internal: http
       oslo_cache:
         auth:
-          memcache_secret_key: password123
+          tojeb:
+            memcache_secret_key: password123
         host_fqdn_override:
           default: ""
         hosts:

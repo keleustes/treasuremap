@@ -9,8 +9,6 @@ spec:
   chart_name: openvswitch
   dependencies:
   - openvswitch-htk
-  install:
-    no_hooks: false
   release: openvswitch
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

@@ -10,8 +10,6 @@ spec:
   chart_name: shipyard
   dependencies:
   - shipyard-htk
-  install:
-    no_hooks: false
   release: ucp-shipyard
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.shipyard)
   target_state: uninitialized

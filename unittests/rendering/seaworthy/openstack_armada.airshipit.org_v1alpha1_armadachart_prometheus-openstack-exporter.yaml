@@ -7,8 +7,6 @@ spec:
   chart_name: prometheus-openstack-exporter
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus-openstack-exporter
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

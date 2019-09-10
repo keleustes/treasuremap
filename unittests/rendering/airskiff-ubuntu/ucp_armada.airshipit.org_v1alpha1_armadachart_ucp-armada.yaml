@@ -9,8 +9,6 @@ spec:
   chart_name: armada
   dependencies:
   - armada-htk
-  install:
-    no_hooks: false
   release: ucp-armada
   source:
     location: /airship-components/armada

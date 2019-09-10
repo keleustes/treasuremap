@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-mariadb
   dependencies:
   - mariadb-htk
-  install:
-    no_hooks: false
   release: ucp-mariadb
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.mariadb)
   target_state: uninitialized

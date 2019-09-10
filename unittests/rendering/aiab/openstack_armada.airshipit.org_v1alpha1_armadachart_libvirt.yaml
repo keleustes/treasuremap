@@ -10,8 +10,6 @@ spec:
   chart_name: libvirt
   dependencies:
   - libvirt-htk
-  install:
-    no_hooks: false
   release: libvirt
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

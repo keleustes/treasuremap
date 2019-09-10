@@ -10,8 +10,6 @@ spec:
   chart_name: prometheus
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus)
   target_state: uninitialized

@@ -172,7 +172,7 @@ spec:
         default: http
     maas_ingress:
       host_fqdn_override:
-        public: null
+        public: ""
       hosts:
         default: maas-ingress
         error_pages: maas-ingress-error

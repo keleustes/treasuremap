@@ -9,8 +9,6 @@ spec:
   chart_name: drydock
   dependencies:
   - drydock-htk
-  install:
-    no_hooks: false
   release: drydock
   source:
     location: https://opendev.org/airship/drydock

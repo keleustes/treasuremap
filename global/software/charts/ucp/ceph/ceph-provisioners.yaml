@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-ceph-provisioners
   dependencies:
   - ceph-htk
-  install:
-    no_hooks: false
   protected:
     continue_processing: true
   release: ucp-ceph-provisioners

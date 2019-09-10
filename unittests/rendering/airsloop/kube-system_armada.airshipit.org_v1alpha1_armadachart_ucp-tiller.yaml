@@ -9,8 +9,6 @@ spec:
   chart_name: tiller
   dependencies:
   - tiller-htk
-  install:
-    no_hooks: false
   release: ucp-tiller
   source:
     location: https://opendev.org/airship/armada

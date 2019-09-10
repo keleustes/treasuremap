@@ -10,8 +10,6 @@ spec:
   chart_name: neutron
   dependencies:
   - neutron-htk
-  install:
-    no_hooks: false
   release: neutron
   source:
     location: https://opendev.org/openstack/openstack-helm
@@ -240,7 +238,8 @@ spec:
           public: http
       oslo_cache:
         auth:
-          memcache_secret_key: password123
+          tojeb:
+            memcache_secret_key: password123
         host_fqdn_override:
           default: ""
         hosts:

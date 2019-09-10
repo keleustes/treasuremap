@@ -8,8 +8,6 @@ spec:
   chart_name: osh-infra-radosgw
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: osh-infra-radosgw
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ceph-rgw)
   target_state: uninitialized

@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-rabbitmq
   dependencies:
   - ucp-rabbitmq-htk
-  install:
-    no_hooks: false
   release: ucp-rabbitmq
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.rabbitmq)
   target_state: uninitialized

@@ -7,8 +7,6 @@ spec:
   chart_name: kibana
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: kibana
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

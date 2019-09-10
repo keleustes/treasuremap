@@ -10,8 +10,6 @@ spec:
   chart_name: drydock
   dependencies:
   - drydock-htk
-  install:
-    no_hooks: false
   release: drydock
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.drydock)
   target_state: uninitialized

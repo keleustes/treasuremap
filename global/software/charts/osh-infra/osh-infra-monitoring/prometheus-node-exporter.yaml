@@ -8,8 +8,6 @@ spec:
   chart_name: prometheus-node-exporter
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus-node-exporter
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_node_exporter)
   target_state: uninitialized

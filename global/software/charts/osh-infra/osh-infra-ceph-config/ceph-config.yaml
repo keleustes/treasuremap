@@ -8,8 +8,6 @@ spec:
   chart_name: osh-infra-ceph-config
   dependencies:
   - ceph-htk
-  install:
-    no_hooks: false
   release: osh-infra-ceph-config
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ceph-provisioners)
   target_state: uninitialized

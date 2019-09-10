@@ -7,8 +7,6 @@ spec:
   chart_name: controller
   dependencies:
   - tungstenfabric-controller-helm-toolkit
-  install:
-    no_hooks: false
   release: contrail-controller
   source:
     location: https://github.com/juniper/contrail-helm-deployer

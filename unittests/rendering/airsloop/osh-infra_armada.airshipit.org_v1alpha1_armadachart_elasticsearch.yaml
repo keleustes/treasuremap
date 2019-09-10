@@ -10,8 +10,6 @@ spec:
   chart_name: elasticsearch
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: elasticsearch
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

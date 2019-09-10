@@ -10,8 +10,6 @@ spec:
   chart_name: podsecuritypolicy
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: true
   release: podsecuritypolicy
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.podsecuritypolicy)
   target_state: uninitialized

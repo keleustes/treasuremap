@@ -10,8 +10,6 @@ spec:
   chart_name: cinder
   dependencies:
   - cinder-htk
-  install:
-    no_hooks: false
   release: cinder
   source:
     location: https://opendev.org/openstack/openstack-helm
@@ -180,7 +178,8 @@ spec:
           default: http
       oslo_cache:
         auth:
-          memcache_secret_key: password123
+          tojeb:
+            memcache_secret_key: password123
         host_fqdn_override:
           default: ""
         hosts:

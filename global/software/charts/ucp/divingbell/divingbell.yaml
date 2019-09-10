@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-divingbell
   dependencies:
   - ucp-divingbell-htk
-  install:
-    no_hooks: false
   release: ucp-divingbell
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.divingbell)
   target_state: uninitialized
@@ -52,7 +50,8 @@ spec:
         net.ipv4.tcp_retries2: '5'
         net.netfilter.nf_conntrack_acct: '1'
         net.nf_conntrack_max: '1048576'
-    images: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.divingbell)
+    images:
+       tags: $(PeglegSoftwareVersions.software-versions.spec.images.ucp.divingbell)
   wait:
     labels:
       release_group: airship-ucp-divingbell

@@ -8,8 +8,6 @@ spec:
   chart_name: analytics
   dependencies:
   - tungstenfabric-analytics-helm-toolkit
-  install:
-    no_hooks: false
   release: contrail-analytics
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.analytics)
   target_state: uninitialized

@@ -9,8 +9,6 @@ spec:
   chart_name: ucp-deckhand
   dependencies:
   - deckhand-htk
-  install:
-    no_hooks: false
   release: ucp-deckhand
   source:
     location: https://opendev.org/airship/deckhand

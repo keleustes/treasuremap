@@ -11,8 +11,6 @@ spec:
   chart_name: openstack-ingress-controller
   dependencies:
   - ingress-htk
-  install:
-    no_hooks: false
   release: openstack-ingress-controller
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.ingress)
   target_state: uninitialized

@@ -10,8 +10,6 @@ spec:
   chart_name: openstack-rabbitmq
   dependencies:
   - openstack-rabbitmq-htk
-  install:
-    no_hooks: false
   release: openstack-rabbitmq
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.rabbitmq)
   target_state: uninitialized

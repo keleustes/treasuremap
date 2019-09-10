@@ -10,8 +10,6 @@ spec:
   chart_name: ingress-kube-system
   dependencies:
   - ingress-kube-system-htk
-  install:
-    no_hooks: false
   release: ingress-kube-system
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

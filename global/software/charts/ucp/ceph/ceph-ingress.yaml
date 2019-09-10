@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-ceph-ingress
   dependencies:
   - ucp-ingress-htk
-  install:
-    no_hooks: false
   release: ucp-ceph-ingress
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.ingress)
   target_state: uninitialized

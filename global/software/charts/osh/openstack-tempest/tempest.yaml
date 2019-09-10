@@ -11,8 +11,6 @@ spec:
   chart_name: tempest
   dependencies:
   - tempest-htk
-  install:
-    no_hooks: false
   release: tempest
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.tempest)
   target_state: uninitialized

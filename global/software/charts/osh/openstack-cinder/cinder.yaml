@@ -11,8 +11,6 @@ spec:
   chart_name: cinder
   dependencies:
   - cinder-htk
-  install:
-    no_hooks: false
   release: cinder
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.cinder)
   target_state: uninitialized
@@ -112,7 +110,8 @@ spec:
       image_registry: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.image_registry)
       oslo_cache:
         auth:
-          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+          tojeb:
+            memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
         parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
       oslo_db:
         auth:

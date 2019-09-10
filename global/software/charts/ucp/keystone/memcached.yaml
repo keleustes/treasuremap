@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-keystone-memcached
   dependencies:
   - ucp-memcached-htk
-  install:
-    no_hooks: false
   release: ucp-keystone-memcached
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.memcached)
   target_state: uninitialized

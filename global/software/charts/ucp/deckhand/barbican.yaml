@@ -10,8 +10,6 @@ spec:
   chart_name: ucp-barbican
   dependencies:
   - ucp-barbican-htk
-  install:
-    no_hooks: false
   release: ucp-barbican
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.barbican)
   target_state: uninitialized

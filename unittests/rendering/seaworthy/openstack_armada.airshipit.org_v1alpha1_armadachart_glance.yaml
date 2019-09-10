@@ -10,8 +10,6 @@ spec:
   chart_name: glance
   dependencies:
   - glance-htk
-  install:
-    no_hooks: false
   release: glance
   source:
     location: https://opendev.org/openstack/openstack-helm
@@ -623,7 +621,8 @@ spec:
           public: https
       oslo_cache:
         auth:
-          memcache_secret_key: password123
+          tojeb:
+            memcache_secret_key: password123
         host_fqdn_override:
           default: ""
         hosts:

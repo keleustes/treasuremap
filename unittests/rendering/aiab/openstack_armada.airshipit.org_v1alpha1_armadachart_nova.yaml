@@ -10,8 +10,6 @@ spec:
   chart_name: nova
   dependencies:
   - nova-htk
-  install:
-    no_hooks: false
   release: nova
   source:
     location: https://opendev.org/openstack/openstack-helm
@@ -271,7 +269,8 @@ spec:
           public: http
       oslo_cache:
         auth:
-          memcache_secret_key: password123
+          tojeb:
+            memcache_secret_key: password123
         host_fqdn_override:
           default: ""
         hosts:

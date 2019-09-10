@@ -7,8 +7,6 @@ spec:
   chart_name: osh-infra-radosgw
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: osh-infra-radosgw
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

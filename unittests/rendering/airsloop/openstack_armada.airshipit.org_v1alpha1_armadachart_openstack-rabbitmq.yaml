@@ -9,8 +9,6 @@ spec:
   chart_name: openstack-rabbitmq
   dependencies:
   - openstack-rabbitmq-htk
-  install:
-    no_hooks: false
   release: openstack-rabbitmq
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

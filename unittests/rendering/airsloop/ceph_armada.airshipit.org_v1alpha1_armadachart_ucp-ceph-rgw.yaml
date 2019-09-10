@@ -7,8 +7,6 @@ spec:
   chart_name: ucp-ceph-rgw
   dependencies:
   - ceph-htk
-  install:
-    no_hooks: false
   release: ucp-ceph-rgw
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

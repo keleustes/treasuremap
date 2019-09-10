@@ -9,8 +9,6 @@ spec:
   chart_name: grafana
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: grafana
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

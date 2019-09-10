@@ -11,8 +11,6 @@ spec:
   chart_name: openstack-mariadb
   dependencies:
   - openstack-mariadb-htk
-  install:
-    no_hooks: false
   release: openstack-mariadb
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.mariadb)
   target_state: uninitialized

@@ -11,8 +11,6 @@ spec:
   chart_name: horizon
   dependencies:
   - horizon-htk
-  install:
-    no_hooks: false
   release: horizon
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.horizon)
   target_state: uninitialized
@@ -35,7 +33,8 @@ spec:
         parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.identity)
       oslo_cache:
         auth:
-          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+          tojeb:
+            memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
         parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
       oslo_db:
         auth:

@@ -8,8 +8,6 @@ spec:
   chart_name: nagios
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: nagios
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.nagios)
   target_state: uninitialized

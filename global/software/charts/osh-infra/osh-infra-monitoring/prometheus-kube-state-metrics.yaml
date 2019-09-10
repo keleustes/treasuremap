@@ -8,8 +8,6 @@ spec:
   chart_name: prometheus-kube-state-metrics
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus-kube-state-metrics
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_kube_state_metrics)
   target_state: uninitialized

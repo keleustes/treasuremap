@@ -9,8 +9,6 @@ spec:
   chart_name: maas
   dependencies:
   - maas-htk
-  install:
-    no_hooks: false
   release: maas
   source:
     location: https://opendev.org/airship/maas
@@ -69,7 +67,7 @@ spec:
         scheme: postgresql+psycopg2
       maas_ingress:
         host_fqdn_override:
-          public: null
+          public: ""
         hosts:
           default: maas-ingress
           error_pages: maas-ingress-error

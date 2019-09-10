@@ -11,8 +11,6 @@ spec:
   chart_name: libvirt
   dependencies:
   - libvirt-htk
-  install:
-    no_hooks: false
   release: libvirt
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.libvirt)
   target_state: uninitialized

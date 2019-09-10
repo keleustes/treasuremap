@@ -9,8 +9,6 @@ spec:
   chart_name: ucp-barbican
   dependencies:
   - ucp-barbican-htk
-  install:
-    no_hooks: false
   release: ucp-barbican
   source:
     location: https://opendev.org/openstack/openstack-helm

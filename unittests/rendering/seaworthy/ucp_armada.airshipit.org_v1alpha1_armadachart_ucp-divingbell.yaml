@@ -9,8 +9,6 @@ spec:
   chart_name: ucp-divingbell
   dependencies:
   - ucp-divingbell-htk
-  install:
-    no_hooks: false
   release: ucp-divingbell
   source:
     location: https://opendev.org/airship/divingbell
@@ -107,7 +105,8 @@ spec:
             airship@seaworthy
           user_sudo: true
     images:
-      divingbell: docker.io/ubuntu:16.04
+      tags:
+        divingbell: docker.io/ubuntu:16.04
   wait:
     labels:
       release_group: airship-ucp-divingbell

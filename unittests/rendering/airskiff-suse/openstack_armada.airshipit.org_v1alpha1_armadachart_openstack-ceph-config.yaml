@@ -10,8 +10,6 @@ spec:
   chart_name: openstack-ceph-config
   dependencies:
   - ceph-htk
-  install:
-    no_hooks: false
   release: openstack-ceph-config
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

@@ -10,8 +10,6 @@ spec:
   chart_name: tempest
   dependencies:
   - tempest-htk
-  install:
-    no_hooks: false
   release: tempest
   source:
     location: https://opendev.org/openstack/openstack-helm

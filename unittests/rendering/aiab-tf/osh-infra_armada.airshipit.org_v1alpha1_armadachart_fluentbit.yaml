@@ -10,8 +10,6 @@ spec:
   chart_name: fluentbit
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: fluentbit
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

@@ -8,8 +8,6 @@ spec:
   chart_name: prometheus-openstack-exporter
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus-openstack-exporter
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.prometheus_openstack_exporter)
   target_state: uninitialized

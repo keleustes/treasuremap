@@ -9,8 +9,6 @@ spec:
   chart_name: osh-infra-mariadb
   dependencies:
   - osh-helm-toolkit
-  install:
-    no_hooks: false
   release: osh-infra-mariadb
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

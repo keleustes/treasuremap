@@ -7,8 +7,6 @@ spec:
   chart_name: prometheus-alertmanager
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus-alertmanager
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

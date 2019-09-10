@@ -11,8 +11,6 @@ spec:
   chart_name: neutron
   dependencies:
   - neutron-htk
-  install:
-    no_hooks: false
   release: neutron
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.neutron)
   target_state: uninitialized
@@ -137,7 +135,8 @@ spec:
       network: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.network)
       oslo_cache:
         auth:
-          memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
+          tojeb:
+            memcache_secret_key: $(DeckhandPassphrase.osh-oslo-cache-secret-key.spec)
         parent-inline: $(PeglegEndpointCatalogue.osh-endpoints.spec.osh.oslo_cache)
       oslo_db:
         auth:

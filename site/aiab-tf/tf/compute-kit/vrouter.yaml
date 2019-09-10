@@ -8,8 +8,6 @@ spec:
   chart_name: vrouter
   dependencies:
   - tungstenfabric-vrouter-helm-toolkit
-  install:
-    no_hooks: false
   release: contrail-vrouter
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.vrouter)
   target_state: uninitialized

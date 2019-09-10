@@ -10,8 +10,6 @@ spec:
   chart_name: tiller
   dependencies:
   - tiller-htk
-  install:
-    no_hooks: false
   release: ucp-tiller
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tiller)
   target_state: uninitialized

@@ -8,8 +8,6 @@ spec:
   chart_name: tenant-ceph-config
   dependencies:
   - tenant-ceph-htk
-  install:
-    no_hooks: false
   release: tenant-ceph-config
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.tenant-ceph-provisioners)
   target_state: uninitialized

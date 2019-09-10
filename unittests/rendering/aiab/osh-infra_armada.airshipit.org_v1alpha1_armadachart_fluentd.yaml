@@ -10,8 +10,6 @@ spec:
   chart_name: fluentd
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: fluentd
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

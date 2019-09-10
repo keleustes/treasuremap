@@ -9,8 +9,6 @@ spec:
   chart_name: shipyard
   dependencies:
   - shipyard-htk
-  install:
-    no_hooks: false
   release: ucp-shipyard
   source:
     location: /airship-components/shipyard

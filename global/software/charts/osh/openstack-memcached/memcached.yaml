@@ -11,8 +11,6 @@ spec:
   chart_name: openstack-memcached
   dependencies:
   - memcached-htk
-  install:
-    no_hooks: false
   release: openstack-memcached
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh.memcached)
   target_state: uninitialized

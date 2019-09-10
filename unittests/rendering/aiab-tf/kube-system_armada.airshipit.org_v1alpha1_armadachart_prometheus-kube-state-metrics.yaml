@@ -7,8 +7,6 @@ spec:
   chart_name: prometheus-kube-state-metrics
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: prometheus-kube-state-metrics
   source:
     location: https://opendev.org/openstack/openstack-helm-infra

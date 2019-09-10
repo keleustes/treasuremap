@@ -10,8 +10,6 @@ spec:
   chart_name: elasticsearch
   dependencies:
   - osh-infra-helm-toolkit
-  install:
-    no_hooks: false
   release: elasticsearch
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.osh_infra.elasticsearch)
   target_state: uninitialized

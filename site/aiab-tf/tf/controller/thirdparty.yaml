@@ -8,8 +8,6 @@ spec:
   chart_name: thirdparty
   dependencies:
   - tungstenfabric-thirdparty-helm-toolkit
-  install:
-    no_hooks: false
   release: contrail-thirdparty
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.tungstenfabric.thirdparty)
   target_state: uninitialized

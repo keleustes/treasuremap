@@ -9,8 +9,6 @@ spec:
   chart_name: promenade
   dependencies:
   - promenade-htk
-  install:
-    no_hooks: false
   release: ucp-promenade
   source:
     location: https://opendev.org/airship/promenade

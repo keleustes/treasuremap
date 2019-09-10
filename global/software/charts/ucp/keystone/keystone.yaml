@@ -11,8 +11,6 @@ spec:
   chart_name: ucp-keystone
   dependencies:
   - ucp-keystone-htk
-  install:
-    no_hooks: false
   release: ucp-keystone
   source: $(PeglegSoftwareVersions.software-versions.spec.charts.ucp.keystone)
   target_state: uninitialized

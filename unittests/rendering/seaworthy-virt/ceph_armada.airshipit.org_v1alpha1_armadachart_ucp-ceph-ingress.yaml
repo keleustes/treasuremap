@@ -9,8 +9,6 @@ spec:
   chart_name: ucp-ceph-ingress
   dependencies:
   - ucp-ingress-htk
-  install:
-    no_hooks: false
   release: ucp-ceph-ingress
   source:
     location: https://opendev.org/openstack/openstack-helm-infra
