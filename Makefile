@@ -89,14 +89,14 @@ purge: purge-operators
 rendering-test-airsloop:
 	rm -fr actual/airsloop
 	mkdir -p actual/airsloop
-	kustomize build site/airsloop -o actual/airsloop
+	kustomize build site/airsloop -o actual/airsloop --enable_alpha_plugins
 	# cp actual/airsloop/* ./unittests/rendering/airsloop
 	diff -r actual/airsloop ./unittests/rendering/airsloop
 
 deploy-airsloop: install
 	rm -fr actual/airsloop
 	mkdir -p actual/airsloop
-	kustomize build site/airsloop -o actual/airsloop
+	kustomize build site/airsloop -o actual/airsloop --enable_alpha_plugins
 	rm actual/airsloop/pegleg*
 	rm actual/airsloop/shipyard*
 	rm actual/airsloop/drydock*
@@ -108,14 +108,14 @@ purge-airsloop:
 rendering-test-airskiff-ubuntu:
 	rm -fr actual/airskiff-ubuntu
 	mkdir -p actual/airskiff-ubuntu
-	kustomize build site/airskiff-ubuntu -o actual/airskiff-ubuntu
+	kustomize build site/airskiff-ubuntu -o actual/airskiff-ubuntu --enable_alpha_plugins
 	# cp actual/airskiff-ubuntu/* ./unittests/rendering/airskiff-ubuntu
 	diff -r actual/airskiff-ubuntu ./unittests/rendering/airskiff-ubuntu
 
 deploy-airskiff-ubuntu: install
 	rm -fr actual/airskiff-ubuntu
 	mkdir -p actual/airskiff-ubuntu
-	kustomize build site/airskiff-ubuntu -o actual/airskiff-ubuntu
+	kustomize build site/airskiff-ubuntu -o actual/airskiff-ubuntu --enable_alpha_plugins
 	rm actual/airskiff-ubuntu/pegleg*
 	rm actual/airskiff-ubuntu/shipyard*
 	rm actual/airskiff-ubuntu/drydock*
@@ -127,14 +127,14 @@ purge-airskiff-ubuntu:
 rendering-test-airskiff-suse:
 	rm -fr actual/airskiff-suse
 	mkdir -p actual/airskiff-suse
-	kustomize build site/airskiff-suse -o actual/airskiff-suse
+	kustomize build site/airskiff-suse -o actual/airskiff-suse --enable_alpha_plugins
 	# cp actual/airskiff-suse/* ./unittests/rendering/airskiff-suse
 	diff -r actual/airskiff-suse ./unittests/rendering/airskiff-suse
 
 deploy-airskiff-suse: install
 	rm -fr actual/airskiff-suse
 	mkdir -p actual/airskiff-suse
-	kustomize build site/airskiff-suse -o actual/airskiff-suse
+	kustomize build site/airskiff-suse -o actual/airskiff-suse --enable_alpha_plugins
 	rm actual/airskiff-suse/pegleg*
 	rm actual/airskiff-suse/shipyard*
 	rm actual/airskiff-suse/drydock*
@@ -147,14 +147,14 @@ purge-airskiff-suse:
 rendering-test-aiab:
 	rm -fr actual/aiab
 	mkdir -p actual/aiab
-	kustomize build site/aiab -o actual/aiab
+	kustomize build site/aiab -o actual/aiab --enable_alpha_plugins
 	# cp actual/aiab/* ./unittests/rendering/aiab
 	diff -r actual/aiab ./unittests/rendering/aiab
 
 deploy-aiab: install
 	rm -fr actual/aiab
 	mkdir -p actual/aiab
-	kustomize build site/aiab -o actual/aiab
+	kustomize build site/aiab -o actual/aiab --enable_alpha_plugins
 	rm actual/aiab/pegleg*
 	rm actual/aiab/shipyard*
 	rm actual/aiab/drydock*
@@ -166,14 +166,14 @@ purge-aiab:
 rendering-test-aiab-tf:
 	rm -fr actual/aiab-tf
 	mkdir -p actual/aiab-tf
-	kustomize build site/aiab-tf -o actual/aiab-tf
+	kustomize build site/aiab-tf -o actual/aiab-tf --enable_alpha_plugins
 	# cp actual/aiab-tf/* ./unittests/rendering/aiab-tf
 	diff -r actual/aiab-tf ./unittests/rendering/aiab-tf
 
 deploy-aiab-tf: install
 	rm -fr actual/aiab-tf
 	mkdir -p actual/aiab-tf
-	kustomize build site/aiab-tf -o actual/aiab-tf
+	kustomize build site/aiab-tf -o actual/aiab-tf --enable_alpha_plugins
 	rm actual/aiab-tf/pegleg*
 	rm actual/aiab-tf/shipyard*
 	rm actual/aiab-tf/drydock*
@@ -185,14 +185,14 @@ purge-aiab-tf:
 rendering-test-seaworthy:
 	rm -fr actual/seaworthy
 	mkdir -p actual/seaworthy
-	kustomize build site/seaworthy -o actual/seaworthy
+	kustomize build site/seaworthy -o actual/seaworthy --enable_alpha_plugins
 	# cp actual/seaworthy/* ./unittests/rendering/seaworthy
 	diff -r actual/seaworthy ./unittests/rendering/seaworthy
 
 deploy-seaworthy: install
 	rm -fr actual/seaworthy
 	mkdir -p actual/seaworthy
-	kustomize build site/seaworthy -o actual/seaworthy
+	kustomize build site/seaworthy -o actual/seaworthy --enable_alpha_plugins
 	rm actual/seaworthy/pegleg*
 	rm actual/seaworthy/shipyard*
 	rm actual/seaworthy/drydock*
@@ -204,14 +204,14 @@ purge-seaworthy:
 rendering-test-seaworthy-virt:
 	rm -fr actual/seaworthy-virt
 	mkdir -p actual/seaworthy-virt
-	kustomize build site/seaworthy-virt -o actual/seaworthy-virt
+	kustomize build site/seaworthy-virt -o actual/seaworthy-virt --enable_alpha_plugins
 	# cp actual/seaworthy-virt/* ./unittests/rendering/seaworthy-virt
 	diff -r actual/seaworthy-virt ./unittests/rendering/seaworthy-virt
 
 deploy-seaworthy-virt: install
 	rm -fr actual/seaworthy-virt
 	mkdir -p actual/seaworthy-virt
-	kustomize build site/seaworthy-virt -o actual/seaworthy-virt
+	kustomize build site/seaworthy-virt -o actual/seaworthy-virt --enable_alpha_plugins
 	rm actual/seaworthy-virt/pegleg*
 	rm actual/seaworthy-virt/shipyard*
 	rm actual/seaworthy-virt/drydock*
