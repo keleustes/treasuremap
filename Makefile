@@ -51,6 +51,11 @@ create-testcluster:
 delete-testcluster:
 	kind delete cluster --name treasuremap
 
+copy-armadacrd-yaml:
+	cp $${HOME}/src/github.com/keleustes/armada-crd/kubectl/armada.airshipit.org_armadacharts.yaml ./deploy/crds/ArmadaChart.yaml
+	cp $${HOME}/src/github.com/keleustes/armada-crd/kubectl/armada.airshipit.org_armadachartgroups.yaml ./deploy/crds/ArmadaChartGroup.yaml
+	cp $${HOME}/src/github.com/keleustes/armada-crd/kubectl/armada.airshipit.org_armadamanifests.yaml ./deploy/crds/ArmadaManifest.yaml
+
 # Merged from POC
 install:
 	$(SETKUBECONFIG) kubectl label nodes --all openstack-control-plane=enabled --overwrite
@@ -100,7 +105,7 @@ deploy-airsloop: install
 	rm actual/airsloop/pegleg*
 	rm actual/airsloop/shipyard*
 	rm actual/airsloop/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/airsloop
+	$(SETKUBECONFIG) kubectl apply -f actual/airsloop --validate=true
 
 purge-airsloop:
 	$(SETKUBECONFIG) kubectl delete -f actual/airsloop
@@ -119,7 +124,7 @@ deploy-airskiff-ubuntu: install
 	rm actual/airskiff-ubuntu/pegleg*
 	rm actual/airskiff-ubuntu/shipyard*
 	rm actual/airskiff-ubuntu/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-ubuntu
+	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-ubuntu --validate=true
 
 purge-airskiff-ubuntu:
 	$(SETKUBECONFIG) kubectl delete -f actual/airskiff-ubuntu
@@ -138,7 +143,7 @@ deploy-airskiff-suse: install
 	rm actual/airskiff-suse/pegleg*
 	rm actual/airskiff-suse/shipyard*
 	rm actual/airskiff-suse/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-suse
+	$(SETKUBECONFIG) kubectl apply -f actual/airskiff-suse --validate=true
 
 purge-airskiff-suse:
 	$(SETKUBECONFIG) kubectl delete -f actual/airskiff-suse
@@ -158,7 +163,7 @@ deploy-aiab: install
 	rm actual/aiab/pegleg*
 	rm actual/aiab/shipyard*
 	rm actual/aiab/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/aiab
+	$(SETKUBECONFIG) kubectl apply -f actual/aiab --validate=true
 
 purge-aiab:
 	$(SETKUBECONFIG) kubectl delete -f actual/aiab
@@ -177,7 +182,7 @@ deploy-aiab-tf: install
 	rm actual/aiab-tf/pegleg*
 	rm actual/aiab-tf/shipyard*
 	rm actual/aiab-tf/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/aiab-tf
+	$(SETKUBECONFIG) kubectl apply -f actual/aiab-tf --validate=true
 
 purge-aiab-tf:
 	$(SETKUBECONFIG) kubectl delete -f actual/aiab-tf
@@ -196,7 +201,7 @@ deploy-seaworthy: install
 	rm actual/seaworthy/pegleg*
 	rm actual/seaworthy/shipyard*
 	rm actual/seaworthy/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/seaworthy
+	$(SETKUBECONFIG) kubectl apply -f actual/seaworthy --validate=true
 
 purge-seaworthy:
 	$(SETKUBECONFIG) kubectl delete -f actual/seaworthy
@@ -215,12 +220,14 @@ deploy-seaworthy-virt: install
 	rm actual/seaworthy-virt/pegleg*
 	rm actual/seaworthy-virt/shipyard*
 	rm actual/seaworthy-virt/drydock*
-	$(SETKUBECONFIG) kubectl apply -f actual/seaworthy-virt
+	$(SETKUBECONFIG) kubectl apply -f actual/seaworthy-virt --validate=true
 
 purge-seaworthy-virt:
 	$(SETKUBECONFIG) kubectl delete -f actual/seaworthy-virt
 
 rendering-tests: rendering-test-airsloop rendering-test-airskiff-ubuntu rendering-test-aiab rendering-test-seaworthy rendering-test-seaworthy-virt rendering-test-airskiff-suse rendering-test-aiab-tf
+
+deploy-purge-tests: deploy-aiab purge-aiab deploy-airsloop purge-airsloop deploy-aiab-tf purge-aiab-tf deploy-airskiff-suse purge-airskiff-suse deploy-airskiff-ubuntu purge-airskiff-ubuntu
 
 deploy-patch:
 	$(SETKUBECONFIG) kubectl patch act openstack-memcached -n openstack --type merge -p $'spec:\n  target_state: deployed'
